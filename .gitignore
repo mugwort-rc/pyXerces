@@ -1,0 +1,25 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# setup.py
+build/
+
+# Eclipse
+Debug/
+Release/
+.cproject
+.project
+.pydevproject
+.settings
+
