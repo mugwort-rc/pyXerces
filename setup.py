@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os, sys
 
 from distutils.core import setup
@@ -28,10 +29,10 @@ os.environ['OPT'] = " ".join([flag for flag in opt.split() if flag != '-Wstrict-
 
 setup(name = 'PyXerces',
       version = '0.0.1',
-      description = 'Xerces: A Python Xerces-c wrapper',
+      description = 'pyXerces: A Python Xerces-c wrapper',
       author = 'mugwort_rc',
       author_email = 'mugwort rc at gmail com',
-      url = 'https://bitbucket.org/mugwort_rc/pyxerces',
+      url = 'https://github.com/mugwort_rc/pyxerces',
       license = 'Apache Software License, Version 2.0',
       packages = ['Xerces'],
 
