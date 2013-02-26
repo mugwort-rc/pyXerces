@@ -13,7 +13,7 @@ Usage
 	parser = Xerces.XercesDOMParser()
 	
 	xml = open('sample.xml', 'rb').read()
-	input = Xerces.MemBufInputSource(Xerces.unsigned_cast(xml), len(xml), 'PyXercesDOMParser')
+	input = Xerces.MemBufInputSource(xml, 'PyXercesDOMParser')
 	parser.parse(input)
 	dom = parser.getDocument()
 
