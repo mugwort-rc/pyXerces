@@ -58,6 +58,7 @@
 #include "framework/MemBufFormatTarget.h"
 #include "framework/MemBufInputSource.h"
 #include "framework/MemoryManager.h"
+#include "framework/XMLBuffer.h"
 #include "framework/XMLContentModel.h"
 #include "framework/XMLDocumentHandler.h"
 #include "framework/XMLElementDecl.h"
@@ -201,6 +202,7 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::MemBufFormatTarget_init();
 	pyxerces::MemBufInputSource_init();
 	pyxerces::MemoryManager_init();
+	pyxerces::XMLBuffer_init();
 	pyxerces::XMLContentModel_init();
 	pyxerces::XMLElementDecl_init();
 	pyxerces::XMLGrammarDescription_init();
