@@ -13,4 +13,6 @@ namespace pyxerces {
 void DOMXPathException_init(void);
 
 } /* namespace pyxerces */
+
 #endif /* DOMXPATHEXCEPTION_H_ */
+

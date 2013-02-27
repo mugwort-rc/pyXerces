@@ -28,6 +28,7 @@
 #include "dom/DOMImplementationList.h"
 #include "dom/DOMImplementationLS.h"
 #include "dom/DOMImplementationRegistry.h"
+#include "dom/DOMLSException.h"
 #include "dom/DOMLSInput.h"
 #include "dom/DOMLSOutput.h"
 #include "dom/DOMLSParser.h"
@@ -42,6 +43,7 @@
 #include "dom/DOMNotation.h"
 #include "dom/DOMProcessingInstruction.h"
 #include "dom/DOMRange.h"
+#include "dom/DOMRangeException.h"
 #include "dom/DOMStringList.h"
 #include "dom/DOMText.h"
 #include "dom/DOMTreeWalker.h"
@@ -77,13 +79,31 @@
 #include "sax/EntityResolver.h"
 #include "sax/ErrorHandler.h"
 #include "sax/InputSource.h"
+#include "sax/SAXException.h"
+#include "sax/SAXParseException.h"
 
 // util
+#include "util/ArrayIndexOutOfBoundsException.h"
 #include "util/BinInputStream.h"
+#include "util/EmptyStackException.h"
+#include "util/IllegalArgumentException.h"
+#include "util/InvalidCastException.h"
+#include "util/IOException.h"
+#include "util/NoSuchElementException.h"
+#include "util/NullPointerException.h"
+#include "util/NumberFormatException.h"
+#include "util/OutOfMemoryException.h"
+#include "util/ParseException.h"
 #include "util/PlatformUtils.h"
 #include "util/QName.h"
+#include "util/RuntimeException.h"
+#include "util/SchemaDateTimeException.h"
 #include "util/SecurityManager.h"
+#include "util/TranscodingException.h"
 #include "util/TransService.h"
+#include "util/UnexpectedEOFException.h"
+#include "util/UnsupportedEncodingException.h"
+#include "util/UTFDataFormatException.h"
 #include "util/XMLEntityResolver.h"
 #include "util/XMLException.h"
 #include "util/XMLExceptMsgs.h"
@@ -97,7 +117,10 @@
 #include "validators/common/ContentLeafNameTypeVector.h"
 #include "validators/common/ContentSpecNode.h"
 #include "validators/common/Grammar.h"
+#include "validators/datatype/InvalidDatatypeFacetException.h"
+#include "validators/datatype/InvalidDatatypeValueException.h"
 #include "validators/DTD/DocTypeHandler.h"
+#include "validators/schema/identity/XPathException.h"
 
 BOOST_PYTHON_MODULE(__Xerces)
 {
@@ -125,6 +148,8 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::XSerializable_init();
 	// sax
 	pyxerces::InputSource_init();
+	// util
+	pyxerces::XMLException_init();
 	// validators/DTD
 	pyxerces::DocTypeHandler_init();
 
@@ -148,6 +173,7 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::DOMImplementation_init();
 	pyxerces::DOMImplementationList_init();
 	pyxerces::DOMImplementationRegistry_init();
+	pyxerces::DOMLSException_init();
 	pyxerces::DOMLSInput_init();
 	pyxerces::DOMLSOutput_init();
 	pyxerces::DOMLSParser_init();
@@ -160,6 +186,7 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::DOMNotation_init();
 	pyxerces::DOMProcessingInstruction_init();
 	pyxerces::DOMRange_init();
+	pyxerces::DOMRangeException_init();
 	pyxerces::DOMStringList_init();
 	pyxerces::DOMTreeWalker_init();
 	pyxerces::DOMTypeInfo_init();
@@ -193,16 +220,33 @@ BOOST_PYTHON_MODULE(__Xerces)
 	// --------------------------------------------------
 	pyxerces::EntityResolver_init();
 	pyxerces::ErrorHandler_init();
+	pyxerces::SAXException_init();
+	pyxerces::SAXParseException_init();
 
 	// ==================================================
 	// util
 	// --------------------------------------------------
+	pyxerces::ArrayIndexOutOfBoundsException_init();
 	pyxerces::BinInputStream_init();
+	pyxerces::EmptyStackException_init();
+	pyxerces::IllegalArgumentException_init();
+	pyxerces::InvalidCastException_init();
+	pyxerces::IOException_init();
+	pyxerces::NoSuchElementException_init();
+	pyxerces::NullPointerException_init();
+	pyxerces::NumberFormatException_init();
+	pyxerces::OutOfMemoryException_init();
+	pyxerces::ParseException_init();
 	pyxerces::PlatformUtils_init();
 	pyxerces::QName_init();
+	pyxerces::RuntimeException_init();
+	pyxerces::SchemaDateTimeException_init();
 	pyxerces::SecurityManager_init();
+	pyxerces::TranscodingException_init();
 	pyxerces::TransService_init();
-	pyxerces::XMLException_init();
+	pyxerces::UnexpectedEOFException_init();
+	pyxerces::UnsupportedEncodingException_init();
+	pyxerces::UTFDataFormatException_init();
 	pyxerces::XMLExceptMsgs_init();
 	pyxerces::XMLFileMgr_init();
 	pyxerces::XMLMsgLoader_init();
@@ -213,7 +257,13 @@ BOOST_PYTHON_MODULE(__Xerces)
 	// ==================================================
 	// validators
 	// --------------------------------------------------
+	// common
 	pyxerces::ContentLeafNameTypeVector_init();
 	pyxerces::ContentSpecNode_init();
 	pyxerces::Grammar_init();
+	// datatype
+	pyxerces::InvalidDatatypeFacetException_init();
+	pyxerces::InvalidDatatypeValueException_init();
+	// schema
+	pyxerces::XPathException_init();
 }

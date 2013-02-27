@@ -13,12 +13,20 @@
 
 namespace pyxerces {
 
+PyObject* pyXercesDOMXPathExceptionType = nullptr;
+
+void translateDOMXPathException(const xercesc::DOMXPathException& e) {
+	assert(pyXercesDOMXPathExceptionType != nullptr);
+	boost::python::object instance(e);
+	PyErr_SetObject(pyXercesDOMXPathExceptionType, instance.ptr());
+}
+
 void DOMXPathException_init(void) {
 	//! xercesc::DOMXPathException
 	auto DOMXPathException = boost::python::class_<xercesc::DOMXPathException, boost::noncopyable, boost::python::bases<xercesc::DOMException> >("DOMXPathException")
-			.def(boost::python::init<short, short, boost::python::optional<xercesc::MemoryManager* const> >())
-			.def(boost::python::init<const xercesc::DOMXPathException&>())
-			;
+				.def(boost::python::init<short, short, boost::python::optional<xercesc::MemoryManager* const > >())
+				.def(boost::python::init<const xercesc::DOMXPathException&>())
+				;
 	boost::python::scope DOMXPathExceptionScope = DOMXPathException;
 	//! xercesc::DOMXPathException::ExceptionCode
 	boost::python::enum_<xercesc::DOMXPathException::ExceptionCode>("ExceptionCode")
@@ -27,6 +35,8 @@ void DOMXPathException_init(void) {
 			.value("NO_RESULT_ERROR", xercesc::DOMXPathException::NO_RESULT_ERROR)
 			.export_values()
 			;
+	pyXercesDOMXPathExceptionType = DOMXPathException.ptr();
+	boost::python::register_exception_translator<xercesc::DOMXPathException>(&translateDOMXPathException);
 }
 
 } /* namespace pyxerces */

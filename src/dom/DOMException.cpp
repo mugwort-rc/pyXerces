@@ -28,6 +28,7 @@ void DOMException_init(void) {
 			.def(boost::python::init<short, boost::python::optional<short, xercesc::MemoryManager*> >())
 			.def(boost::python::init<const xercesc::DOMException&>())
 			.def("getMessage", &xercesc::DOMException::getMessage, boost::python::return_value_policy<boost::python::return_by_value>())
+			.def_readwrite("code", &xercesc::DOMException::code)
 			;
 	pyXercesDOMExceptionType = DOMException.ptr();
 	boost::python::register_exception_translator<xercesc::DOMException>(&translateDOMException);
