@@ -353,7 +353,7 @@ std::string XMLString::reprString(void) const {
 	// pprint
 	boost::python::exec("import pprint\n"
 						"pp  = pprint.PrettyPrinter()\n"
-						"__res = pp.pformat(obj)", global_ns, global_ns);
+						"__res = 'X'+pp.pformat(obj)", global_ns, global_ns);
 	return boost::python::extract<std::string>(global_ns["__res"]);
 }
 
@@ -391,11 +391,35 @@ char* signed_cast(unsigned char* ch) {
 
 // ==================================================
 
-//! const XMLCh* -> XMLChPointerWrapper
+//! const XMLCh* -> XMLString
 class ConstXMLChToPythonConverter {
 public:
 	static PyObject* convert(const XMLCh* const ptr) {
 		return boost::python::incref(boost::python::object(XMLString(ptr)).ptr());
+	}
+};
+
+//! XMLChPtr -> XMLString
+class XMLChPtrToXMLStringConverter {
+public:
+	static PyObject* convert(const XMLChPtr& ptr) {
+		return boost::python::incref(boost::python::object(ptr.toString()).ptr());
+	}
+};
+
+class XMLChPtrConverter {
+public:
+	static void* convertible(PyObject* obj) {
+		if( ! boost::python::extract<XMLChPtr>(obj).check()) {
+			return nullptr;
+		}
+		return obj;
+	}
+
+	static void construct(PyObject* obj, boost::python::converter::rvalue_from_python_stage1_data* data) {
+		XMLChPtr ptr = boost::python::extract<XMLChPtr>(obj);
+		XMLString* storage = new(reinterpret_cast<boost::python::converter::rvalue_from_python_storage<XMLString>*>(data)->storage.bytes) XMLString(ptr.ptr());
+		data->convertible = storage;
 	}
 };
 
@@ -465,6 +489,9 @@ void XMLString_init(void) {
 
 	//! const XMLCh* -> XMLString
 	boost::python::to_python_converter<const XMLCh*, pyxerces::ConstXMLChToPythonConverter>();
+
+	//! XMLChPtr -> XMLString
+	boost::python::converter::registry::push_back(&XMLChPtrConverter::convertible, &XMLChPtrConverter::construct, boost::python::type_id<XMLString>());
 }
 
 } /* namespace pyxerces */

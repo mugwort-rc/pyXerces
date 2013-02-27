@@ -11,13 +11,45 @@
 #include <xercesc/framework/MemoryManager.hpp>	//!< for forward declaration
 #include <xercesc/framework/XMLRecognizer.hpp>
 
+#include "../util/XMLString.h"
+
 namespace pyxerces {
 
 BOOST_PYTHON_FUNCTION_OVERLOADS(XMLRecognizerNameForEncodingOverloads, xercesc::XMLRecognizer::nameForEncoding, 1, 2)
 
+class XMLRecognizerDefVisitor
+: public boost::python::def_visitor<XMLRecognizerDefVisitor> {
+friend class def_visitor_access;
+
+public:
+template <class T>
+void visit(T& class_) const {
+	class_
+	.def("basicEncodingProbe", static_cast<xercesc::XMLRecognizer::Encodings(*)(const std::string&)>(&XMLRecognizerDefVisitor::basicEncodingProbe))
+	.def("encodingForName", static_cast<xercesc::XMLRecognizer::Encodings(*)(const XMLString&)>(&XMLRecognizerDefVisitor::encodingForName))
+	.def("encodingForName", static_cast<xercesc::XMLRecognizer::Encodings(*)(const std::string&)>(&XMLRecognizerDefVisitor::encodingForName))
+	;
+}
+
+static xercesc::XMLRecognizer::Encodings basicEncodingProbe(const std::string& rawBuffer) {
+	return xercesc::XMLRecognizer::basicEncodingProbe(reinterpret_cast<const unsigned char*>(rawBuffer.c_str()), rawBuffer.size());
+}
+
+static xercesc::XMLRecognizer::Encodings encodingForName(const XMLString& theEncName) {
+	return xercesc::XMLRecognizer::encodingForName(theEncName.ptr());
+}
+
+static xercesc::XMLRecognizer::Encodings encodingForName(const std::string& theEncName) {
+	XMLString buff(theEncName);
+	return XMLRecognizerDefVisitor::encodingForName(buff);
+}
+
+};
+
 void XMLRecognizer_init(void) {
 	//! xercesc::XMLRecognizer
 	auto XMLRecognizer = boost::python::class_<xercesc::XMLRecognizer, boost::noncopyable>("XMLRecognizer", boost::python::no_init)
+			.def(XMLRecognizerDefVisitor())
 			.def("basicEncodingProbe", &xercesc::XMLRecognizer::basicEncodingProbe)
 			.def("encodingForName", &xercesc::XMLRecognizer::encodingForName)
 			.def("nameForEncoding", &xercesc::XMLRecognizer::nameForEncoding, XMLRecognizerNameForEncodingOverloads()[boost::python::return_value_policy<boost::python::return_by_value>()])

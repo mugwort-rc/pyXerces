@@ -21,8 +21,13 @@ public:
 template <class T>
 void visit(T& class_) const {
 	class_
+	.def("writeChars", &MemBufFormatTargetDefVisitor::writeChars)
 	.def("getStringBuffer", &MemBufFormatTargetDefVisitor::getStringBuffer)
 	;
+}
+
+static void writeChars(xercesc::MemBufFormatTarget& self, const std::string& toWrite, xercesc::XMLFormatter* formatter) {
+	self.writeChars(reinterpret_cast<const unsigned char*>(toWrite.c_str()), toWrite.size(), formatter);
 }
 
 static std::string getStringBuffer(xercesc::MemBufFormatTarget& self) {

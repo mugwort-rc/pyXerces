@@ -11,13 +11,68 @@
 #include <xercesc/util/TransService.hpp>		//!< for forward declaration
 #include <xercesc/framework/XMLFormatter.hpp>
 
+#include "../util/XMLString.h"
+
 namespace pyxerces {
 
+//! XMLFormatter
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(XMLFormatterFormatBufOverloads, formatBuf, 2, 4)
+
+class XMLFormatterDefVisitor
+: public boost::python::def_visitor<XMLFormatterDefVisitor> {
+friend class def_visitor_access;
+
+public:
+template <class T>
+void visit(T& class_) const {
+	class_
+	.def("formatBuf", static_cast<void(*)(xercesc::XMLFormatter&, const XMLString&, const XMLSize_t, const xercesc::XMLFormatter::EscapeFlags, const xercesc::XMLFormatter::UnRepFlags)>(&XMLFormatterDefVisitor::formatBuf))
+	.def("formatBuf", static_cast<void(*)(xercesc::XMLFormatter&, const std::string&, const XMLSize_t, const xercesc::XMLFormatter::EscapeFlags, const xercesc::XMLFormatter::UnRepFlags)>(&XMLFormatterDefVisitor::formatBuf))
+	.def("formatBuf", static_cast<void(*)(xercesc::XMLFormatter&, const XMLString&, const XMLSize_t, const xercesc::XMLFormatter::EscapeFlags)>(&XMLFormatterDefVisitor::formatBuf))
+	.def("formatBuf", static_cast<void(*)(xercesc::XMLFormatter&, const std::string&, const XMLSize_t, const xercesc::XMLFormatter::EscapeFlags)>(&XMLFormatterDefVisitor::formatBuf))
+	.def("formatBuf", static_cast<void(*)(xercesc::XMLFormatter&, const XMLString&, const XMLSize_t)>(&XMLFormatterDefVisitor::formatBuf))
+	.def("formatBuf", static_cast<void(*)(xercesc::XMLFormatter&, const std::string&, const XMLSize_t)>(&XMLFormatterDefVisitor::formatBuf))
+	.def("writeBOM", static_cast<void(*)(xercesc::XMLFormatter&, const std::string&, const XMLSize_t)>(&XMLFormatterDefVisitor::writeBOM))
+	;
+}
+
+static void formatBuf(xercesc::XMLFormatter& self, const XMLString& toFormat, const XMLSize_t count, const xercesc::XMLFormatter::EscapeFlags escapeFlags, const xercesc::XMLFormatter::UnRepFlags unrepFlags) {
+	self.formatBuf(toFormat.ptr(), count, escapeFlags, unrepFlags);
+}
+
+static void formatBuf(xercesc::XMLFormatter& self, const std::string& toFormat, const XMLSize_t count, const xercesc::XMLFormatter::EscapeFlags escapeFlags, const xercesc::XMLFormatter::UnRepFlags unrepFlags) {
+	XMLString buff(toFormat);
+	XMLFormatterDefVisitor::formatBuf(self, buff, count, escapeFlags, unrepFlags);
+}
+
+static void formatBuf(xercesc::XMLFormatter& self, const XMLString& toFormat, const XMLSize_t count, const xercesc::XMLFormatter::EscapeFlags escapeFlags) {
+	self.formatBuf(toFormat.ptr(), count, escapeFlags, xercesc::XMLFormatter::DefaultUnRep);
+}
+
+static void formatBuf(xercesc::XMLFormatter& self, const std::string& toFormat, const XMLSize_t count, const xercesc::XMLFormatter::EscapeFlags escapeFlags) {
+	XMLString buff(toFormat);
+	XMLFormatterDefVisitor::formatBuf(self, buff, count, escapeFlags);
+}
+
+static void formatBuf(xercesc::XMLFormatter& self, const XMLString& toFormat, const XMLSize_t count) {
+	self.formatBuf(toFormat.ptr(), count, xercesc::XMLFormatter::DefaultEscape, xercesc::XMLFormatter::DefaultUnRep);
+}
+
+static void formatBuf(xercesc::XMLFormatter& self, const std::string& toFormat, const XMLSize_t count) {
+	XMLString buff(toFormat);
+	XMLFormatterDefVisitor::formatBuf(self, buff, count);
+}
+
+static void writeBOM(xercesc::XMLFormatter& self, const std::string& toFormat, const XMLSize_t count) {
+	self.writeBOM(reinterpret_cast<const unsigned char*>(toFormat.c_str()), count);
+}
+
+};
 
 void XMLFormatter_init(void) {
 	//! xercesc::XMLFormatter
 	auto XMLFormatter = boost::python::class_<xercesc::XMLFormatter, boost::noncopyable>("XMLFormatter", boost::python::init<const XMLCh* const, const XMLCh* const, xercesc::XMLFormatTarget* const, boost::python::optional<const xercesc::XMLFormatter::EscapeFlags, const xercesc::XMLFormatter::UnRepFlags, xercesc::MemoryManager* const> >())
+			.def(XMLFormatterDefVisitor())
 			.def(boost::python::init<const char* const, const char* const, xercesc::XMLFormatTarget* const, boost::python::optional<const xercesc::XMLFormatter::EscapeFlags, const xercesc::XMLFormatter::UnRepFlags, xercesc::MemoryManager* const> >())
 			.def(boost::python::init<const XMLCh* const, xercesc::XMLFormatTarget* const, boost::python::optional<const xercesc::XMLFormatter::EscapeFlags, const xercesc::XMLFormatter::UnRepFlags, xercesc::MemoryManager* const> >())
 			.def(boost::python::init<const char* const, xercesc::XMLFormatTarget* const, boost::python::optional<const xercesc::XMLFormatter::EscapeFlags, const xercesc::XMLFormatter::UnRepFlags, xercesc::MemoryManager* const> >())

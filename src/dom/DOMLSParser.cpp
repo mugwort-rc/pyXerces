@@ -14,14 +14,40 @@
 #include <xercesc/dom/DOMDocument.hpp>		//!< for forward declaration
 #include <xercesc/dom/DOMLSParser.hpp>
 
+#include "../util/XMLString.h"
+
 namespace pyxerces {
 
 //! DOMLSParser
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(DOMLSParserLoadGrammarOverloads, loadGrammar, 2, 3)
 
+class DOMLSParserDefVisitor
+: public boost::python::def_visitor<DOMLSParserDefVisitor>
+{
+friend class def_visitor_access;
+public:
+template <class T>
+void visit(T& class_) const {
+	class_
+	.def("getGrammar", static_cast<xercesc::Grammar*(*)(xercesc::DOMLSParser&, const XMLString&)>(&DOMLSParserDefVisitor::getGrammar), boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("getGrammar", static_cast<xercesc::Grammar*(*)(xercesc::DOMLSParser&, const std::string&)>(&DOMLSParserDefVisitor::getGrammar), boost::python::return_value_policy<boost::python::reference_existing_object>())
+	;
+}
+
+static xercesc::Grammar* getGrammar(xercesc::DOMLSParser& self, const XMLString& nameSpaceKey) {
+	return self.getGrammar(nameSpaceKey.ptr());
+}
+
+static xercesc::Grammar* getGrammar(xercesc::DOMLSParser& self, const std::string& nameSpaceKey) {
+	XMLString buff(nameSpaceKey);
+	return DOMLSParserDefVisitor::getGrammar(self, buff);
+}
+};
+
 void DOMLSParser_init(void) {
 	//! xercesc::DOMLSParser
 	auto DOMLSParser = boost::python::class_<xercesc::DOMLSParser, boost::noncopyable>("DOMLSParser", boost::python::no_init)
+			.def(DOMLSParserDefVisitor())
 			.def("getDomConfig", &xercesc::DOMLSParser::getDomConfig, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getFilter", &xercesc::DOMLSParser::getFilter, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getAsync", &xercesc::DOMLSParser::getAsync)
