@@ -12,6 +12,17 @@
 #include <xercesc/dom/DOMNamedNodeMap.hpp>		//!< for forward declaration
 #include <xercesc/dom/DOMNodeList.hpp>			//!< for forward declaration
 #include <xercesc/dom/DOMUserDataHandler.hpp>	//!< for forward declaration
+#include <xercesc/dom/DOMXPathNamespace.hpp>	//!< for forward declaration
+#include <xercesc/dom/DOMAttr.hpp>				//!< for forward declaration
+#include <xercesc/dom/DOMCharacterData.hpp>		//!< for forward declaration
+#include <xercesc/dom/DOMDocumentFragment.hpp>	//!< for forward declaration
+#include <xercesc/dom/DOMDocumentType.hpp>		//!< for forward declaration
+#include <xercesc/dom/DOMElement.hpp>			//!< for forward declaration
+#include <xercesc/dom/DOMEntity.hpp>			//!< for forward declaration
+#include <xercesc/dom/DOMEntityReference.hpp>	//!< for forward declaration
+#include <xercesc/dom/DOMNotation.hpp>			//!< for forward declaration
+#include <xercesc/dom/DOMProcessingInstruction.hpp>	//!< for forward declaration
+#include <xercesc/dom/DOMXPathNamespace.hpp>	//!< for forward declaration
 #include <xercesc/dom/DOMNode.hpp>
 
 #include "../util/XMLString.h"
@@ -26,6 +37,18 @@ public:
 template <class T>
 void visit(T& class_) const {
 	class_
+	.def("toDOMNode", &DOMNodeDefVisitor::toDOMNode, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("toDOMAttr", &DOMNodeDefVisitor::toDOMAttr, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("toDOMCharacterData", &DOMNodeDefVisitor::toDOMCharacterData, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("toDOMDocument", &DOMNodeDefVisitor::toDOMDocument, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("toDOMDocumentFragment", &DOMNodeDefVisitor::toDOMDocumentFragment, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("toDOMDocumentType", &DOMNodeDefVisitor::toDOMDocumentType, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("toDOMElement", &DOMNodeDefVisitor::toDOMElement, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("toDOMEntity", &DOMNodeDefVisitor::toDOMEntity, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("toDOMEntityReference", &DOMNodeDefVisitor::toDOMEntityReference, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("toDOMNotation", &DOMNodeDefVisitor::toDOMNotation, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("toDOMProcessingInstruction", &DOMNodeDefVisitor::toDOMProcessingInstruction, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("toDOMXPathNamespace", &DOMNodeDefVisitor::toDOMXPathNamespace, boost::python::return_value_policy<boost::python::reference_existing_object>())
 	.def("setNodeValue", static_cast<void(*)(xercesc::DOMNode&, const XMLString&)>(&DOMNodeDefVisitor::setNodeValue))
 	.def("setNodeValue", static_cast<void(*)(xercesc::DOMNode&, const std::string&)>(&DOMNodeDefVisitor::setNodeValue))
 	.def("isSupported", static_cast<bool(*)(xercesc::DOMNode&, const XMLString&, const XMLString&)>(&DOMNodeDefVisitor::isSupported))
@@ -47,6 +70,87 @@ void visit(T& class_) const {
 	.def("getFeature", static_cast<void*(*)(xercesc::DOMNode&, const XMLString&, const XMLString&)>(&DOMNodeDefVisitor::getFeature), boost::python::return_value_policy<boost::python::return_opaque_pointer>())
 	.def("getFeature", static_cast<void*(*)(xercesc::DOMNode&, const std::string&, const std::string&)>(&DOMNodeDefVisitor::getFeature), boost::python::return_value_policy<boost::python::return_opaque_pointer>())
 	;
+}
+
+static xercesc::DOMNode* toDOMNode(xercesc::DOMNode& self) {
+	return &self;
+}
+
+static xercesc::DOMAttr* toDOMAttr(xercesc::DOMNode& self) {
+	if(self.getNodeType() != xercesc::DOMNode::ATTRIBUTE_NODE){
+		return nullptr;
+	}
+	return reinterpret_cast<xercesc::DOMAttr*>(&self);
+}
+
+static xercesc::DOMCharacterData* toDOMCharacterData(xercesc::DOMNode& self) {
+	if(self.getNodeType() != xercesc::DOMNode::TEXT_NODE && self.getNodeType() != xercesc::DOMNode::CDATA_SECTION_NODE && self.getNodeType() != xercesc::DOMNode::COMMENT_NODE){
+		return nullptr;
+	}
+	return reinterpret_cast<xercesc::DOMCharacterData*>(&self);
+}
+
+static xercesc::DOMDocument* toDOMDocument(xercesc::DOMNode& self) {
+	if(self.getNodeType() != xercesc::DOMNode::DOCUMENT_NODE){
+		return nullptr;
+	}
+	return reinterpret_cast<xercesc::DOMDocument*>(&self);
+}
+
+static xercesc::DOMDocumentFragment* toDOMDocumentFragment(xercesc::DOMNode& self) {
+	if(self.getNodeType() != xercesc::DOMNode::DOCUMENT_FRAGMENT_NODE){
+		return nullptr;
+	}
+	return reinterpret_cast<xercesc::DOMDocumentFragment*>(&self);
+}
+
+static xercesc::DOMDocumentType* toDOMDocumentType(xercesc::DOMNode& self) {
+	if(self.getNodeType() != xercesc::DOMNode::DOCUMENT_TYPE_NODE){
+		return nullptr;
+	}
+	return reinterpret_cast<xercesc::DOMDocumentType*>(&self);
+}
+
+static xercesc::DOMElement* toDOMElement(xercesc::DOMNode& self) {
+	if(self.getNodeType() != xercesc::DOMNode::ELEMENT_NODE){
+		return nullptr;
+	}
+	return reinterpret_cast<xercesc::DOMElement*>(&self);
+}
+
+static xercesc::DOMEntity* toDOMEntity(xercesc::DOMNode& self) {
+	if(self.getNodeType() != xercesc::DOMNode::ENTITY_NODE){
+		return nullptr;
+	}
+	return reinterpret_cast<xercesc::DOMEntity*>(&self);
+}
+
+static xercesc::DOMEntityReference* toDOMEntityReference(xercesc::DOMNode& self) {
+	if(self.getNodeType() != xercesc::DOMNode::ENTITY_REFERENCE_NODE){
+		return nullptr;
+	}
+	return reinterpret_cast<xercesc::DOMEntityReference*>(&self);
+}
+
+static xercesc::DOMNotation* toDOMNotation(xercesc::DOMNode& self) {
+	if(self.getNodeType() != xercesc::DOMNode::NOTATION_NODE){
+		return nullptr;
+	}
+	return reinterpret_cast<xercesc::DOMNotation*>(&self);
+}
+
+static xercesc::DOMProcessingInstruction* toDOMProcessingInstruction(xercesc::DOMNode& self) {
+	if(self.getNodeType() != xercesc::DOMNode::PROCESSING_INSTRUCTION_NODE){
+		return nullptr;
+	}
+	return reinterpret_cast<xercesc::DOMProcessingInstruction*>(&self);
+}
+
+static xercesc::DOMXPathNamespace* toDOMXPathNamespace(xercesc::DOMNode& self) {
+	if(self.getNodeType() != xercesc::DOMXPathNamespace::XPATH_NAMESPACE_NODE){
+		return nullptr;
+	}
+	return reinterpret_cast<xercesc::DOMXPathNamespace*>(&self);
 }
 
 static void setNodeValue(xercesc::DOMNode& self, const XMLString& nodeValue) {
