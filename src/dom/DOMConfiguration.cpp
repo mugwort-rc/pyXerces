@@ -8,6 +8,7 @@
 #include "DOMConfiguration.h"
 
 #include <boost/python.hpp>
+#include <xercesc/dom/DOMErrorHandler.hpp>	//!< for forward declaration
 #include <xercesc/dom/DOMConfiguration.hpp>
 
 #include "../util/XMLString.h"
@@ -32,6 +33,8 @@ void visit(T& class_) const {
 	.def("canSetParameter", static_cast<bool(*)(xercesc::DOMConfiguration&, const std::string&, const void*)>(&DOMConfigurationDefVisitor::canSetParameter))
 	.def("canSetParameter", static_cast<bool(*)(xercesc::DOMConfiguration&, const XMLString&, bool)>(&DOMConfigurationDefVisitor::canSetParameter))
 	.def("canSetParameter", static_cast<bool(*)(xercesc::DOMConfiguration&, const std::string&, bool)>(&DOMConfigurationDefVisitor::canSetParameter))
+	.def("setParameter", &DOMConfigurationDefVisitor::setParameter<XMLString, xercesc::DOMErrorHandler>)
+	.def("setParameter", &DOMConfigurationDefVisitor::setParameter<std::string, xercesc::DOMErrorHandler>)
 	;
 }
 
@@ -79,6 +82,13 @@ static bool canSetParameter(xercesc::DOMConfiguration& self, const std::string& 
 	XMLString buff(name);
 	return DOMConfigurationDefVisitor::canSetParameter(self, buff, value);
 }
+
+// template value
+template <typename STR, typename T>
+static void setParameter(xercesc::DOMConfiguration& self, const STR& name, const T& value) {
+	DOMConfigurationDefVisitor::setParameter(self, XMLString(name), reinterpret_cast<const void*>(&value));
+}
+
 };
 
 void DOMConfiguration_init(void) {
