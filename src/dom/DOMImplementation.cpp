@@ -7,6 +7,8 @@
 
 #include "DOMImplementation.h"
 
+#include <boost/scoped_ptr.hpp>
+
 #include <boost/python.hpp>
 #include <xercesc/dom/DOMLSInput.hpp>			//!< for forward declaration DOMImplementationLS
 #include <xercesc/dom/DOMLSOutput.hpp>			//!< for forward declaration DOMImplementationLS
@@ -45,8 +47,7 @@ void visit(T& class_) const {
 	.def("createDocument", static_cast<xercesc::DOMDocument*(*)(xercesc::DOMImplementation&, const std::string&, const std::string&, xercesc::DOMDocumentType*)>(&DOMImplementationDefVisitor::createDocument), boost::python::return_value_policy<boost::python::reference_existing_object>())
 	.def("getFeature", static_cast<void*(*)(xercesc::DOMImplementation&, const XMLString&, const XMLString&)>(&DOMImplementationDefVisitor::getFeature), boost::python::return_value_policy<boost::python::return_opaque_pointer>())
 	.def("getFeature", static_cast<void*(*)(xercesc::DOMImplementation&, const std::string&, const std::string&)>(&DOMImplementationDefVisitor::getFeature), boost::python::return_value_policy<boost::python::return_opaque_pointer>())
-	.def("loadDOMExceptionMsg", static_cast<bool(*)(xercesc::DOMImplementation&, const short, const XMLString&, const XMLSize_t)>(&DOMImplementationDefVisitor::loadDOMExceptionMsg))
-	.def("loadDOMExceptionMsg", static_cast<bool(*)(xercesc::DOMImplementation&, const short, const std::string&, const XMLSize_t)>(&DOMImplementationDefVisitor::loadDOMExceptionMsg))
+	.def("loadDOMExceptionMsg", &DOMImplementationDefVisitor::loadDOMExceptionMsg)
 	;
 }
 
@@ -99,13 +100,11 @@ static void* getFeature(xercesc::DOMImplementation& self, const std::string& fea
 	return DOMImplementationDefVisitor::getFeature(self, buff1, buff2);
 }
 
-static bool loadDOMExceptionMsg(xercesc::DOMImplementation& self, const short msgToLoad, const XMLString& toFill, const XMLSize_t maxChars) {
-	return self.loadDOMExceptionMsg(msgToLoad, toFill.ptr(), maxChars);
-}
-
-static bool loadDOMExceptionMsg(xercesc::DOMImplementation& self, const short msgToLoad, const std::string& toFill, const XMLSize_t maxChars) {
-	XMLString buff(toFill);
-	return DOMImplementationDefVisitor::loadDOMExceptionMsg(self, msgToLoad, buff, maxChars);
+static boost::python::tuple loadDOMExceptionMsg(xercesc::DOMImplementation& self, const short msgToLoad, const XMLSize_t maxChars) {
+	boost::scoped_ptr<XMLCh> buff(new XMLCh[maxChars+1]);
+	bool        ret = self.loadDOMExceptionMsg(msgToLoad, buff.get(), maxChars);
+	std::string str = XMLString(buff.get()).toString();
+	return boost::python::make_tuple(ret, str);
 }
 
 };
