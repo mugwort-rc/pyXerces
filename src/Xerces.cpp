@@ -23,11 +23,14 @@
 #include "dom/DOMElement.h"
 #include "dom/DOMEntity.h"
 #include "dom/DOMEntityReference.h"
+#include "dom/DOMError.h"
+#include "dom/DOMErrorHandler.h"
 #include "dom/DOMException.h"
 #include "dom/DOMImplementation.h"
 #include "dom/DOMImplementationList.h"
 #include "dom/DOMImplementationLS.h"
 #include "dom/DOMImplementationRegistry.h"
+#include "dom/DOMLocator.h"
 #include "dom/DOMLSException.h"
 #include "dom/DOMLSInput.h"
 #include "dom/DOMLSOutput.h"
@@ -172,9 +175,12 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::DOMElement_init();
 	pyxerces::DOMEntity_init();
 	pyxerces::DOMEntityReference_init();
+	pyxerces::DOMError_init();
+	pyxerces::DOMErrorHandler_init();
 	pyxerces::DOMImplementation_init();
 	pyxerces::DOMImplementationList_init();
 	pyxerces::DOMImplementationRegistry_init();
+	pyxerces::DOMLocator_init();
 	pyxerces::DOMLSException_init();
 	pyxerces::DOMLSInput_init();
 	pyxerces::DOMLSOutput_init();
