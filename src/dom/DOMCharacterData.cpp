@@ -14,66 +14,49 @@
 
 namespace pyxerces {
 
+template <class STR>
 class DOMCharacterDataDefVisitor
-: public boost::python::def_visitor<DOMCharacterDataDefVisitor>
+: public boost::python::def_visitor<DOMCharacterDataDefVisitor<STR> >
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("appendData", static_cast<void(*)(xercesc::DOMCharacterData&, const XMLString&)>(&DOMCharacterDataDefVisitor::appendData))
-	.def("appendData", static_cast<void(*)(xercesc::DOMCharacterData&, const std::string&)>(&DOMCharacterDataDefVisitor::appendData))
-	.def("insertData", static_cast<void(*)(xercesc::DOMCharacterData&, XMLSize_t, const XMLString&)>(&DOMCharacterDataDefVisitor::insertData))
-	.def("insertData", static_cast<void(*)(xercesc::DOMCharacterData&, XMLSize_t, const std::string&)>(&DOMCharacterDataDefVisitor::insertData))
-	.def("replaceData", static_cast<void(*)(xercesc::DOMCharacterData&, XMLSize_t, XMLSize_t, const XMLString&)>(&DOMCharacterDataDefVisitor::replaceData))
-	.def("replaceData", static_cast<void(*)(xercesc::DOMCharacterData&, XMLSize_t, XMLSize_t, const std::string&)>(&DOMCharacterDataDefVisitor::replaceData))
-	.def("setData", static_cast<void(*)(xercesc::DOMCharacterData&, const XMLString&)>(&DOMCharacterDataDefVisitor::setData))
-	.def("setData", static_cast<void(*)(xercesc::DOMCharacterData&, const std::string&)>(&DOMCharacterDataDefVisitor::setData))
+	.def("appendData", &DOMCharacterDataDefVisitor::appendData)
+	.def("insertData", &DOMCharacterDataDefVisitor::insertData)
+	.def("replaceData", &DOMCharacterDataDefVisitor::replaceData)
+	.def("setData", &DOMCharacterDataDefVisitor::setData)
 	;
 }
 
-static void appendData(xercesc::DOMCharacterData& self, const XMLString& arg) {
-	self.appendData(arg.ptr());
-}
-
-static void appendData(xercesc::DOMCharacterData& self, const std::string& arg) {
+static void appendData(xercesc::DOMCharacterData& self, const STR& arg) {
 	XMLString buff(arg);
-	DOMCharacterDataDefVisitor::appendData(self, buff);
+	self.appendData(buff.ptr());
 }
 
-static void insertData(xercesc::DOMCharacterData& self, XMLSize_t offset, const XMLString& arg) {
-	self.insertData(offset, arg.ptr());
-}
-
-static void insertData(xercesc::DOMCharacterData& self, XMLSize_t offset, const std::string& arg) {
+static void insertData(xercesc::DOMCharacterData& self, XMLSize_t offset, const STR& arg) {
 	XMLString buff(arg);
-	DOMCharacterDataDefVisitor::insertData(self, offset, buff);
+	self.insertData(offset, buff);
 }
 
-static void replaceData(xercesc::DOMCharacterData& self, XMLSize_t offset, XMLSize_t count, const XMLString& arg) {
-	self.replaceData(offset, count, arg.ptr());
-}
-
-static void replaceData(xercesc::DOMCharacterData& self, XMLSize_t offset, XMLSize_t count, const std::string& arg) {
+static void replaceData(xercesc::DOMCharacterData& self, XMLSize_t offset, XMLSize_t count, const STR& arg) {
 	XMLString buff(arg);
-	DOMCharacterDataDefVisitor::replaceData(self, offset, count, buff);
+	self.replaceData(offset, count, buff.ptr());
 }
 
-static void setData(xercesc::DOMCharacterData& self, const XMLString& data) {
-	self.setData(data.ptr());
-}
-
-static void setData(xercesc::DOMCharacterData& self, const std::string& data) {
+static void setData(xercesc::DOMCharacterData& self, const STR& data) {
 	XMLString buff(data);
-	DOMCharacterDataDefVisitor::setData(self, buff);
+	self.setData(buff.ptr());
 }
+
 };
 
 void DOMCharacterData_init(void) {
 	//! xercesc::DOMCharacterData
 	boost::python::class_<xercesc::DOMCharacterData, boost::noncopyable, boost::python::bases<xercesc::DOMNode> >("DOMCharacterData", boost::python::no_init)
-			.def(DOMCharacterDataDefVisitor())
+			.def(DOMCharacterDataDefVisitor<XMLString>())
+			.def(DOMCharacterDataDefVisitor<std::string>())
 			.def("getData", &xercesc::DOMCharacterData::getData, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getLength", &xercesc::DOMCharacterData::getLength)
 			.def("substringData", &xercesc::DOMCharacterData::substringData, boost::python::return_value_policy<boost::python::return_by_value>())

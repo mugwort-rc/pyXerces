@@ -25,55 +25,43 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(DOMImplementationLSCreateLSSerializerOver
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(DOMImplementationLSCreateLSInputOverloads, createLSInput, 0, 1)
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(DOMImplementationLSCreateLSOutputOverloads, createLSOutput, 0, 1)
 
+template <class STR>
 class DOMImplementationLSDefVisitor
-: public boost::python::def_visitor<DOMImplementationLSDefVisitor>
+: public boost::python::def_visitor<DOMImplementationLSDefVisitor<STR> >
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("createLSParser", static_cast<xercesc::DOMLSParser*(*)(xercesc::DOMImplementationLS&, xercesc::DOMImplementationLS::DOMImplementationLSMode, const XMLString&, xercesc::MemoryManager* const, xercesc::XMLGrammarPool* const)>(&DOMImplementationLSDefVisitor::createLSParser), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createLSParser", static_cast<xercesc::DOMLSParser*(*)(xercesc::DOMImplementationLS&, xercesc::DOMImplementationLS::DOMImplementationLSMode, const std::string&, xercesc::MemoryManager* const, xercesc::XMLGrammarPool* const)>(&DOMImplementationLSDefVisitor::createLSParser), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createLSParser", static_cast<xercesc::DOMLSParser*(*)(xercesc::DOMImplementationLS&, xercesc::DOMImplementationLS::DOMImplementationLSMode, const XMLString&, xercesc::MemoryManager* const)>(&DOMImplementationLSDefVisitor::createLSParser), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createLSParser", static_cast<xercesc::DOMLSParser*(*)(xercesc::DOMImplementationLS&, xercesc::DOMImplementationLS::DOMImplementationLSMode, const std::string&, xercesc::MemoryManager* const)>(&DOMImplementationLSDefVisitor::createLSParser), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createLSParser", static_cast<xercesc::DOMLSParser*(*)(xercesc::DOMImplementationLS&, xercesc::DOMImplementationLS::DOMImplementationLSMode, const XMLString&)>(&DOMImplementationLSDefVisitor::createLSParser), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createLSParser", static_cast<xercesc::DOMLSParser*(*)(xercesc::DOMImplementationLS&, xercesc::DOMImplementationLS::DOMImplementationLSMode, const std::string&)>(&DOMImplementationLSDefVisitor::createLSParser), boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("createLSParser", static_cast<xercesc::DOMLSParser*(*)(xercesc::DOMImplementationLS&, xercesc::DOMImplementationLS::DOMImplementationLSMode, const STR&, xercesc::MemoryManager* const, xercesc::XMLGrammarPool* const)>(&DOMImplementationLSDefVisitor::createLSParser), boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("createLSParser", static_cast<xercesc::DOMLSParser*(*)(xercesc::DOMImplementationLS&, xercesc::DOMImplementationLS::DOMImplementationLSMode, const STR&, xercesc::MemoryManager* const)>(&DOMImplementationLSDefVisitor::createLSParser), boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("createLSParser", static_cast<xercesc::DOMLSParser*(*)(xercesc::DOMImplementationLS&, xercesc::DOMImplementationLS::DOMImplementationLSMode, const STR&)>(&DOMImplementationLSDefVisitor::createLSParser), boost::python::return_value_policy<boost::python::reference_existing_object>())
 	;
 }
 
-static xercesc::DOMLSParser* createLSParser(xercesc::DOMImplementationLS& self, xercesc::DOMImplementationLS::DOMImplementationLSMode mode, const XMLString& schemaType, xercesc::MemoryManager* const manager, xercesc::XMLGrammarPool* const gramPool) {
-	return self.createLSParser(mode, schemaType.ptr(), manager, gramPool);
-}
-
-static xercesc::DOMLSParser* createLSParser(xercesc::DOMImplementationLS& self, xercesc::DOMImplementationLS::DOMImplementationLSMode mode, const std::string& schemaType, xercesc::MemoryManager* const manager, xercesc::XMLGrammarPool* const gramPool) {
+static xercesc::DOMLSParser* createLSParser(xercesc::DOMImplementationLS& self, xercesc::DOMImplementationLS::DOMImplementationLSMode mode, const STR& schemaType, xercesc::MemoryManager* const manager, xercesc::XMLGrammarPool* const gramPool) {
 	XMLString buff(schemaType);
-	return DOMImplementationLSDefVisitor::createLSParser(self, mode, buff, manager, gramPool);
+	return self.createLSParser(mode, buff.ptr(), manager, gramPool);
 }
 
-static xercesc::DOMLSParser* createLSParser(xercesc::DOMImplementationLS& self, xercesc::DOMImplementationLS::DOMImplementationLSMode mode, const XMLString& schemaType, xercesc::MemoryManager* const manager) {
-	return self.createLSParser(mode, schemaType.ptr(), manager, nullptr);
-}
-
-static xercesc::DOMLSParser* createLSParser(xercesc::DOMImplementationLS& self, xercesc::DOMImplementationLS::DOMImplementationLSMode mode, const std::string& schemaType, xercesc::MemoryManager* const manager) {
+static xercesc::DOMLSParser* createLSParser(xercesc::DOMImplementationLS& self, xercesc::DOMImplementationLS::DOMImplementationLSMode mode, const STR& schemaType, xercesc::MemoryManager* const manager) {
 	XMLString buff(schemaType);
-	return DOMImplementationLSDefVisitor::createLSParser(self, mode, buff, manager, nullptr);
+	return self.createLSParser(mode, buff.ptr(), manager, nullptr);
 }
 
-static xercesc::DOMLSParser* createLSParser(xercesc::DOMImplementationLS& self, xercesc::DOMImplementationLS::DOMImplementationLSMode mode, const XMLString& schemaType) {
-	return self.createLSParser(mode, schemaType.ptr(), xercesc::XMLPlatformUtils::fgMemoryManager);
-}
-
-static xercesc::DOMLSParser* createLSParser(xercesc::DOMImplementationLS& self, xercesc::DOMImplementationLS::DOMImplementationLSMode mode, const std::string& schemaType) {
+static xercesc::DOMLSParser* createLSParser(xercesc::DOMImplementationLS& self, xercesc::DOMImplementationLS::DOMImplementationLSMode mode, const STR& schemaType) {
 	XMLString buff(schemaType);
-	return DOMImplementationLSDefVisitor::createLSParser(self, mode, buff, xercesc::XMLPlatformUtils::fgMemoryManager);
+	return self.createLSParser(mode, buff.ptr(), xercesc::XMLPlatformUtils::fgMemoryManager);
 }
+
 };
 
 void DOMImplementationLS_init(void) {
 	//! xercesc::DOMImplementationLS
 	auto DOMImplementationLS = boost::python::class_<xercesc::DOMImplementationLS, boost::noncopyable>("DOMImplementationLS", boost::python::no_init)
-			.def(DOMImplementationLSDefVisitor())
+			.def(DOMImplementationLSDefVisitor<XMLString>())
+			.def(DOMImplementationLSDefVisitor<std::string>())
 			.def("createLSParser", &xercesc::DOMImplementationLS::createLSParser, DOMImplementationLSCreateLSParserOverloads()[boost::python::return_value_policy<boost::python::reference_existing_object>()])
 			.def("createLSSerializer", &xercesc::DOMImplementationLS::createLSSerializer, DOMImplementationLSCreateLSSerializerOverloads()[boost::python::return_value_policy<boost::python::reference_existing_object>()])
 			.def("createLSInput", &xercesc::DOMImplementationLS::createLSInput, DOMImplementationLSCreateLSInputOverloads()[boost::python::return_value_policy<boost::python::reference_existing_object>()])

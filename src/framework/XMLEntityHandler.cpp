@@ -17,26 +17,22 @@
 
 namespace pyxerces {
 
+template <class STR>
 class XMLEntityHandlerDefVisitor
-: public boost::python::def_visitor<XMLEntityHandlerDefVisitor> {
+: public boost::python::def_visitor<XMLEntityHandlerDefVisitor<STR> > {
 friend class def_visitor_access;
 
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("expandSystemId", static_cast<bool(*)(xercesc::XMLEntityHandler&, const XMLString&, xercesc::XMLBuffer&)>(&XMLEntityHandlerDefVisitor::expandSystemId))
-	.def("expandSystemId", static_cast<bool(*)(xercesc::XMLEntityHandler&, const std::string&, xercesc::XMLBuffer&)>(&XMLEntityHandlerDefVisitor::expandSystemId))
+	.def("expandSystemId", &XMLEntityHandlerDefVisitor::expandSystemId)
 	;
 }
 
-static bool expandSystemId(xercesc::XMLEntityHandler& self, const XMLString& systemId, xercesc::XMLBuffer& toFill) {
-	return self.expandSystemId(systemId.ptr(), toFill);
-}
-
-static bool expandSystemId(xercesc::XMLEntityHandler& self, const std::string& systemId, xercesc::XMLBuffer& toFill) {
+static bool expandSystemId(xercesc::XMLEntityHandler& self, const STR& systemId, xercesc::XMLBuffer& toFill) {
 	XMLString buff(systemId);
-	return XMLEntityHandlerDefVisitor::expandSystemId(self, buff, toFill);
+	return self.expandSystemId(buff.ptr(), toFill);
 }
 
 };
@@ -44,7 +40,8 @@ static bool expandSystemId(xercesc::XMLEntityHandler& self, const std::string& s
 void XMLEntityHandler_init(void) {
 	//! xercesc::XMLEntityHandler
 	boost::python::class_<xercesc::XMLEntityHandler, boost::noncopyable>("XMLEntityHandler", boost::python::no_init)
-			.def(XMLEntityHandlerDefVisitor())
+			.def(XMLEntityHandlerDefVisitor<XMLString>())
+			.def(XMLEntityHandlerDefVisitor<std::string>())
 			.def("endInputSource", &xercesc::XMLEntityHandler::endInputSource)
 			.def("expandSystemId", &xercesc::XMLEntityHandler::expandSystemId)
 			.def("resetEntities", &xercesc::XMLEntityHandler::resetEntities)

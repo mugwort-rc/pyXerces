@@ -49,26 +49,6 @@ void visit(T& class_) const {
 	.def("toDOMNotation", &DOMNodeDefVisitor::toDOMNotation, boost::python::return_value_policy<boost::python::reference_existing_object>())
 	.def("toDOMProcessingInstruction", &DOMNodeDefVisitor::toDOMProcessingInstruction, boost::python::return_value_policy<boost::python::reference_existing_object>())
 	.def("toDOMXPathNamespace", &DOMNodeDefVisitor::toDOMXPathNamespace, boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("setNodeValue", static_cast<void(*)(xercesc::DOMNode&, const XMLString&)>(&DOMNodeDefVisitor::setNodeValue))
-	.def("setNodeValue", static_cast<void(*)(xercesc::DOMNode&, const std::string&)>(&DOMNodeDefVisitor::setNodeValue))
-	.def("isSupported", static_cast<bool(*)(xercesc::DOMNode&, const XMLString&, const XMLString&)>(&DOMNodeDefVisitor::isSupported))
-	.def("isSupported", static_cast<bool(*)(xercesc::DOMNode&, const std::string&, const std::string&)>(&DOMNodeDefVisitor::isSupported))
-	.def("setPrefix", static_cast<void(*)(xercesc::DOMNode&, const XMLString&)>(&DOMNodeDefVisitor::setPrefix))
-	.def("setPrefix", static_cast<void(*)(xercesc::DOMNode&, const std::string&)>(&DOMNodeDefVisitor::setPrefix))
-	.def("setUserData", static_cast<void*(*)(xercesc::DOMNode&, const XMLString&, void*, xercesc::DOMUserDataHandler*)>(&DOMNodeDefVisitor::setUserData), boost::python::return_value_policy<boost::python::return_opaque_pointer>())
-	.def("setUserData", static_cast<void*(*)(xercesc::DOMNode&, const std::string&, void*, xercesc::DOMUserDataHandler*)>(&DOMNodeDefVisitor::setUserData), boost::python::return_value_policy<boost::python::return_opaque_pointer>())
-	.def("getUserData", static_cast<void*(*)(xercesc::DOMNode&, const XMLString&)>(&DOMNodeDefVisitor::getUserData), boost::python::return_value_policy<boost::python::return_opaque_pointer>())
-	.def("getUserData", static_cast<void*(*)(xercesc::DOMNode&, const std::string&)>(&DOMNodeDefVisitor::getUserData), boost::python::return_value_policy<boost::python::return_opaque_pointer>())
-	.def("setTextContent", static_cast<void(*)(xercesc::DOMNode&, const XMLString&)>(&DOMNodeDefVisitor::setTextContent))
-	.def("setTextContent", static_cast<void(*)(xercesc::DOMNode&, const std::string&)>(&DOMNodeDefVisitor::setTextContent))
-	.def("lookupPrefix", static_cast<const XMLCh*(*)(xercesc::DOMNode&, const XMLString&)>(&DOMNodeDefVisitor::lookupPrefix), boost::python::return_value_policy<boost::python::return_by_value>())
-	.def("lookupPrefix", static_cast<const XMLCh*(*)(xercesc::DOMNode&, const std::string&)>(&DOMNodeDefVisitor::lookupPrefix), boost::python::return_value_policy<boost::python::return_by_value>())
-	.def("isDefaultNamespace", static_cast<bool(*)(xercesc::DOMNode&, const XMLString&)>(&DOMNodeDefVisitor::isDefaultNamespace))
-	.def("isDefaultNamespace", static_cast<bool(*)(xercesc::DOMNode&, const std::string&)>(&DOMNodeDefVisitor::isDefaultNamespace))
-	.def("lookupNamespaceURI", static_cast<const XMLCh*(*)(xercesc::DOMNode&, const XMLString&)>(&DOMNodeDefVisitor::lookupNamespaceURI), boost::python::return_value_policy<boost::python::return_by_value>())
-	.def("lookupNamespaceURI", static_cast<const XMLCh*(*)(xercesc::DOMNode&, const std::string&)>(&DOMNodeDefVisitor::lookupNamespaceURI), boost::python::return_value_policy<boost::python::return_by_value>())
-	.def("getFeature", static_cast<void*(*)(xercesc::DOMNode&, const XMLString&, const XMLString&)>(&DOMNodeDefVisitor::getFeature), boost::python::return_value_policy<boost::python::return_opaque_pointer>())
-	.def("getFeature", static_cast<void*(*)(xercesc::DOMNode&, const std::string&, const std::string&)>(&DOMNodeDefVisitor::getFeature), boost::python::return_value_policy<boost::python::return_opaque_pointer>())
 	;
 }
 
@@ -153,94 +133,78 @@ static xercesc::DOMXPathNamespace* toDOMXPathNamespace(xercesc::DOMNode& self) {
 	return reinterpret_cast<xercesc::DOMXPathNamespace*>(&self);
 }
 
-static void setNodeValue(xercesc::DOMNode& self, const XMLString& nodeValue) {
-	self.setNodeValue(nodeValue.ptr());
+};
+
+template <class STR>
+class DOMNodeStringDefVisitor
+: public boost::python::def_visitor<DOMNodeStringDefVisitor<STR> >
+{
+friend class def_visitor_access;
+public:
+template <class T>
+void visit(T& class_) const {
+	class_
+	.def("setNodeValue", &DOMNodeStringDefVisitor::setNodeValue)
+	.def("isSupported", &DOMNodeStringDefVisitor::isSupported)
+	.def("setPrefix", &DOMNodeStringDefVisitor::setPrefix)
+	.def("setUserData", &DOMNodeStringDefVisitor::setUserData, boost::python::return_value_policy<boost::python::return_opaque_pointer>())
+	.def("getUserData", &DOMNodeStringDefVisitor::getUserData, boost::python::return_value_policy<boost::python::return_opaque_pointer>())
+	.def("setTextContent", &DOMNodeStringDefVisitor::setTextContent)
+	.def("lookupPrefix", &DOMNodeStringDefVisitor::lookupPrefix, boost::python::return_value_policy<boost::python::return_by_value>())
+	.def("isDefaultNamespace", &DOMNodeStringDefVisitor::isDefaultNamespace)
+	.def("lookupNamespaceURI", &DOMNodeStringDefVisitor::lookupNamespaceURI, boost::python::return_value_policy<boost::python::return_by_value>())
+	.def("getFeature", &DOMNodeStringDefVisitor::getFeature, boost::python::return_value_policy<boost::python::return_opaque_pointer>())
+	;
 }
 
-static void setNodeValue(xercesc::DOMNode& self, const std::string& nodeValue) {
+static void setNodeValue(xercesc::DOMNode& self, const STR& nodeValue) {
 	XMLString buff(nodeValue);
-	DOMNodeDefVisitor::setNodeValue(self, buff);
+	self.setNodeValue(buff.ptr());
 }
 
-static bool isSupported(xercesc::DOMNode& self, const XMLString& feature, const XMLString& version) {
-	return self.isSupported(feature.ptr(), version.ptr());
-}
-
-static bool isSupported(xercesc::DOMNode& self, const std::string& feature, const std::string& version) {
+static bool isSupported(xercesc::DOMNode& self, const STR& feature, const STR& version) {
 	XMLString buff1(feature), buff2(version);
-	return DOMNodeDefVisitor::isSupported(self, buff1, buff2);
+	return self.isSupported(buff1.ptr(), buff2.ptr());
 }
 
-static void setPrefix(xercesc::DOMNode& self, const XMLString& prefix) {
-	self.setPrefix(prefix.ptr());
-}
-
-static void setPrefix(xercesc::DOMNode& self, const std::string& prefix) {
+static void setPrefix(xercesc::DOMNode& self, const STR& prefix) {
 	XMLString buff(prefix);
-	DOMNodeDefVisitor::setPrefix(self, buff);
+	self.setPrefix(buff.ptr());
 }
 
-static void* setUserData(xercesc::DOMNode& self, const XMLString& key, void* data, xercesc::DOMUserDataHandler* handler) {
-	return self.setUserData(key.ptr(), data, handler);
-}
-
-static void* setUserData(xercesc::DOMNode& self, const std::string& key, void* data, xercesc::DOMUserDataHandler* handler) {
+static void* setUserData(xercesc::DOMNode& self, const STR& key, void* data, xercesc::DOMUserDataHandler* handler) {
 	XMLString buff(key);
-	return DOMNodeDefVisitor::setUserData(self, buff, data, handler);
+	return self.setUserData(buff.ptr(), data, handler);
 }
 
-static void* getUserData(xercesc::DOMNode& self, const XMLString& key) {
-	return self.getUserData(key.ptr());
-}
-
-static void* getUserData(xercesc::DOMNode& self, const std::string& key) {
+static void* getUserData(xercesc::DOMNode& self, const STR& key) {
 	XMLString buff(key);
-	return DOMNodeDefVisitor::getUserData(self, buff);
+	return self.getUserData(buff.ptr());
 }
 
-static void setTextContent(xercesc::DOMNode& self, const XMLString& textContent) {
-	self.setTextContent(textContent.ptr());
-}
-
-static void setTextContent(xercesc::DOMNode& self, const std::string& textContent) {
+static void setTextContent(xercesc::DOMNode& self, const STR& textContent) {
 	XMLString buff(textContent);
-	DOMNodeDefVisitor::setTextContent(self, buff);
+	self.setTextContent(buff.ptr());
 }
 
-static const XMLCh* lookupPrefix(xercesc::DOMNode& self, const XMLString& namespaceURI) {
-	return self.lookupPrefix(namespaceURI.ptr());
-}
-
-static const XMLCh* lookupPrefix(xercesc::DOMNode& self, const std::string& namespaceURI) {
+static const XMLCh* lookupPrefix(xercesc::DOMNode& self, const STR& namespaceURI) {
 	XMLString buff(namespaceURI);
-	return DOMNodeDefVisitor::lookupPrefix(self, buff);
+	return self.lookupPrefix(buff.ptr());
 }
 
-static bool isDefaultNamespace(xercesc::DOMNode& self, const XMLString& namespaceURI) {
-	return self.isDefaultNamespace(namespaceURI.ptr());
-}
-
-static bool isDefaultNamespace(xercesc::DOMNode& self, const std::string& namespaceURI) {
+static bool isDefaultNamespace(xercesc::DOMNode& self, const STR& namespaceURI) {
 	XMLString buff(namespaceURI);
-	return DOMNodeDefVisitor::isDefaultNamespace(self, buff);
+	return self.isDefaultNamespace(buff.ptr());
 }
 
-static const XMLCh* lookupNamespaceURI(xercesc::DOMNode& self, const XMLString& prefix) {
-	return self.lookupNamespaceURI(prefix.ptr());
-}
-
-static const XMLCh* lookupNamespaceURI(xercesc::DOMNode& self, const std::string& prefix) {
+static const XMLCh* lookupNamespaceURI(xercesc::DOMNode& self, const STR& prefix) {
 	XMLString buff(prefix);
-	return DOMNodeDefVisitor::lookupNamespaceURI(self, buff);
+	return self.lookupNamespaceURI(buff.ptr());
 }
 
-static void* getFeature(xercesc::DOMNode& self, const XMLString& feature, const XMLString& version) {
-	return self.getFeature(feature.ptr(), version.ptr());
-}
-
-static void* getFeature(xercesc::DOMNode& self, const std::string& feature, const std::string& version) {
+static void* getFeature(xercesc::DOMNode& self, const STR& feature, const STR& version) {
 	XMLString buff1(feature), buff2(version);
-	return DOMNodeDefVisitor::getFeature(self, buff1, buff2);
+	return self.getFeature(buff1.ptr(), buff2.ptr());
 }
 
 };
@@ -249,6 +213,8 @@ void DOMNode_init(void) {
 	//! xercesc::DOMNode
 	auto DOMNode = boost::python::class_<xercesc::DOMNode, boost::noncopyable>("DOMNode", boost::python::no_init)
 			.def(DOMNodeDefVisitor())
+			.def(DOMNodeStringDefVisitor<XMLString>())
+			.def(DOMNodeStringDefVisitor<std::string>())
 			.def("getNodeName", &xercesc::DOMNode::getNodeName, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getNodeValue", &xercesc::DOMNode::getNodeValue, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getNodeType", &xercesc::DOMNode::getNodeType)

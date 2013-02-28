@@ -31,242 +31,145 @@
 
 namespace pyxerces {
 
+template <class STR>
 class DOMDocumentDefVisitor
-: public boost::python::def_visitor<DOMDocumentDefVisitor>
+: public boost::python::def_visitor<DOMDocumentDefVisitor<STR> >
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("createElement", static_cast<xercesc::DOMElement*(*)(xercesc::DOMDocument&, const XMLString&)>(&DOMDocumentDefVisitor::createElement), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createElement", static_cast<xercesc::DOMElement*(*)(xercesc::DOMDocument&, const std::string&)>(&DOMDocumentDefVisitor::createElement), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createTextNode", static_cast<xercesc::DOMText*(*)(xercesc::DOMDocument&, const XMLString&)>(&DOMDocumentDefVisitor::createTextNode), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createTextNode", static_cast<xercesc::DOMText*(*)(xercesc::DOMDocument&, const std::string&)>(&DOMDocumentDefVisitor::createTextNode), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createComment", static_cast<xercesc::DOMComment*(*)(xercesc::DOMDocument&, const XMLString&)>(&DOMDocumentDefVisitor::createComment), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createComment", static_cast<xercesc::DOMComment*(*)(xercesc::DOMDocument&, const std::string&)>(&DOMDocumentDefVisitor::createComment), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createCDATASection", static_cast<xercesc::DOMCDATASection*(*)(xercesc::DOMDocument&, const XMLString&)>(&DOMDocumentDefVisitor::createCDATASection), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createCDATASection", static_cast<xercesc::DOMCDATASection*(*)(xercesc::DOMDocument&, const std::string&)>(&DOMDocumentDefVisitor::createCDATASection), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createProcessingInstruction", static_cast<xercesc::DOMProcessingInstruction*(*)(xercesc::DOMDocument&, const XMLString&, const XMLString&)>(&DOMDocumentDefVisitor::createProcessingInstruction), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createProcessingInstruction", static_cast<xercesc::DOMProcessingInstruction*(*)(xercesc::DOMDocument&, const std::string&, const std::string&)>(&DOMDocumentDefVisitor::createProcessingInstruction), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createAttribute", static_cast<xercesc::DOMAttr*(*)(xercesc::DOMDocument&, const XMLString&)>(&DOMDocumentDefVisitor::createAttribute), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createAttribute", static_cast<xercesc::DOMAttr*(*)(xercesc::DOMDocument&, const std::string&)>(&DOMDocumentDefVisitor::createAttribute), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createEntityReference", static_cast<xercesc::DOMEntityReference*(*)(xercesc::DOMDocument&, const XMLString&)>(&DOMDocumentDefVisitor::createEntityReference), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createEntityReference", static_cast<xercesc::DOMEntityReference*(*)(xercesc::DOMDocument&, const std::string&)>(&DOMDocumentDefVisitor::createEntityReference), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("getElementsByTagName", static_cast<xercesc::DOMNodeList*(*)(xercesc::DOMDocument&, const XMLString&)>(&DOMDocumentDefVisitor::getElementsByTagName), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("getElementsByTagName", static_cast<xercesc::DOMNodeList*(*)(xercesc::DOMDocument&, const std::string&)>(&DOMDocumentDefVisitor::getElementsByTagName), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createElementNS", static_cast<xercesc::DOMElement*(*)(xercesc::DOMDocument&, const XMLString&, const XMLString&)>(&DOMDocumentDefVisitor::createElementNS), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createElementNS", static_cast<xercesc::DOMElement*(*)(xercesc::DOMDocument&, const std::string&, const std::string&)>(&DOMDocumentDefVisitor::createElementNS), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createAttributeNS", static_cast<xercesc::DOMAttr*(*)(xercesc::DOMDocument&, const XMLString&, const XMLString&)>(&DOMDocumentDefVisitor::createAttributeNS), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createAttributeNS", static_cast<xercesc::DOMAttr*(*)(xercesc::DOMDocument&, const std::string&, const std::string&)>(&DOMDocumentDefVisitor::createAttributeNS), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("getElementsByTagNameNS", static_cast<xercesc::DOMNodeList*(*)(xercesc::DOMDocument&, const XMLString&, const XMLString&)>(&DOMDocumentDefVisitor::getElementsByTagNameNS), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("getElementsByTagNameNS", static_cast<xercesc::DOMNodeList*(*)(xercesc::DOMDocument&, const std::string&, const std::string&)>(&DOMDocumentDefVisitor::getElementsByTagNameNS), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("getElementById", static_cast<xercesc::DOMElement*(*)(xercesc::DOMDocument&, const XMLString&)>(&DOMDocumentDefVisitor::getElementById), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("getElementById", static_cast<xercesc::DOMElement*(*)(xercesc::DOMDocument&, const std::string&)>(&DOMDocumentDefVisitor::getElementById), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("setXmlVersion", static_cast<void(*)(xercesc::DOMDocument&, const XMLString&)>(&DOMDocumentDefVisitor::setXmlVersion))
-	.def("setXmlVersion", static_cast<void(*)(xercesc::DOMDocument&, const std::string&)>(&DOMDocumentDefVisitor::setXmlVersion))
-	.def("setDocumentURI", static_cast<void(*)(xercesc::DOMDocument&, const XMLString&)>(&DOMDocumentDefVisitor::setDocumentURI))
-	.def("setDocumentURI", static_cast<void(*)(xercesc::DOMDocument&, const std::string&)>(&DOMDocumentDefVisitor::setDocumentURI))
-	.def("renameNode", static_cast<xercesc::DOMNode*(*)(xercesc::DOMDocument&, xercesc::DOMNode*, const XMLString&, const XMLString&)>(&DOMDocumentDefVisitor::renameNode), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("renameNode", static_cast<xercesc::DOMNode*(*)(xercesc::DOMDocument&, xercesc::DOMNode*, const std::string&, const std::string&)>(&DOMDocumentDefVisitor::renameNode), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createEntity", static_cast<xercesc::DOMEntity*(*)(xercesc::DOMDocument&, const XMLString&)>(&DOMDocumentDefVisitor::createEntity), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createEntity", static_cast<xercesc::DOMEntity*(*)(xercesc::DOMDocument&, const std::string&)>(&DOMDocumentDefVisitor::createEntity), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createDocumentType", static_cast<xercesc::DOMDocumentType*(*)(xercesc::DOMDocument&, const XMLString&)>(&DOMDocumentDefVisitor::createDocumentType), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createDocumentType", static_cast<xercesc::DOMDocumentType*(*)(xercesc::DOMDocument&, const std::string&)>(&DOMDocumentDefVisitor::createDocumentType), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createDocumentType", static_cast<xercesc::DOMDocumentType*(*)(xercesc::DOMDocument&, const XMLString&, const XMLString&, const XMLString&)>(&DOMDocumentDefVisitor::createDocumentType), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createDocumentType", static_cast<xercesc::DOMDocumentType*(*)(xercesc::DOMDocument&, const std::string&, const std::string&, const std::string&)>(&DOMDocumentDefVisitor::createDocumentType), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createNotation", static_cast<xercesc::DOMNotation*(*)(xercesc::DOMDocument&, const XMLString&)>(&DOMDocumentDefVisitor::createNotation), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createNotation", static_cast<xercesc::DOMNotation*(*)(xercesc::DOMDocument&, const std::string&)>(&DOMDocumentDefVisitor::createNotation), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createElementNS", static_cast<xercesc::DOMElement*(*)(xercesc::DOMDocument&, const XMLString&, const XMLString&, const XMLFileLoc, const XMLFileLoc)>(&DOMDocumentDefVisitor::createElementNS), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createElementNS", static_cast<xercesc::DOMElement*(*)(xercesc::DOMDocument&, const std::string&, const std::string&, const XMLFileLoc, const XMLFileLoc)>(&DOMDocumentDefVisitor::createElementNS), boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("createElement", &DOMDocumentDefVisitor::createElement, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("createTextNode", &DOMDocumentDefVisitor::createTextNode, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("createComment", &DOMDocumentDefVisitor::createComment, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("createCDATASection", &DOMDocumentDefVisitor::createCDATASection, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("createProcessingInstruction", &DOMDocumentDefVisitor::createProcessingInstruction, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("createAttribute", &DOMDocumentDefVisitor::createAttribute, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("createEntityReference", &DOMDocumentDefVisitor::createEntityReference, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("getElementsByTagName", &DOMDocumentDefVisitor::getElementsByTagName, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("createElementNS", &DOMDocumentDefVisitor::createElementNS, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("createAttributeNS", &DOMDocumentDefVisitor::createAttributeNS, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("getElementsByTagNameNS", &DOMDocumentDefVisitor::getElementsByTagNameNS, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("getElementById", &DOMDocumentDefVisitor::getElementById, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("setXmlVersion", &DOMDocumentDefVisitor::setXmlVersion)
+	.def("setDocumentURI", &DOMDocumentDefVisitor::setDocumentURI)
+	.def("renameNode", &DOMDocumentDefVisitor::renameNode, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("createEntity", &DOMDocumentDefVisitor::createEntity, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("createDocumentType", static_cast<xercesc::DOMDocumentType*(*)(xercesc::DOMDocument&, const STR&)>(&DOMDocumentDefVisitor::createDocumentType), boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("createDocumentType", static_cast<xercesc::DOMDocumentType*(*)(xercesc::DOMDocument&, const STR&, const STR&, const STR&)>(&DOMDocumentDefVisitor::createDocumentType), boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("createNotation", &DOMDocumentDefVisitor::createNotation, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("createElementNS", &DOMDocumentDefVisitor::nonStandardCreateElementNS, boost::python::return_value_policy<boost::python::reference_existing_object>())
 	;
 }
 
-static xercesc::DOMElement* createElement(xercesc::DOMDocument& self, const XMLString& tagName) {
-	return self.createElement(tagName.ptr());
-}
-
-static xercesc::DOMElement* createElement(xercesc::DOMDocument& self, const std::string& tagName) {
+static xercesc::DOMElement* createElement(xercesc::DOMDocument& self, const STR& tagName) {
 	XMLString buff(tagName);
-	return DOMDocumentDefVisitor::createElement(self, buff);
+	return self.createElement(buff.ptr());
 }
 
-static xercesc::DOMText* createTextNode(xercesc::DOMDocument& self, const XMLString& data) {
-	return self.createTextNode(data.ptr());
-}
-
-static xercesc::DOMText* createTextNode(xercesc::DOMDocument& self, const std::string& data) {
+static xercesc::DOMText* createTextNode(xercesc::DOMDocument& self, const STR& data) {
 	XMLString buff(data);
-	return DOMDocumentDefVisitor::createTextNode(self, buff);
+	return self.createTextNode(buff.ptr());
 }
 
-static xercesc::DOMComment* createComment(xercesc::DOMDocument& self, const XMLString& data) {
-	return self.createComment(data.ptr());
-}
-
-static xercesc::DOMComment* createComment(xercesc::DOMDocument& self, const std::string& data) {
+static xercesc::DOMComment* createComment(xercesc::DOMDocument& self, const STR& data) {
 	XMLString buff(data);
-	return DOMDocumentDefVisitor::createComment(self, buff);
+	return self.createComment(buff.ptr());
 }
 
-static xercesc::DOMCDATASection* createCDATASection(xercesc::DOMDocument& self, const XMLString& data) {
-	return self.createCDATASection(data.ptr());
-}
-
-static xercesc::DOMCDATASection* createCDATASection(xercesc::DOMDocument& self, const std::string& data) {
+static xercesc::DOMCDATASection* createCDATASection(xercesc::DOMDocument& self, const STR& data) {
 	XMLString buff(data);
-	return DOMDocumentDefVisitor::createCDATASection(self, buff);
+	return self.createCDATASection(buff.ptr());
 }
 
-static xercesc::DOMProcessingInstruction* createProcessingInstruction(xercesc::DOMDocument& self, const XMLString& target, const XMLString& data) {
-	return self.createProcessingInstruction(target.ptr(), data.ptr());
-}
-
-static xercesc::DOMProcessingInstruction* createProcessingInstruction(xercesc::DOMDocument& self, const std::string& target, const std::string& data) {
+static xercesc::DOMProcessingInstruction* createProcessingInstruction(xercesc::DOMDocument& self, const STR& target, const STR& data) {
 	XMLString buff1(target), buff2(data);
-	return DOMDocumentDefVisitor::createProcessingInstruction(self, buff1, buff2);
+	return self.createProcessingInstruction(buff1.ptr(), buff2.ptr());
 }
 
-static xercesc::DOMAttr* createAttribute(xercesc::DOMDocument& self, const XMLString& name) {
-	return self.createAttribute(name.ptr());
-}
-
-static xercesc::DOMAttr* createAttribute(xercesc::DOMDocument& self, const std::string& name) {
+static xercesc::DOMAttr* createAttribute(xercesc::DOMDocument& self, const STR& name) {
 	XMLString buff(name);
-	return DOMDocumentDefVisitor::createAttribute(self, buff);
+	return self.createAttribute(buff.ptr());
 }
 
-static xercesc::DOMEntityReference* createEntityReference(xercesc::DOMDocument& self, const XMLString& name) {
-	return self.createEntityReference(name.ptr());
-}
-
-static xercesc::DOMEntityReference* createEntityReference(xercesc::DOMDocument& self, const std::string& name) {
+static xercesc::DOMEntityReference* createEntityReference(xercesc::DOMDocument& self, const STR& name) {
 	XMLString buff(name);
-	return DOMDocumentDefVisitor::createEntityReference(self, buff);
+	return self.createEntityReference(buff.ptr());
 }
 
-static xercesc::DOMNodeList* getElementsByTagName(xercesc::DOMDocument& self, const XMLString& tagName) {
-	return self.getElementsByTagName(tagName.ptr());
-}
-
-static xercesc::DOMNodeList* getElementsByTagName(xercesc::DOMDocument& self, const std::string& tagName) {
+static xercesc::DOMNodeList* getElementsByTagName(xercesc::DOMDocument& self, const STR& tagName) {
 	XMLString buff(tagName);
-	return DOMDocumentDefVisitor::getElementsByTagName(self, buff);
+	return self.getElementsByTagName(buff.ptr());
 }
 
-static xercesc::DOMElement* createElementNS(xercesc::DOMDocument& self, const XMLString& namespaceURI, const XMLString& qualifiedName) {
-	return self.createElementNS(namespaceURI.ptr(), qualifiedName.ptr());
-}
-
-static xercesc::DOMElement* createElementNS(xercesc::DOMDocument& self, const std::string& namespaceURI, const std::string& qualifiedName) {
+static xercesc::DOMElement* createElementNS(xercesc::DOMDocument& self, const STR& namespaceURI, const STR& qualifiedName) {
 	XMLString buff1(namespaceURI), buff2(qualifiedName);
-	return DOMDocumentDefVisitor::createElementNS(self, buff1, buff2);
+	return self.createElementNS(buff1.ptr(), buff2.ptr());
 }
 
-static xercesc::DOMAttr* createAttributeNS(xercesc::DOMDocument& self, const XMLString& namespaceURI, const XMLString& qualifiedName) {
-	return self.createAttributeNS(namespaceURI.ptr(), qualifiedName.ptr());
-}
-
-static xercesc::DOMAttr* createAttributeNS(xercesc::DOMDocument& self, const std::string& namespaceURI, const std::string& qualifiedName) {
+static xercesc::DOMAttr* createAttributeNS(xercesc::DOMDocument& self, const STR& namespaceURI, const STR& qualifiedName) {
 	XMLString buff1(namespaceURI), buff2(qualifiedName);
-	return DOMDocumentDefVisitor::createAttributeNS(self, buff1, buff2);
+	return self.createAttributeNS(buff1.ptr(), buff2.ptr());
 }
 
-static xercesc::DOMNodeList* getElementsByTagNameNS(xercesc::DOMDocument& self, const XMLString& namespaceURI, const XMLString& localName) {
-	return self.getElementsByTagNameNS(namespaceURI.ptr(), localName.ptr());
-}
-
-static xercesc::DOMNodeList* getElementsByTagNameNS(xercesc::DOMDocument& self, const std::string& namespaceURI, const std::string& localName) {
+static xercesc::DOMNodeList* getElementsByTagNameNS(xercesc::DOMDocument& self, const STR& namespaceURI, const STR& localName) {
 	XMLString buff1(namespaceURI), buff2(localName);
-	return DOMDocumentDefVisitor::getElementsByTagNameNS(self, buff1, buff2);
+	return self.getElementsByTagNameNS(buff1.ptr(), buff2.ptr());
 }
 
-static xercesc::DOMElement* getElementById(xercesc::DOMDocument& self, const XMLString& elementId) {
-	return self.getElementById(elementId.ptr());
-}
-
-static xercesc::DOMElement* getElementById(xercesc::DOMDocument& self, const std::string& elementId) {
+static xercesc::DOMElement* getElementById(xercesc::DOMDocument& self, const STR& elementId) {
 	XMLString buff(elementId);
-	return DOMDocumentDefVisitor::getElementById(self, buff);
+	return self.getElementById(buff.ptr());
 }
 
-static void setXmlVersion(xercesc::DOMDocument& self, const XMLString& version) {
-	self.setXmlVersion(version.ptr());
-}
-
-static void setXmlVersion(xercesc::DOMDocument& self, const std::string& version) {
+static void setXmlVersion(xercesc::DOMDocument& self, const STR& version) {
 	XMLString buff(version);
-	DOMDocumentDefVisitor::setXmlVersion(self, buff);
+	self.setXmlVersion(buff.ptr());
 }
 
-static void setDocumentURI(xercesc::DOMDocument& self, const XMLString& documentURI) {
-	self.setDocumentURI(documentURI.ptr());
-}
-
-static void setDocumentURI(xercesc::DOMDocument& self, const std::string& documentURI) {
+static void setDocumentURI(xercesc::DOMDocument& self, const STR& documentURI) {
 	XMLString buff(documentURI);
-	DOMDocumentDefVisitor::setDocumentURI(self, buff);
+	self.setDocumentURI(buff.ptr());
 }
 
-static xercesc::DOMNode* renameNode(xercesc::DOMDocument& self, xercesc::DOMNode* n, const XMLString& namespaceURI, const XMLString& qualifiedName) {
-	return self.renameNode(n, namespaceURI.ptr(), qualifiedName.ptr());
-}
-
-static xercesc::DOMNode* renameNode(xercesc::DOMDocument& self, xercesc::DOMNode* n, const std::string& namespaceURI, const std::string& qualifiedName) {
+static xercesc::DOMNode* renameNode(xercesc::DOMDocument& self, xercesc::DOMNode* n, const STR& namespaceURI, const STR& qualifiedName) {
 	XMLString buff1(namespaceURI), buff2(qualifiedName);
-	return DOMDocumentDefVisitor::renameNode(self, n, buff1, buff2);
+	return self.renameNode(n, buff1.ptr(), buff2.ptr());
 }
 
-static xercesc::DOMEntity* createEntity(xercesc::DOMDocument& self, const XMLString& name) {
-	return self.createEntity(name.ptr());
-}
-
-static xercesc::DOMEntity* createEntity(xercesc::DOMDocument& self, const std::string& name) {
+static xercesc::DOMEntity* createEntity(xercesc::DOMDocument& self, const STR& name) {
 	XMLString buff(name);
-	return DOMDocumentDefVisitor::createEntity(self, buff);
+	return self.createEntity(buff.ptr());
 }
 
-static xercesc::DOMDocumentType* createDocumentType(xercesc::DOMDocument& self, const XMLString& name) {
-	return self.createDocumentType(name.ptr());
-}
-
-static xercesc::DOMDocumentType* createDocumentType(xercesc::DOMDocument& self, const std::string& name) {
+static xercesc::DOMDocumentType* createDocumentType(xercesc::DOMDocument& self, const STR& name) {
 	XMLString buff(name);
-	return DOMDocumentDefVisitor::createDocumentType(self, buff);
+	return self.createDocumentType(buff.ptr());
 }
 
-static xercesc::DOMDocumentType* createDocumentType(xercesc::DOMDocument& self, const XMLString& qName, const XMLString& publicId, const XMLString& systemId) {
-	return self.createDocumentType(qName.ptr(), publicId.ptr(), systemId.ptr());
-}
-
-static xercesc::DOMDocumentType* createDocumentType(xercesc::DOMDocument& self, const std::string& qName, const std::string& publicId, const std::string& systemId) {
+static xercesc::DOMDocumentType* createDocumentType(xercesc::DOMDocument& self, const STR& qName, const STR& publicId, const STR& systemId) {
 	XMLString buff1(qName), buff2(publicId), buff3(systemId);
-	return DOMDocumentDefVisitor::createDocumentType(self, buff1, buff2, buff3);
+	return self.createDocumentType(buff1.ptr(), buff2.ptr(), buff3.ptr());
 }
 
-static xercesc::DOMNotation* createNotation(xercesc::DOMDocument& self, const XMLString& name) {
-	return self.createNotation(name.ptr());
-}
-
-static xercesc::DOMNotation* createNotation(xercesc::DOMDocument& self, const std::string& name) {
+static xercesc::DOMNotation* createNotation(xercesc::DOMDocument& self, const STR& name) {
 	XMLString buff(name);
-	return DOMDocumentDefVisitor::createNotation(self, buff);
+	return self.createNotation(buff.ptr());
 }
 
-static xercesc::DOMElement* createElementNS(xercesc::DOMDocument& self, const XMLString& namespaceURI, const XMLString& qualifiedName, const XMLFileLoc lineNum, const XMLFileLoc columnNum) {
-	return self.createElementNS(namespaceURI.ptr(), qualifiedName.ptr(), lineNum, columnNum);
-}
-
-static xercesc::DOMElement* createElementNS(xercesc::DOMDocument& self, const std::string& namespaceURI, const std::string& qualifiedName, const XMLFileLoc lineNum, const XMLFileLoc columnNum) {
+static xercesc::DOMElement* nonStandardCreateElementNS(xercesc::DOMDocument& self, const STR& namespaceURI, const STR& qualifiedName, const XMLFileLoc lineNum, const XMLFileLoc columnNum) {
 	XMLString buff1(namespaceURI), buff2(qualifiedName);
-	return DOMDocumentDefVisitor::createElementNS(self, buff1, buff2, lineNum, columnNum);
+	return self.createElementNS(buff1.ptr(), buff2.ptr(), lineNum, columnNum);
 }
+
 };
 
 void DOMDocument_init(void) {
 	//! xercesc::DOMDocument
 	auto DOMDocument = boost::python::class_<xercesc::DOMDocument, boost::noncopyable, boost::python::bases<xercesc::DOMDocumentRange, xercesc::DOMXPathEvaluator, xercesc::DOMDocumentTraversal, xercesc::DOMNode> >("DOMDocument", boost::python::no_init)
-			.def(DOMDocumentDefVisitor())
+			.def(DOMDocumentDefVisitor<XMLString>())
+			.def(DOMDocumentDefVisitor<std::string>())
 			.def("createElement", &xercesc::DOMDocument::createElement, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("createDocumentFragment", &xercesc::DOMDocument::createDocumentFragment, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("createTextNode", &xercesc::DOMDocument::createTextNode, boost::python::return_value_policy<boost::python::reference_existing_object>())

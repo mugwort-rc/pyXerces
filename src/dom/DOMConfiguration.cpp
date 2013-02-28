@@ -15,78 +15,44 @@
 
 namespace pyxerces {
 
+template <class STR>
 class DOMConfigurationDefVisitor
-: public boost::python::def_visitor<DOMConfigurationDefVisitor>
+: public boost::python::def_visitor<DOMConfigurationDefVisitor<STR> >
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("setParameter", static_cast<void(*)(xercesc::DOMConfiguration&, const XMLString&, const void*)>(&DOMConfigurationDefVisitor::setParameter))
-	.def("setParameter", static_cast<void(*)(xercesc::DOMConfiguration&, const std::string&, const void*)>(&DOMConfigurationDefVisitor::setParameter))
-	.def("setParameter", static_cast<void(*)(xercesc::DOMConfiguration&, const XMLString&, bool)>(&DOMConfigurationDefVisitor::setParameter))
-	.def("setParameter", static_cast<void(*)(xercesc::DOMConfiguration&, const std::string&, bool)>(&DOMConfigurationDefVisitor::setParameter))
-	.def("setParameter", static_cast<const void*(*)(xercesc::DOMConfiguration&, const XMLString&)>(&DOMConfigurationDefVisitor::getParameter), boost::python::return_value_policy<boost::python::return_opaque_pointer>())
-	.def("setParameter", static_cast<const void*(*)(xercesc::DOMConfiguration&, const std::string&)>(&DOMConfigurationDefVisitor::getParameter), boost::python::return_value_policy<boost::python::return_opaque_pointer>())
-	.def("canSetParameter", static_cast<bool(*)(xercesc::DOMConfiguration&, const XMLString&, const void*)>(&DOMConfigurationDefVisitor::canSetParameter))
-	.def("canSetParameter", static_cast<bool(*)(xercesc::DOMConfiguration&, const std::string&, const void*)>(&DOMConfigurationDefVisitor::canSetParameter))
-	.def("canSetParameter", static_cast<bool(*)(xercesc::DOMConfiguration&, const XMLString&, bool)>(&DOMConfigurationDefVisitor::canSetParameter))
-	.def("canSetParameter", static_cast<bool(*)(xercesc::DOMConfiguration&, const std::string&, bool)>(&DOMConfigurationDefVisitor::canSetParameter))
-	.def("setParameter", &DOMConfigurationDefVisitor::setParameter<XMLString, xercesc::DOMErrorHandler>)
-	.def("setParameter", &DOMConfigurationDefVisitor::setParameter<std::string, xercesc::DOMErrorHandler>)
+	.def("setParameter", &DOMConfigurationDefVisitor::setParameter<const void*>)
+	.def("setParameter", &DOMConfigurationDefVisitor::setParameter<bool>)
+	.def("setParameter", &DOMConfigurationDefVisitor::getParameter, boost::python::return_value_policy<boost::python::return_opaque_pointer>())
+	.def("canSetParameter", &DOMConfigurationDefVisitor::canSetParameter<const void*>)
+	.def("canSetParameter", &DOMConfigurationDefVisitor::canSetParameter<bool>)
+	.def("setParameter", &DOMConfigurationDefVisitor::setParameterCastValue<xercesc::DOMErrorHandler>)
 	;
 }
 
-static void setParameter(xercesc::DOMConfiguration& self, const XMLString& name, const void* value) {
-	self.setParameter(name.ptr(), value);
-}
-
-static void setParameter(xercesc::DOMConfiguration& self, const std::string& name, const void* value) {
+template <typename T>
+static void setParameter(xercesc::DOMConfiguration& self, const STR& name, T value) {
 	XMLString buff(name);
-	DOMConfigurationDefVisitor::setParameter(self, buff, value);
+	self.setParameter(buff.ptr(), value);
 }
 
-static void setParameter(xercesc::DOMConfiguration& self, const XMLString& name, bool value) {
-	self.setParameter(name.ptr(), value);
-}
-
-static void setParameter(xercesc::DOMConfiguration& self, const std::string& name, bool value) {
+static const void* getParameter(xercesc::DOMConfiguration& self, const STR& name) {
 	XMLString buff(name);
-	DOMConfigurationDefVisitor::setParameter(self, buff, value);
+	return self.getParameter(buff.ptr());
 }
 
-static const void* getParameter(xercesc::DOMConfiguration& self, const XMLString& name) {
-	return self.getParameter(name.ptr());
-}
-
-static const void* getParameter(xercesc::DOMConfiguration& self, const std::string& name) {
+template <typename T>
+static bool canSetParameter(xercesc::DOMConfiguration& self, const STR& name, T value) {
 	XMLString buff(name);
-	return DOMConfigurationDefVisitor::getParameter(self, buff);
+	return self.canSetParameter(buff.ptr(), value);
 }
 
-static bool canSetParameter(xercesc::DOMConfiguration& self, const XMLString& name, const void* value) {
-	return self.canSetParameter(name.ptr(), value);
-}
-
-static bool canSetParameter(xercesc::DOMConfiguration& self, const std::string& name, const void* value) {
-	XMLString buff(name);
-	return DOMConfigurationDefVisitor::canSetParameter(self, buff, value);
-}
-
-static bool canSetParameter(xercesc::DOMConfiguration& self, const XMLString& name, bool value) {
-	return self.canSetParameter(name.ptr(), value);
-}
-
-static bool canSetParameter(xercesc::DOMConfiguration& self, const std::string& name, bool value) {
-	XMLString buff(name);
-	return DOMConfigurationDefVisitor::canSetParameter(self, buff, value);
-}
-
-// template value
-template <typename STR, typename T>
-static void setParameter(xercesc::DOMConfiguration& self, const STR& name, const T& value) {
-	DOMConfigurationDefVisitor::setParameter(self, XMLString(name), reinterpret_cast<const void*>(&value));
+template <typename T>
+static void setParameterCastValue(xercesc::DOMConfiguration& self, const STR& name, const T& value) {
+	DOMConfigurationDefVisitor::setParameter<const void*>(self, name, reinterpret_cast<const void*>(&value));
 }
 
 };
@@ -94,7 +60,8 @@ static void setParameter(xercesc::DOMConfiguration& self, const STR& name, const
 void DOMConfiguration_init(void) {
 	//! xercesc::DOMConfiguration
 	boost::python::class_<xercesc::DOMConfiguration, boost::noncopyable>("DOMConfiguration", boost::python::no_init)
-			.def(DOMConfigurationDefVisitor())
+			.def(DOMConfigurationDefVisitor<XMLString>())
+			.def(DOMConfigurationDefVisitor<std::string>())
 			.def("setParameter", static_cast<void(xercesc::DOMConfiguration::*)(const XMLCh*, const void*)>(&xercesc::DOMConfiguration::setParameter))
 			.def("setParameter", static_cast<void(xercesc::DOMConfiguration::*)(const XMLCh*, bool)>(&xercesc::DOMConfiguration::setParameter))
 			.def("getParameter", &xercesc::DOMConfiguration::getParameter, boost::python::return_value_policy<boost::python::return_opaque_pointer>())  //!< void*

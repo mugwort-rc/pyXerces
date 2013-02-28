@@ -21,33 +21,31 @@ namespace pyxerces {
 //! DOMLSParser
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(DOMLSParserLoadGrammarOverloads, loadGrammar, 2, 3)
 
+template <class STR>
 class DOMLSParserDefVisitor
-: public boost::python::def_visitor<DOMLSParserDefVisitor>
+: public boost::python::def_visitor<DOMLSParserDefVisitor<STR> >
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("getGrammar", static_cast<xercesc::Grammar*(*)(xercesc::DOMLSParser&, const XMLString&)>(&DOMLSParserDefVisitor::getGrammar), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("getGrammar", static_cast<xercesc::Grammar*(*)(xercesc::DOMLSParser&, const std::string&)>(&DOMLSParserDefVisitor::getGrammar), boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("getGrammar", &DOMLSParserDefVisitor::getGrammar, boost::python::return_value_policy<boost::python::reference_existing_object>())
 	;
 }
 
-static xercesc::Grammar* getGrammar(xercesc::DOMLSParser& self, const XMLString& nameSpaceKey) {
-	return self.getGrammar(nameSpaceKey.ptr());
+static xercesc::Grammar* getGrammar(xercesc::DOMLSParser& self, const STR& nameSpaceKey) {
+	XMLString buff(nameSpaceKey);
+	return self.getGrammar(buff.ptr());
 }
 
-static xercesc::Grammar* getGrammar(xercesc::DOMLSParser& self, const std::string& nameSpaceKey) {
-	XMLString buff(nameSpaceKey);
-	return DOMLSParserDefVisitor::getGrammar(self, buff);
-}
 };
 
 void DOMLSParser_init(void) {
 	//! xercesc::DOMLSParser
 	auto DOMLSParser = boost::python::class_<xercesc::DOMLSParser, boost::noncopyable>("DOMLSParser", boost::python::no_init)
-			.def(DOMLSParserDefVisitor())
+			.def(DOMLSParserDefVisitor<XMLString>())
+			.def(DOMLSParserDefVisitor<std::string>())
 			.def("getDomConfig", &xercesc::DOMLSParser::getDomConfig, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getFilter", &xercesc::DOMLSParser::getFilter, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getAsync", &xercesc::DOMLSParser::getAsync)

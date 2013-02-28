@@ -16,48 +16,34 @@
 
 namespace pyxerces {
 
+template <class STR>
 class InputSourceDefVisitor
-: public boost::python::def_visitor<InputSourceDefVisitor>
+: public boost::python::def_visitor<InputSourceDefVisitor<STR> >
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("setEncoding", static_cast<void(*)(xercesc::InputSource&, const XMLString&)>(&InputSourceDefVisitor::setEncoding))
-	.def("setEncoding", static_cast<void(*)(xercesc::InputSource&, const std::string&)>(&InputSourceDefVisitor::setEncoding))
-	.def("setPublicId", static_cast<void(*)(xercesc::InputSource&, const XMLString&)>(&InputSourceDefVisitor::setPublicId))
-	.def("setPublicId", static_cast<void(*)(xercesc::InputSource&, const std::string&)>(&InputSourceDefVisitor::setPublicId))
-	.def("setSystemId", static_cast<void(*)(xercesc::InputSource&, const XMLString&)>(&InputSourceDefVisitor::setSystemId))
-	.def("setSystemId", static_cast<void(*)(xercesc::InputSource&, const std::string&)>(&InputSourceDefVisitor::setSystemId))
+	.def("setEncoding", &InputSourceDefVisitor::setEncoding)
+	.def("setPublicId", &InputSourceDefVisitor::setPublicId)
+	.def("setSystemId", &InputSourceDefVisitor::setSystemId)
 	;
 }
 
-static void setEncoding(xercesc::InputSource& self, const XMLString& encodingStr) {
-	self.setEncoding(encodingStr.ptr());
-}
-
-static void setEncoding(xercesc::InputSource& self, const std::string& encodingStr) {
+static void setEncoding(xercesc::InputSource& self, const STR& encodingStr) {
 	XMLString buff(encodingStr);
-	InputSourceDefVisitor::setEncoding(self, buff);
+	self.setEncoding(buff.ptr());
 }
 
-static void setPublicId(xercesc::InputSource& self, const XMLString& publicId) {
-	self.setPublicId(publicId.ptr());
-}
-
-static void setPublicId(xercesc::InputSource& self, const std::string& publicId) {
+static void setPublicId(xercesc::InputSource& self, const STR& publicId) {
 	XMLString buff(publicId);
-	InputSourceDefVisitor::setPublicId(self, buff);
+	self.setPublicId(buff.ptr());
 }
 
-static void setSystemId(xercesc::InputSource& self, const XMLString& systemId) {
-	self.setSystemId(systemId.ptr());
-}
-
-static void setSystemId(xercesc::InputSource& self, const std::string& systemId) {
+static void setSystemId(xercesc::InputSource& self, const STR& systemId) {
 	XMLString buff(systemId);
-	InputSourceDefVisitor::setSystemId(self, buff);
+	self.setSystemId(buff.ptr());
 }
 
 };
@@ -65,6 +51,8 @@ static void setSystemId(xercesc::InputSource& self, const std::string& systemId)
 void InputSource_init(void) {
 	//! xercesc::InputSource
 	boost::python::class_<xercesc::InputSource, boost::noncopyable>("InputSouce", boost::python::no_init)
+			.def(InputSourceDefVisitor<XMLString>())
+			.def(InputSourceDefVisitor<std::string>())
 			.def("makeStream", &xercesc::InputSource::makeStream, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getEncoding", &xercesc::InputSource::getEncoding, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getPublicId", &xercesc::InputSource::getPublicId, boost::python::return_value_policy<boost::python::return_by_value>())

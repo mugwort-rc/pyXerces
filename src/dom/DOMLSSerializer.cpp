@@ -18,44 +18,37 @@ namespace pyxerces {
 //! DOMLSSerializer
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(DOMLSSerializerWriteToStringOverloads, writeToString, 1, 2)
 
+template <class STR>
 class DOMLSSerializerDefVisitor
-: public boost::python::def_visitor<DOMLSSerializerDefVisitor>
+: public boost::python::def_visitor<DOMLSSerializerDefVisitor<STR> >
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("setNewLine", static_cast<void(*)(xercesc::DOMLSSerializer&, const XMLString&)>(&DOMLSSerializerDefVisitor::setNewLine))
-	.def("setNewLine", static_cast<void(*)(xercesc::DOMLSSerializer&, const std::string&)>(&DOMLSSerializerDefVisitor::setNewLine))
-	.def("writeToURI", static_cast<bool(*)(xercesc::DOMLSSerializer&, xercesc::DOMNode*, const XMLString&)>(&DOMLSSerializerDefVisitor::writeToURI))
-	.def("writeToURI", static_cast<bool(*)(xercesc::DOMLSSerializer&, xercesc::DOMNode*, const std::string&)>(&DOMLSSerializerDefVisitor::writeToURI))
+	.def("setNewLine", &DOMLSSerializerDefVisitor::setNewLine)
+	.def("writeToURI", &DOMLSSerializerDefVisitor::writeToURI)
 	;
 }
 
-static void setNewLine(xercesc::DOMLSSerializer& self, const XMLString& newLine) {
-	self.setNewLine(newLine.ptr());
-}
-
-static void setNewLine(xercesc::DOMLSSerializer& self, const std::string& newLine) {
+static void setNewLine(xercesc::DOMLSSerializer& self, const STR& newLine) {
 	XMLString buff(newLine);
-	DOMLSSerializerDefVisitor::setNewLine(self, buff);
+	self.setNewLine(buff.ptr());
 }
 
-static bool writeToURI(xercesc::DOMLSSerializer& self, xercesc::DOMNode* nodeToWrite, const XMLString& uri) {
-	return self.writeToURI(nodeToWrite, uri.ptr());
-}
-
-static bool writeToURI(xercesc::DOMLSSerializer& self, xercesc::DOMNode* nodeToWrite, const std::string& uri) {
+static bool writeToURI(xercesc::DOMLSSerializer& self, xercesc::DOMNode* nodeToWrite, const STR& uri) {
 	XMLString buff(uri);
-	return DOMLSSerializerDefVisitor::writeToURI(self, nodeToWrite, buff);
+	return self.writeToURI(nodeToWrite, buff.ptr());
 }
+
 };
 
 void DOMLSSerializer_init(void) {
 	//! xercesc::DOMLSSerializer
 	boost::python::class_<xercesc::DOMLSSerializer, boost::noncopyable>("DOMLSSerializer", boost::python::no_init)
-			.def(DOMLSSerializerDefVisitor())
+			.def(DOMLSSerializerDefVisitor<XMLString>())
+			.def(DOMLSSerializerDefVisitor<std::string>())
 			.def("getDomConfig", &xercesc::DOMLSSerializer::getDomConfig, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("setNewLine", &xercesc::DOMLSSerializer::setNewLine)
 			.def("setFilter", &xercesc::DOMLSSerializer::setFilter)

@@ -15,37 +15,28 @@
 
 namespace pyxerces {
 
+template <class STR>
 class DOMLSOutputDefVisitor
-: public boost::python::def_visitor<DOMLSOutputDefVisitor>
+: public boost::python::def_visitor<DOMLSOutputDefVisitor<STR> >
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("setEncoding", static_cast<void(*)(xercesc::DOMLSOutput&, const XMLString&)>(&DOMLSOutputDefVisitor::setEncoding))
-	.def("setEncoding", static_cast<void(*)(xercesc::DOMLSOutput&, const std::string&)>(&DOMLSOutputDefVisitor::setEncoding))
-	.def("setSystemId", static_cast<void(*)(xercesc::DOMLSOutput&, const XMLString&)>(&DOMLSOutputDefVisitor::setSystemId))
-	.def("setSystemId", static_cast<void(*)(xercesc::DOMLSOutput&, const std::string&)>(&DOMLSOutputDefVisitor::setSystemId))
+	.def("setEncoding", &DOMLSOutputDefVisitor::setEncoding)
+	.def("setSystemId", &DOMLSOutputDefVisitor::setSystemId)
 	;
 }
 
-static void setEncoding(xercesc::DOMLSOutput& self, const XMLString& encodingStr) {
-	self.setEncoding(encodingStr.ptr());
-}
-
-static void setEncoding(xercesc::DOMLSOutput& self, const std::string& encodingStr) {
+static void setEncoding(xercesc::DOMLSOutput& self, const STR& encodingStr) {
 	XMLString buff(encodingStr);
-	DOMLSOutputDefVisitor::setEncoding(self, buff);
+	self.setEncoding(buff.ptr());
 }
 
-static void setSystemId(xercesc::DOMLSOutput& self, const XMLString& systemId) {
-	self.setSystemId(systemId.ptr());
-}
-
-static void setSystemId(xercesc::DOMLSOutput& self, const std::string& systemId) {
+static void setSystemId(xercesc::DOMLSOutput& self, const STR& systemId) {
 	XMLString buff(systemId);
-	DOMLSOutputDefVisitor::setSystemId(self, buff);
+	self.setSystemId(buff.ptr());
 }
 
 };
@@ -53,7 +44,8 @@ static void setSystemId(xercesc::DOMLSOutput& self, const std::string& systemId)
 void DOMLSOutput_init(void) {
 	//! xercesc::DOMLSOutput
 	boost::python::class_<xercesc::DOMLSOutput, boost::noncopyable>("DOMLSOutput", boost::python::no_init)
-			.def(DOMLSOutputDefVisitor())
+			.def(DOMLSOutputDefVisitor<XMLString>())
+			.def(DOMLSOutputDefVisitor<std::string>())
 			.def("getByteStream", &xercesc::DOMLSOutput::getByteStream, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getEncoding", &xercesc::DOMLSOutput::getEncoding, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getSystemId", &xercesc::DOMLSOutput::getSystemId, boost::python::return_value_policy<boost::python::return_by_value>())

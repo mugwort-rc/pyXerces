@@ -16,37 +16,28 @@
 
 namespace pyxerces {
 
+template <class STR>
 class XMLElementDeclDefVisitor
-: public boost::python::def_visitor<XMLElementDeclDefVisitor> {
+: public boost::python::def_visitor<XMLElementDeclDefVisitor<STR> > {
 friend class def_visitor_access;
 
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("setElementName", static_cast<void(*)(xercesc::XMLElementDecl&, const XMLString&, const XMLString&, const int)>(&XMLElementDeclDefVisitor::setElementName))
-	.def("setElementName", static_cast<void(*)(xercesc::XMLElementDecl&, const std::string&, const std::string&, const int)>(&XMLElementDeclDefVisitor::setElementName))
-	.def("setElementName", static_cast<void(*)(xercesc::XMLElementDecl&, const XMLString&, const int)>(&XMLElementDeclDefVisitor::setElementName))
-	.def("setElementName", static_cast<void(*)(xercesc::XMLElementDecl&, const std::string&, const int)>(&XMLElementDeclDefVisitor::setElementName))
+	.def("setElementName", static_cast<void(*)(xercesc::XMLElementDecl&, const STR&, const STR&, const int)>(&XMLElementDeclDefVisitor::setElementName))
+	.def("setElementName", static_cast<void(*)(xercesc::XMLElementDecl&, const STR&, const int)>(&XMLElementDeclDefVisitor::setElementName))
 	;
 }
 
-static void setElementName(xercesc::XMLElementDecl& self, const XMLString& prefix, const XMLString& localPart, const int uriId) {
-	self.setElementName(prefix.ptr(), localPart.ptr(), uriId);
-}
-
-static void setElementName(xercesc::XMLElementDecl& self, const std::string& prefix, const std::string& localPart, const int uriId) {
+static void setElementName(xercesc::XMLElementDecl& self, const STR& prefix, const STR& localPart, const int uriId) {
 	XMLString buff1(prefix), buff2(localPart);
-	XMLElementDeclDefVisitor::setElementName(self, buff1, buff2, uriId);
+	self.setElementName(buff1.ptr(), buff2.ptr(), uriId);
 }
 
-static void setElementName(xercesc::XMLElementDecl& self, const XMLString& rawName, const int uriId) {
-	self.setElementName(rawName.ptr(), uriId);
-}
-
-static void setElementName(xercesc::XMLElementDecl& self, const std::string& rawName, const int uriId) {
+static void setElementName(xercesc::XMLElementDecl& self, const STR& rawName, const int uriId) {
 	XMLString buff(rawName);
-	XMLElementDeclDefVisitor::setElementName(self, buff, uriId);
+	self.setElementName(buff.ptr(), uriId);
 }
 
 };
@@ -54,7 +45,8 @@ static void setElementName(xercesc::XMLElementDecl& self, const std::string& raw
 void XMLElementDecl_init(void) {
 	//! xercesc::XMLElementDecl
 	auto XMLElementDecl = boost::python::class_<xercesc::XMLElementDecl, boost::noncopyable, boost::python::bases<xercesc::XSerializable> >("XMLElementDecl", boost::python::no_init)
-			.def(XMLElementDeclDefVisitor())
+			.def(XMLElementDeclDefVisitor<XMLString>())
+			.def(XMLElementDeclDefVisitor<std::string>())
 			.def("getAttDefList", &xercesc::XMLElementDecl::getAttDefList, boost::python::return_internal_reference<>())
 			.def("getCharDataOpts", &xercesc::XMLElementDecl::getCharDataOpts)
 			.def("hasAttDefs", &xercesc::XMLElementDecl::hasAttDefs)

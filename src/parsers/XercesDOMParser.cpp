@@ -24,48 +24,34 @@ namespace pyxerces {
 //! XercesDOMParser
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(XercesDOMParserLoadGrammarOverloads, loadGrammar, 2, 3)
 
+template <class STR>
 class XercesDOMParserDefVisitor
-: public boost::python::def_visitor<XercesDOMParserDefVisitor> {
+: public boost::python::def_visitor<XercesDOMParserDefVisitor<STR> > {
 friend class def_visitor_access;
 
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("getGrammar", static_cast<xercesc::Grammar*(*)(xercesc::XercesDOMParser&, const XMLString&)>(&XercesDOMParserDefVisitor::getGrammar), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("getGrammar", static_cast<xercesc::Grammar*(*)(xercesc::XercesDOMParser&, const std::string&)>(&XercesDOMParserDefVisitor::getGrammar), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("error", static_cast<void(*)(xercesc::XercesDOMParser&, const unsigned int, const XMLString&, const xercesc::XMLErrorReporter::ErrTypes, const XMLString&, const XMLString&, const XMLString&, const XMLFileLoc, const XMLFileLoc)>(&XercesDOMParserDefVisitor::error))
-	.def("error", static_cast<void(*)(xercesc::XercesDOMParser&, const unsigned int, const std::string&, const xercesc::XMLErrorReporter::ErrTypes, const std::string&, const std::string&, const std::string&, const XMLFileLoc, const XMLFileLoc)>(&XercesDOMParserDefVisitor::error))
-	.def("expandSystemId", static_cast<bool(*)(xercesc::XercesDOMParser&, const XMLString&, xercesc::XMLBuffer&)>(&XercesDOMParserDefVisitor::expandSystemId))
-	.def("expandSystemId", static_cast<bool(*)(xercesc::XercesDOMParser&, const std::string&, xercesc::XMLBuffer&)>(&XercesDOMParserDefVisitor::expandSystemId))
+	.def("getGrammar", &XercesDOMParserDefVisitor::getGrammar, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("error", &XercesDOMParserDefVisitor::error)
+	.def("expandSystemId", &XercesDOMParserDefVisitor::expandSystemId)
 	;
 }
 
-static xercesc::Grammar* getGrammar(xercesc::XercesDOMParser& self, const XMLString& nameSpaceKey) {
-	return self.getGrammar(nameSpaceKey.ptr());
-}
-
-static xercesc::Grammar* getGrammar(xercesc::XercesDOMParser& self, const std::string& nameSpaceKey) {
+static xercesc::Grammar* getGrammar(xercesc::XercesDOMParser& self, const STR& nameSpaceKey) {
 	XMLString buff(nameSpaceKey);
-	return XercesDOMParserDefVisitor::getGrammar(self, buff);
+	return self.getGrammar(buff.ptr());
 }
 
-static void error(xercesc::XercesDOMParser& self, const unsigned int errCode, const XMLString& errDomain, const xercesc::XMLErrorReporter::ErrTypes type, const XMLString& errorText, const XMLString& systemId, const XMLString& publicId, const XMLFileLoc lineNum, const XMLFileLoc colNum) {
-	self.error(errCode, errDomain.ptr(), type, errorText.ptr(), systemId.ptr(), publicId.ptr(), lineNum, colNum);
-}
-
-static void error(xercesc::XercesDOMParser& self, const unsigned int errCode, const std::string& errDomain, const xercesc::XMLErrorReporter::ErrTypes type, const std::string& errorText, const std::string& systemId, const std::string& publicId, const XMLFileLoc lineNum, const XMLFileLoc colNum) {
+static void error(xercesc::XercesDOMParser& self, const unsigned int errCode, const STR& errDomain, const xercesc::XMLErrorReporter::ErrTypes type, const STR& errorText, const STR& systemId, const STR& publicId, const XMLFileLoc lineNum, const XMLFileLoc colNum) {
 	XMLString buff1(errDomain), buff2(errorText), buff3(systemId), buff4(publicId);
-	XercesDOMParserDefVisitor::error(self, errCode, buff1, type, buff2, buff3, buff4, lineNum, colNum);
+	self.error(errCode, buff1.ptr(), type, buff2.ptr(), buff3.ptr(), buff4.ptr(), lineNum, colNum);
 }
 
-static bool expandSystemId(xercesc::XercesDOMParser& self, const XMLString& systemId, xercesc::XMLBuffer& toFill) {
-	return self.expandSystemId(systemId.ptr(), toFill);
-}
-
-static bool expandSystemId(xercesc::XercesDOMParser& self, const std::string& systemId, xercesc::XMLBuffer& toFill) {
+static bool expandSystemId(xercesc::XercesDOMParser& self, const STR& systemId, xercesc::XMLBuffer& toFill) {
 	XMLString buff(systemId);
-	return XercesDOMParserDefVisitor::expandSystemId(self, buff, toFill);
+	return self.expandSystemId(buff.ptr(), toFill);
 }
 
 };
@@ -73,7 +59,8 @@ static bool expandSystemId(xercesc::XercesDOMParser& self, const std::string& sy
 void XercesDOMParser_init(void) {
 	//! xercesc::XercesDOMParser
 	boost::python::class_<xercesc::XercesDOMParser, boost::noncopyable, boost::python::bases<xercesc::AbstractDOMParser>, boost::shared_ptr<xercesc::XercesDOMParser> >("XercesDOMParser", boost::python::init<boost::python::optional<xercesc::XMLValidator* const, xercesc::MemoryManager* const, xercesc::XMLGrammarPool* const> >())
-			.def(XercesDOMParserDefVisitor())
+			.def(XercesDOMParserDefVisitor<XMLString>())
+			.def(XercesDOMParserDefVisitor<std::string>())
 			.def("getErrorHandler", static_cast<xercesc::ErrorHandler*(xercesc::XercesDOMParser::*)(void)>(&xercesc::XercesDOMParser::getErrorHandler), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getEntityResolver", static_cast<xercesc::EntityResolver*(xercesc::XercesDOMParser::*)(void)>(&xercesc::XercesDOMParser::getEntityResolver), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getXMLEntityResolver", static_cast<xercesc::XMLEntityResolver*(xercesc::XercesDOMParser::*)(void)>(&xercesc::XercesDOMParser::getXMLEntityResolver), boost::python::return_value_policy<boost::python::reference_existing_object>())

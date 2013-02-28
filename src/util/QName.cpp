@@ -14,92 +14,67 @@
 
 namespace pyxerces {
 
+template <class STR>
 class QNameDefVisitor
-: public boost::python::def_visitor<QNameDefVisitor> {
+: public boost::python::def_visitor<QNameDefVisitor<STR> > {
 friend class def_visitor_access;
 
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("setName", static_cast<void(*)(xercesc::QName&, const XMLString&, const XMLString&, const unsigned int)>(&QNameDefVisitor::setName))
-	.def("setName", static_cast<void(*)(xercesc::QName&, const std::string&, const std::string&, const unsigned int)>(&QNameDefVisitor::setName))
-	.def("setName", static_cast<void(*)(xercesc::QName&, const XMLString&, const unsigned int)>(&QNameDefVisitor::setName))
-	.def("setName", static_cast<void(*)(xercesc::QName&, const std::string&, const unsigned int)>(&QNameDefVisitor::setName))
-	.def("setPrefix", static_cast<void(*)(xercesc::QName&, const XMLString&)>(&QNameDefVisitor::setPrefix))
-	.def("setPrefix", static_cast<void(*)(xercesc::QName&, const std::string&)>(&QNameDefVisitor::setPrefix))
-	.def("setLocalPart", static_cast<void(*)(xercesc::QName&, const XMLString&)>(&QNameDefVisitor::setLocalPart))
-	.def("setLocalPart", static_cast<void(*)(xercesc::QName&, const std::string&)>(&QNameDefVisitor::setLocalPart))
+	.def("setName", static_cast<void(*)(xercesc::QName&, const STR&, const STR&, const unsigned int)>(&QNameDefVisitor::setName))
+	.def("setName", static_cast<void(*)(xercesc::QName&, const STR&, const unsigned int)>(&QNameDefVisitor::setName))
+	.def("setPrefix", &QNameDefVisitor::setPrefix)
+	.def("setLocalPart", &QNameDefVisitor::setLocalPart)
 	;
 }
 
-static void setName(xercesc::QName& self, const XMLString& prefix, const XMLString& localPart, const unsigned int uriId) {
-	self.setName(prefix.ptr(), localPart.ptr(), uriId);
-}
-
-static void setName(xercesc::QName& self, const std::string& prefix, const std::string& localPart, const unsigned int uriId) {
+static void setName(xercesc::QName& self, const STR& prefix, const STR& localPart, const unsigned int uriId) {
 	XMLString buff1(prefix), buff2(localPart);
-	QNameDefVisitor::setName(self, buff1, buff2, uriId);
+	self.setName(buff1.ptr(), buff2.ptr(), uriId);
 }
 
-static void setName(xercesc::QName& self, const XMLString& rawName, const unsigned int uriId) {
-	self.setName(rawName.ptr(), uriId);
-}
-
-static void setName(xercesc::QName& self, const std::string& rawName, const unsigned int uriId) {
+static void setName(xercesc::QName& self, const STR& rawName, const unsigned int uriId) {
 	XMLString buff(rawName);
-	QNameDefVisitor::setName(self, buff, uriId);
+	self.setName(buff.ptr(), uriId);
 }
 
-static void setPrefix(xercesc::QName& self, const XMLString& prefix) {
-	self.setPrefix(prefix.ptr());
-}
-
-static void setPrefix(xercesc::QName& self, const std::string& prefix) {
+static void setPrefix(xercesc::QName& self, const STR& prefix) {
 	XMLString buff(prefix);
-	QNameDefVisitor::setPrefix(self, buff);
+	self.setPrefix(buff.ptr());
 }
 
-static void setLocalPart(xercesc::QName& self, const XMLString& localPart) {
-	self.setLocalPart(localPart.ptr());
-}
-
-static void setLocalPart(xercesc::QName& self, const std::string& localPart) {
+static void setLocalPart(xercesc::QName& self, const STR& localPart) {
 	XMLString buff(localPart);
-	QNameDefVisitor::setLocalPart(self, buff);
+	self.setLocalPart(buff.ptr());
 }
 
 };
 
-xercesc::QName* QName_fromstring(const std::string& prefix, const std::string& localPart, const unsigned int uriId, xercesc::MemoryManager* const manager) {
+template <class STR>
+xercesc::QName* QName_fromstring_manager(const STR& prefix, const STR& localPart, const unsigned int uriId, xercesc::MemoryManager* const manager) {
 	XMLString buff1(prefix), buff2(localPart);
 	return new xercesc::QName(buff1.ptr(), buff2.ptr(), uriId, manager);
 }
 
-xercesc::QName* QName_fromstring(const std::string& prefix, const std::string& localPart, const unsigned int uriId) {
-	return QName_fromstring(prefix, localPart, uriId, xercesc::XMLPlatformUtils::fgMemoryManager);
-}
-
-xercesc::QName* QName_fromstring(const std::string& rawName, const unsigned int uriId, xercesc::MemoryManager* const manager) {
-	XMLString buff(rawName);
-	return new xercesc::QName(buff.ptr(), uriId, manager);
-}
-
-xercesc::QName* QName_fromstring(const std::string& rawName, const unsigned int uriId) {
-	return QName_fromstring(rawName, uriId, xercesc::XMLPlatformUtils::fgMemoryManager);
+template <class STR>
+xercesc::QName* QName_fromstring(const STR& prefix, const STR& localPart, const unsigned int uriId) {
+	return QName_fromstring_manager(prefix, localPart, uriId, xercesc::XMLPlatformUtils::fgMemoryManager);
 }
 
 void QName_init(void) {
 	//! xercesc::QName
 	boost::python::class_<xercesc::QName, boost::noncopyable, boost::python::bases<xercesc::XSerializable> >("QName", boost::python::init<boost::python::optional<xercesc::MemoryManager* const> >())
-			.def(QNameDefVisitor())
+			.def(QNameDefVisitor<XMLString>())
+			.def(QNameDefVisitor<std::string>())
 			.def(boost::python::init<const XMLCh* const, const XMLCh* const, const unsigned int, boost::python::optional<xercesc::MemoryManager* const> >())
 			.def(boost::python::init<const XMLCh* const, const unsigned int, boost::python::optional<xercesc::MemoryManager* const> >())
 			.def(boost::python::init<const xercesc::QName&>())
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::QName*(*)(const std::string&, const std::string&, const unsigned int, xercesc::MemoryManager* const)>(&QName_fromstring)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::QName*(*)(const std::string&, const std::string&, const unsigned int)>(&QName_fromstring)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::QName*(*)(const std::string&, const unsigned int, xercesc::MemoryManager* const)>(&QName_fromstring)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::QName*(*)(const std::string&, const unsigned int)>(&QName_fromstring)))
+			.def("__init__", boost::python::make_constructor(&QName_fromstring_manager<XMLString>))
+			.def("__init__", boost::python::make_constructor(&QName_fromstring<XMLString>))
+			.def("__init__", boost::python::make_constructor(&QName_fromstring_manager<std::string>))
+			.def("__init__", boost::python::make_constructor(&QName_fromstring<std::string>))
 			.def("getPrefix", static_cast<const XMLCh*(xercesc::QName::*)(void) const>(&xercesc::QName::getPrefix), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getLocalPart", static_cast<const XMLCh*(xercesc::QName::*)(void) const>(&xercesc::QName::getLocalPart), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getURI", &xercesc::QName::getURI)

@@ -26,8 +26,6 @@ template <class T>
 void visit(T& class_) const {
 	class_
 	.def("basicEncodingProbe", static_cast<xercesc::XMLRecognizer::Encodings(*)(const std::string&)>(&XMLRecognizerDefVisitor::basicEncodingProbe))
-	.def("encodingForName", static_cast<xercesc::XMLRecognizer::Encodings(*)(const XMLString&)>(&XMLRecognizerDefVisitor::encodingForName))
-	.def("encodingForName", static_cast<xercesc::XMLRecognizer::Encodings(*)(const std::string&)>(&XMLRecognizerDefVisitor::encodingForName))
 	;
 }
 
@@ -35,13 +33,24 @@ static xercesc::XMLRecognizer::Encodings basicEncodingProbe(const std::string& r
 	return xercesc::XMLRecognizer::basicEncodingProbe(reinterpret_cast<const unsigned char*>(rawBuffer.c_str()), rawBuffer.size());
 }
 
-static xercesc::XMLRecognizer::Encodings encodingForName(const XMLString& theEncName) {
-	return xercesc::XMLRecognizer::encodingForName(theEncName.ptr());
+};
+
+template <class STR>
+class XMLRecognizerStringDefVisitor
+: public boost::python::def_visitor<XMLRecognizerStringDefVisitor<STR> > {
+friend class def_visitor_access;
+
+public:
+template <class T>
+void visit(T& class_) const {
+	class_
+	.def("encodingForName", &XMLRecognizerStringDefVisitor::encodingForName)
+	;
 }
 
-static xercesc::XMLRecognizer::Encodings encodingForName(const std::string& theEncName) {
+static xercesc::XMLRecognizer::Encodings encodingForName(const STR& theEncName) {
 	XMLString buff(theEncName);
-	return XMLRecognizerDefVisitor::encodingForName(buff);
+	return xercesc::XMLRecognizer::encodingForName(buff.ptr());
 }
 
 };
@@ -50,6 +59,8 @@ void XMLRecognizer_init(void) {
 	//! xercesc::XMLRecognizer
 	auto XMLRecognizer = boost::python::class_<xercesc::XMLRecognizer, boost::noncopyable>("XMLRecognizer", boost::python::no_init)
 			.def(XMLRecognizerDefVisitor())
+			.def(XMLRecognizerStringDefVisitor<XMLString>())
+			.def(XMLRecognizerStringDefVisitor<std::string>())
 			.def("basicEncodingProbe", &xercesc::XMLRecognizer::basicEncodingProbe)
 			.def("encodingForName", &xercesc::XMLRecognizer::encodingForName)
 			.def("nameForEncoding", &xercesc::XMLRecognizer::nameForEncoding, XMLRecognizerNameForEncodingOverloads()[boost::python::return_value_policy<boost::python::return_by_value>()])

@@ -19,202 +19,118 @@
 
 namespace pyxerces {
 
+template <class STR>
 class AbstractDOMParserDefVisitor
-: public boost::python::def_visitor<AbstractDOMParserDefVisitor> {
+: public boost::python::def_visitor<AbstractDOMParserDefVisitor<STR> > {
 friend class def_visitor_access;
 
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("useScanner", static_cast<void(*)(xercesc::AbstractDOMParser&, const XMLString&)>(&AbstractDOMParserDefVisitor::useScanner))
-	.def("useScanner", static_cast<void(*)(xercesc::AbstractDOMParser&, const std::string&)>(&AbstractDOMParserDefVisitor::useScanner))
-	.def("useImplementation", static_cast<void(*)(xercesc::AbstractDOMParser&, const XMLString&)>(&AbstractDOMParserDefVisitor::useImplementation))
-	.def("useImplementation", static_cast<void(*)(xercesc::AbstractDOMParser&, const std::string&)>(&AbstractDOMParserDefVisitor::useImplementation))
-	.def("handleElementPSVI", static_cast<void(*)(xercesc::AbstractDOMParser&, const XMLString&, const XMLString&, xercesc::PSVIElement*)>(&AbstractDOMParserDefVisitor::handleElementPSVI))
-	.def("handleElementPSVI", static_cast<void(*)(xercesc::AbstractDOMParser&, const std::string&, const std::string&, xercesc::PSVIElement*)>(&AbstractDOMParserDefVisitor::handleElementPSVI))
-	.def("handlePartialElementPSVI", static_cast<void(*)(xercesc::AbstractDOMParser&, const XMLString&, const XMLString&, xercesc::PSVIElement*)>(&AbstractDOMParserDefVisitor::handlePartialElementPSVI))
-	.def("handlePartialElementPSVI", static_cast<void(*)(xercesc::AbstractDOMParser&, const std::string&, const std::string&, xercesc::PSVIElement*)>(&AbstractDOMParserDefVisitor::handlePartialElementPSVI))
-	.def("handleAttributesPSVI", static_cast<void(*)(xercesc::AbstractDOMParser&, const XMLString&, const XMLString&, xercesc::PSVIAttributeList*)>(&AbstractDOMParserDefVisitor::handleAttributesPSVI))
-	.def("handleAttributesPSVI", static_cast<void(*)(xercesc::AbstractDOMParser&, const std::string&, const std::string&, xercesc::PSVIAttributeList*)>(&AbstractDOMParserDefVisitor::handleAttributesPSVI))
-	.def("docCharacters", static_cast<void(*)(xercesc::AbstractDOMParser&, const XMLString&, const bool)>(&AbstractDOMParserDefVisitor::docCharacters))
-	.def("docCharacters", static_cast<void(*)(xercesc::AbstractDOMParser&, const std::string&, const bool)>(&AbstractDOMParserDefVisitor::docCharacters))
-	.def("docComment", static_cast<void(*)(xercesc::AbstractDOMParser&, const XMLString&)>(&AbstractDOMParserDefVisitor::docComment))
-	.def("docComment", static_cast<void(*)(xercesc::AbstractDOMParser&, const std::string&)>(&AbstractDOMParserDefVisitor::docComment))
-	.def("docPI", static_cast<void(*)(xercesc::AbstractDOMParser&, const XMLString&, const XMLString&)>(&AbstractDOMParserDefVisitor::docPI))
-	.def("docPI", static_cast<void(*)(xercesc::AbstractDOMParser&, const std::string&, const std::string&)>(&AbstractDOMParserDefVisitor::docPI))
-	.def("endElement", static_cast<void(*)(xercesc::AbstractDOMParser&, const xercesc::XMLElementDecl&, const unsigned int, const bool, const XMLString&)>(&AbstractDOMParserDefVisitor::endElement))
-	.def("endElement", static_cast<void(*)(xercesc::AbstractDOMParser&, const xercesc::XMLElementDecl&, const unsigned int, const bool, const std::string&)>(&AbstractDOMParserDefVisitor::endElement))
-	.def("ignorableWhitespace", static_cast<void(*)(xercesc::AbstractDOMParser&, const XMLString&, const bool)>(&AbstractDOMParserDefVisitor::ignorableWhitespace))
-	.def("ignorableWhitespace", static_cast<void(*)(xercesc::AbstractDOMParser&, const std::string&, const bool)>(&AbstractDOMParserDefVisitor::ignorableWhitespace))
-	.def("startElement", static_cast<void(*)(xercesc::AbstractDOMParser&, const xercesc::XMLElementDecl&, const unsigned int, const XMLString&, const xercesc::RefVectorOf<xercesc::XMLAttr>&, const XMLSize_t, const bool, const bool)>(&AbstractDOMParserDefVisitor::startElement))
-	.def("startElement", static_cast<void(*)(xercesc::AbstractDOMParser&, const xercesc::XMLElementDecl&, const unsigned int, const std::string&, const xercesc::RefVectorOf<xercesc::XMLAttr>&, const XMLSize_t, const bool, const bool)>(&AbstractDOMParserDefVisitor::startElement))
-	.def("XMLDecl", static_cast<void(*)(xercesc::AbstractDOMParser&, const XMLString&, const XMLString&, const XMLString&, const XMLString&)>(&AbstractDOMParserDefVisitor::XMLDecl))
-	.def("XMLDecl", static_cast<void(*)(xercesc::AbstractDOMParser&, const std::string&, const std::string&, const std::string&, const std::string&)>(&AbstractDOMParserDefVisitor::XMLDecl))
-	.def("doctypeComment", static_cast<void(*)(xercesc::AbstractDOMParser&, const XMLString&)>(&AbstractDOMParserDefVisitor::doctypeComment))
-	.def("doctypeComment", static_cast<void(*)(xercesc::AbstractDOMParser&, const std::string&)>(&AbstractDOMParserDefVisitor::doctypeComment))
-	.def("doctypeDecl", static_cast<void(*)(xercesc::AbstractDOMParser&, const xercesc::DTDElementDecl&, const XMLString&, const XMLString&, const bool, const bool)>(&AbstractDOMParserDefVisitor::doctypeDecl))
-	.def("doctypeDecl", static_cast<void(*)(xercesc::AbstractDOMParser&, const xercesc::DTDElementDecl&, const std::string&, const std::string&, const bool, const bool)>(&AbstractDOMParserDefVisitor::doctypeDecl))
-	.def("doctypePI", static_cast<void(*)(xercesc::AbstractDOMParser&, const XMLString&, const XMLString&)>(&AbstractDOMParserDefVisitor::doctypePI))
-	.def("doctypePI", static_cast<void(*)(xercesc::AbstractDOMParser&, const std::string&, const std::string&)>(&AbstractDOMParserDefVisitor::doctypePI))
-	.def("doctypeWhitespace", static_cast<void(*)(xercesc::AbstractDOMParser&, const XMLString&)>(&AbstractDOMParserDefVisitor::doctypeWhitespace))
-	.def("doctypeWhitespace", static_cast<void(*)(xercesc::AbstractDOMParser&, const std::string&)>(&AbstractDOMParserDefVisitor::doctypeWhitespace))
-	.def("TextDecl", static_cast<void(*)(xercesc::AbstractDOMParser&, const XMLString&, const XMLString&)>(&AbstractDOMParserDefVisitor::TextDecl))
-	.def("TextDecl", static_cast<void(*)(xercesc::AbstractDOMParser&, const std::string&, const std::string&)>(&AbstractDOMParserDefVisitor::TextDecl))
+	.def("useScanner", &AbstractDOMParserDefVisitor::useScanner)
+	.def("useImplementation", &AbstractDOMParserDefVisitor::useImplementation)
+	.def("handleElementPSVI", &AbstractDOMParserDefVisitor::handleElementPSVI)
+	.def("handlePartialElementPSVI", &AbstractDOMParserDefVisitor::handlePartialElementPSVI)
+	.def("handleAttributesPSVI", &AbstractDOMParserDefVisitor::handleAttributesPSVI)
+	.def("docCharacters", &AbstractDOMParserDefVisitor::docCharacters)
+	.def("docComment", &AbstractDOMParserDefVisitor::docComment)
+	.def("docPI", &AbstractDOMParserDefVisitor::docPI)
+	.def("endElement", &AbstractDOMParserDefVisitor::endElement)
+	.def("ignorableWhitespace", &AbstractDOMParserDefVisitor::ignorableWhitespace)
+	.def("startElement", &AbstractDOMParserDefVisitor::startElement)
+	.def("XMLDecl", &AbstractDOMParserDefVisitor::XMLDecl)
+	.def("doctypeComment", &AbstractDOMParserDefVisitor::doctypeComment)
+	.def("doctypeDecl", &AbstractDOMParserDefVisitor::doctypeDecl)
+	.def("doctypePI", &AbstractDOMParserDefVisitor::doctypePI)
+	.def("doctypeWhitespace", &AbstractDOMParserDefVisitor::doctypeWhitespace)
+	.def("TextDecl", &AbstractDOMParserDefVisitor::TextDecl)
 	;
 }
 
-static void useScanner(xercesc::AbstractDOMParser& self, const XMLString& scannerName) {
-	self.useScanner(scannerName.ptr());
-}
-
-static void useScanner(xercesc::AbstractDOMParser& self, const std::string& scannerName) {
+static void useScanner(xercesc::AbstractDOMParser& self, const STR& scannerName) {
 	XMLString buff(scannerName);
-	AbstractDOMParserDefVisitor::useScanner(self, buff);
+	self.useScanner(buff.ptr());
 }
 
-static void useImplementation(xercesc::AbstractDOMParser& self, const XMLString& implementationFeatures) {
-	self.useImplementation(implementationFeatures.ptr());
-}
-
-static void useImplementation(xercesc::AbstractDOMParser& self, const std::string& implementationFeatures) {
+static void useImplementation(xercesc::AbstractDOMParser& self, const STR& implementationFeatures) {
 	XMLString buff(implementationFeatures);
-	AbstractDOMParserDefVisitor::useImplementation(self, buff);
+	self.useImplementation(buff.ptr());
 }
 
-static void handleElementPSVI(xercesc::AbstractDOMParser& self, const XMLString& localName, const XMLString& uri, xercesc::PSVIElement* elementInfo) {
-	self.handleElementPSVI(localName.ptr(), uri.ptr(), elementInfo);
-}
-
-static void handleElementPSVI(xercesc::AbstractDOMParser& self, const std::string& localName, const std::string& uri, xercesc::PSVIElement* elementInfo) {
+static void handleElementPSVI(xercesc::AbstractDOMParser& self, const STR& localName, const STR& uri, xercesc::PSVIElement* elementInfo) {
 	XMLString buff1(localName), buff2(uri);
-	AbstractDOMParserDefVisitor::handleElementPSVI(self, buff1, buff2, elementInfo);
+	self.handleElementPSVI(buff1.ptr(), buff2.ptr(), elementInfo);
 }
 
-static void handlePartialElementPSVI(xercesc::AbstractDOMParser& self, const XMLString& localName, const XMLString& uri, xercesc::PSVIElement* elementInfo) {
-	self.handlePartialElementPSVI(localName.ptr(), uri.ptr(), elementInfo);
-}
-
-static void handlePartialElementPSVI(xercesc::AbstractDOMParser& self, const std::string& localName, const std::string& uri, xercesc::PSVIElement* elementInfo) {
+static void handlePartialElementPSVI(xercesc::AbstractDOMParser& self, const STR& localName, const STR& uri, xercesc::PSVIElement* elementInfo) {
 	XMLString buff1(localName), buff2(uri);
-	AbstractDOMParserDefVisitor::handlePartialElementPSVI(self, buff1, buff2, elementInfo);
+	self.handlePartialElementPSVI(buff1.ptr(), buff2.ptr(), elementInfo);
 }
 
-static void handleAttributesPSVI(xercesc::AbstractDOMParser& self, const XMLString& localName, const XMLString& uri, xercesc::PSVIAttributeList* psviAttributes) {
-	self.handleAttributesPSVI(localName.ptr(), uri.ptr(), psviAttributes);
-}
-
-static void handleAttributesPSVI(xercesc::AbstractDOMParser& self, const std::string& localName, const std::string& uri, xercesc::PSVIAttributeList* psviAttributes) {
+static void handleAttributesPSVI(xercesc::AbstractDOMParser& self, const STR& localName, const STR& uri, xercesc::PSVIAttributeList* psviAttributes) {
 	XMLString buff1(localName), buff2(uri);
-	AbstractDOMParserDefVisitor::handleAttributesPSVI(self, buff1, buff2, psviAttributes);
+	self.handleAttributesPSVI(buff1.ptr(), buff2.ptr(), psviAttributes);
 }
 
-static void docCharacters(xercesc::AbstractDOMParser& self, const XMLString& chars, const bool cdataSection) {
-	self.docCharacters(chars.ptr(), chars.size(), cdataSection);
-}
-
-static void docCharacters(xercesc::AbstractDOMParser& self, const std::string& chars, const bool cdataSection) {
+static void docCharacters(xercesc::AbstractDOMParser& self, const STR& chars, const bool cdataSection) {
 	XMLString buff(chars);
-	AbstractDOMParserDefVisitor::docCharacters(self, buff, cdataSection);
+	self.docCharacters(buff.ptr(), buff.size(), cdataSection);
 }
 
-static void docComment(xercesc::AbstractDOMParser& self, const XMLString& comment) {
-	self.docComment(comment.ptr());
-}
-
-static void docComment(xercesc::AbstractDOMParser& self, const std::string& comment) {
+static void docComment(xercesc::AbstractDOMParser& self, const STR& comment) {
 	XMLString buff(comment);
-	AbstractDOMParserDefVisitor::docComment(self, buff);
+	self.docComment(buff.ptr());
 }
 
-static void docPI(xercesc::AbstractDOMParser& self, const XMLString& target, const XMLString& data) {
-	self.docPI(target.ptr(), data.ptr());
-}
-
-static void docPI(xercesc::AbstractDOMParser& self, const std::string& target, const std::string& data) {
+static void docPI(xercesc::AbstractDOMParser& self, const STR& target, const STR& data) {
 	XMLString buff1(target), buff2(data);
-	AbstractDOMParserDefVisitor::docPI(self, buff1, buff2);
+	self.docPI(buff1.ptr(), buff2.ptr());
 }
 
-static void endElement(xercesc::AbstractDOMParser& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const bool isRoot, const XMLString& prefixName) {
-	self.endElement(elemDecl, uriId, isRoot, prefixName.ptr());
-}
-
-static void endElement(xercesc::AbstractDOMParser& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const bool isRoot, const std::string& prefixName) {
+static void endElement(xercesc::AbstractDOMParser& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const bool isRoot, const STR& prefixName) {
 	XMLString buff(prefixName);
-	AbstractDOMParserDefVisitor::endElement(self, elemDecl, uriId, isRoot, buff);
+	self.endElement(elemDecl, uriId, isRoot, buff.ptr());
 }
 
-static void ignorableWhitespace(xercesc::AbstractDOMParser& self, const XMLString& chars, const bool cdataSection) {
-	self.ignorableWhitespace(chars.ptr(), chars.size(), cdataSection);
-}
-
-static void ignorableWhitespace(xercesc::AbstractDOMParser& self, const std::string& chars, const bool cdataSection) {
+static void ignorableWhitespace(xercesc::AbstractDOMParser& self, const STR& chars, const bool cdataSection) {
 	XMLString buff(chars);
-	AbstractDOMParserDefVisitor::ignorableWhitespace(self, buff, cdataSection);
+	self.ignorableWhitespace(buff.ptr(), buff.size(), cdataSection);
 }
 
-static void startElement(xercesc::AbstractDOMParser& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const XMLString& prefixName, const xercesc::RefVectorOf<xercesc::XMLAttr>& attrList, const XMLSize_t attrCount, const bool isEmpty, const bool isRoot) {
-	self.startElement(elemDecl, uriId, prefixName.ptr(), attrList, attrCount, isEmpty, isRoot);
-}
-
-static void startElement(xercesc::AbstractDOMParser& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const std::string& prefixName, const xercesc::RefVectorOf<xercesc::XMLAttr>& attrList, const XMLSize_t attrCount, const bool isEmpty, const bool isRoot) {
+static void startElement(xercesc::AbstractDOMParser& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const STR& prefixName, const xercesc::RefVectorOf<xercesc::XMLAttr>& attrList, const XMLSize_t attrCount, const bool isEmpty, const bool isRoot) {
 	XMLString buff(prefixName);
-	AbstractDOMParserDefVisitor::startElement(self, elemDecl, uriId, buff, attrList, attrCount, isEmpty, isRoot);
+	self.startElement(elemDecl, uriId, buff.ptr(), attrList, attrCount, isEmpty, isRoot);
 }
 
-static void XMLDecl(xercesc::AbstractDOMParser& self, const XMLString& versionStr, const XMLString& encodingStr, const XMLString& standaloneStr, const XMLString& autoEncodingStr) {
-	self.XMLDecl(versionStr.ptr(), encodingStr.ptr(), standaloneStr.ptr(), autoEncodingStr.ptr());
-}
-
-static void XMLDecl(xercesc::AbstractDOMParser& self, const std::string& versionStr, const std::string& encodingStr, const std::string& standaloneStr, const std::string& autoEncodingStr) {
+static void XMLDecl(xercesc::AbstractDOMParser& self, const STR& versionStr, const STR& encodingStr, const STR& standaloneStr, const STR& autoEncodingStr) {
 	XMLString buff1(versionStr), buff2(encodingStr), buff3(standaloneStr), buff4(autoEncodingStr);
-	AbstractDOMParserDefVisitor::XMLDecl(self, buff1, buff2, buff3, buff4);
+	self.XMLDecl(buff1.ptr(), buff2.ptr(), buff3.ptr(), buff4.ptr());
 }
 
-static void doctypeComment(xercesc::AbstractDOMParser& self, const XMLString& comment) {
-	self.doctypeComment(comment.ptr());
-}
-
-static void doctypeComment(xercesc::AbstractDOMParser& self, const std::string& comment) {
+static void doctypeComment(xercesc::AbstractDOMParser& self, const STR& comment) {
 	XMLString buff(comment);
-	AbstractDOMParserDefVisitor::doctypeComment(self, buff);
+	self.doctypeComment(buff.ptr());
 }
 
-static void doctypeDecl(xercesc::AbstractDOMParser& self, const xercesc::DTDElementDecl& elemDecl, const XMLString& publicId, const XMLString& systemId, const bool hasIntSubset, const bool hasExtSubset) {
-	self.doctypeDecl(elemDecl, publicId.ptr(), systemId.ptr(), hasIntSubset, hasExtSubset);
-}
-
-static void doctypeDecl(xercesc::AbstractDOMParser& self, const xercesc::DTDElementDecl& elemDecl, const std::string& publicId, const std::string& systemId, const bool hasIntSubset, const bool hasExtSubset) {
+static void doctypeDecl(xercesc::AbstractDOMParser& self, const xercesc::DTDElementDecl& elemDecl, const STR& publicId, const STR& systemId, const bool hasIntSubset, const bool hasExtSubset) {
 	XMLString buff1(publicId), buff2(systemId);
-	AbstractDOMParserDefVisitor::doctypeDecl(self, elemDecl, buff1, buff2, hasIntSubset, hasExtSubset);
+	self.doctypeDecl(elemDecl, buff1.ptr(), buff2.ptr(), hasIntSubset, hasExtSubset);
 }
 
-static void doctypePI(xercesc::AbstractDOMParser& self, const XMLString& target, const XMLString& data) {
-	self.doctypePI(target.ptr(), data.ptr());
-}
-
-static void doctypePI(xercesc::AbstractDOMParser& self, const std::string& target, const std::string& data) {
+static void doctypePI(xercesc::AbstractDOMParser& self, const STR& target, const STR& data) {
 	XMLString buff1(target), buff2(data);
-	AbstractDOMParserDefVisitor::doctypePI(self, buff1, buff2);
+	self.doctypePI(buff1.ptr(), buff2.ptr());
 }
 
-static void doctypeWhitespace(xercesc::AbstractDOMParser& self, const XMLString& chars) {
-	self.doctypeWhitespace(chars.ptr(), chars.size());
-}
-
-static void doctypeWhitespace(xercesc::AbstractDOMParser& self, const std::string& chars) {
+static void doctypeWhitespace(xercesc::AbstractDOMParser& self, const STR& chars) {
 	XMLString buff(chars);
-	AbstractDOMParserDefVisitor::doctypeWhitespace(self, buff);
+	self.doctypeWhitespace(buff.ptr(), buff.size());
 }
 
-static void TextDecl(xercesc::AbstractDOMParser& self, const XMLString& versionStr, const XMLString& encodingStr) {
-	self.TextDecl(versionStr.ptr(), encodingStr.ptr());
-}
-
-static void TextDecl(xercesc::AbstractDOMParser& self, const std::string& versionStr, const std::string& encodingStr) {
+static void TextDecl(xercesc::AbstractDOMParser& self, const STR& versionStr, const STR& encodingStr) {
 	XMLString buff1(versionStr), buff2(encodingStr);
-	AbstractDOMParserDefVisitor::TextDecl(self, buff1, buff2);
+	self.TextDecl(buff1.ptr(), buff2.ptr());
 }
 
 };
@@ -222,7 +138,8 @@ static void TextDecl(xercesc::AbstractDOMParser& self, const std::string& versio
 void AbstractDOMParser_init(void) {
 	//! xercesc::AbstractDOMParser
 	auto AbstractDOMParser = boost::python::class_<xercesc::AbstractDOMParser, boost::noncopyable, boost::python::bases<xercesc::XMLDocumentHandler, xercesc::XMLErrorReporter, xercesc::XMLEntityHandler, xercesc::DocTypeHandler, xercesc::PSVIHandler> >("AbstractDOMParser", boost::python::no_init)
-			.def(AbstractDOMParserDefVisitor())
+			.def(AbstractDOMParserDefVisitor<XMLString>())
+			.def(AbstractDOMParserDefVisitor<std::string>())
 			.def("reset", &xercesc::AbstractDOMParser::reset)
 			.def("adoptDocument", &xercesc::AbstractDOMParser::adoptDocument, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getDocument", &xercesc::AbstractDOMParser::getDocument, boost::python::return_value_policy<boost::python::reference_existing_object>())
