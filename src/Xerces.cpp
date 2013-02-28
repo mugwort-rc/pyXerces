@@ -51,6 +51,7 @@
 #include "dom/DOMXPathEvaluator.h"
 #include "dom/DOMXPathException.h"
 #include "dom/DOMXPathExpression.h"
+#include "dom/DOMXPathNamespace.h"
 #include "dom/DOMXPathNSResolver.h"
 #include "dom/DOMXPathResult.h"
 
@@ -193,6 +194,7 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::DOMTypeInfo_init();
 	pyxerces::DOMXPathException_init();
 	pyxerces::DOMXPathExpression_init();
+	pyxerces::DOMXPathNamespace_init();
 	pyxerces::DOMXPathNSResolver_init();
 	pyxerces::DOMXPathResult_init();
 
