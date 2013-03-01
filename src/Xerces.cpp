@@ -72,6 +72,7 @@
 #include "framework/XMLErrorReporter.h"
 #include "framework/XMLFormatter.h"
 #include "framework/XMLGrammarDescription.h"
+#include "framework/XMLRecognizer.h"
 #include "framework/psvi/PSVIHandler.h"
 
 // internal
@@ -218,6 +219,7 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::XMLContentModel_init();
 	pyxerces::XMLElementDecl_init();
 	pyxerces::XMLGrammarDescription_init();
+	pyxerces::XMLRecognizer_init();
 
 	// ==================================================
 	// internal
@@ -261,6 +263,7 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::UnexpectedEOFException_init();
 	pyxerces::UnsupportedEncodingException_init();
 	pyxerces::UTFDataFormatException_init();
+	pyxerces::XMLEntityResolver_init();
 	pyxerces::XMLExceptMsgs_init();
 	pyxerces::XMLFileMgr_init();
 	pyxerces::XMLMsgLoader_init();
