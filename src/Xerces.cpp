@@ -59,9 +59,11 @@
 #include "dom/DOMXPathResult.h"
 
 // framework
+#include "framework/LocalFileFormatTarget.h"
 #include "framework/MemBufFormatTarget.h"
 #include "framework/MemBufInputSource.h"
 #include "framework/MemoryManager.h"
+#include "framework/StdOutFormatTarget.h"
 #include "framework/XMLBuffer.h"
 #include "framework/XMLContentModel.h"
 #include "framework/XMLDocumentHandler.h"
@@ -207,9 +209,11 @@ BOOST_PYTHON_MODULE(__Xerces)
 	// ==================================================
 	// framework
 	// --------------------------------------------------
+	pyxerces::LocalFileFormatTarget_init();
 	pyxerces::MemBufFormatTarget_init();
 	pyxerces::MemBufInputSource_init();
 	pyxerces::MemoryManager_init();
+	pyxerces::StdOutFormatTarget_init();
 	pyxerces::XMLBuffer_init();
 	pyxerces::XMLContentModel_init();
 	pyxerces::XMLElementDecl_init();
