@@ -24,7 +24,7 @@ void translateDOMException(const xercesc::DOMException& e) {
 
 void DOMException_init(void) {
 	//! xercesc::DOMException
-	auto DOMException = boost::python::class_<xercesc::DOMException, boost::noncopyable>("DOMException")
+	auto DOMException = boost::python::class_<xercesc::DOMException>("DOMException")
 			.def(boost::python::init<short, boost::python::optional<short, xercesc::MemoryManager*> >())
 			.def(boost::python::init<const xercesc::DOMException&>())
 			.def("getMessage", &xercesc::DOMException::getMessage, boost::python::return_value_policy<boost::python::return_by_value>())

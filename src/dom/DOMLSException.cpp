@@ -23,7 +23,7 @@ void translateDOMLSException(const xercesc::DOMLSException& e) {
 
 void DOMLSException_init(void) {
 	//! xercesc::DOMLSException
-	auto DOMLSException = boost::python::class_<xercesc::DOMLSException, boost::noncopyable, boost::python::bases<xercesc::DOMException> >("DOMLSException")
+	auto DOMLSException = boost::python::class_<xercesc::DOMLSException, boost::python::bases<xercesc::DOMException> >("DOMLSException")
 			.def(boost::python::init<short, short, xercesc::MemoryManager* const>())
 			.def(boost::python::init<const xercesc::DOMLSException&>())
 			;

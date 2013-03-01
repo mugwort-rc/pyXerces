@@ -23,7 +23,7 @@ void translateDOMRangeException(const xercesc::DOMRangeException& e) {
 
 void DOMRangeException_init(void) {
 	//! xercesc::DOMRangeException
-	auto DOMRangeException = boost::python::class_<xercesc::DOMRangeException, boost::noncopyable, boost::python::bases<xercesc::DOMException> >("DOMRangeException")
+	auto DOMRangeException = boost::python::class_<xercesc::DOMRangeException, boost::python::bases<xercesc::DOMException> >("DOMRangeException")
 			.def(boost::python::init<short, short, xercesc::MemoryManager* const>())
 			.def(boost::python::init<const xercesc::DOMRangeException&>())
 			;
