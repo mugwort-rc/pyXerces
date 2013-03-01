@@ -73,6 +73,7 @@
 #include "framework/XMLFormatter.h"
 #include "framework/XMLGrammarDescription.h"
 #include "framework/XMLRecognizer.h"
+#include "framework/XMLValidator.h"
 #include "framework/psvi/PSVIHandler.h"
 
 // internal
@@ -128,6 +129,7 @@
 #include "validators/datatype/InvalidDatatypeFacetException.h"
 #include "validators/datatype/InvalidDatatypeValueException.h"
 #include "validators/DTD/DocTypeHandler.h"
+#include "validators/DTD/DTDValidator.h"
 #include "validators/schema/identity/XPathException.h"
 
 BOOST_PYTHON_MODULE(__Xerces)
@@ -150,6 +152,7 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::XMLEntityHandler_init();
 	pyxerces::XMLErrorReporter_init();
 	pyxerces::XMLFormatter_init();
+	pyxerces::XMLValidator_init();
 	// framework/psvi
 	pyxerces::PSVIHandler_init();
 	// internal
@@ -281,6 +284,8 @@ BOOST_PYTHON_MODULE(__Xerces)
 	// datatype
 	pyxerces::InvalidDatatypeFacetException_init();
 	pyxerces::InvalidDatatypeValueException_init();
+	// DTD
+	pyxerces::DTDValidator_init();
 	// schema
 	pyxerces::XPathException_init();
 }
