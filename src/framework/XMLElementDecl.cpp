@@ -63,6 +63,20 @@ void XMLElementDecl_init(void) {
 			.def("isDeclared", &xercesc::XMLElementDecl::isDeclared)
 			.def("isExternal", &xercesc::XMLElementDecl::isExternal)
 			.def("getMemoryManager", &xercesc::XMLElementDecl::getMemoryManager, boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("setElementName", static_cast<void(xercesc::XMLElementDecl::*)(const XMLCh* const, const XMLCh* const, const int)>(&xercesc::XMLElementDecl::setElementName))
+			.def("setElementName", static_cast<void(xercesc::XMLElementDecl::*)(const XMLCh* const, const int)>(&xercesc::XMLElementDecl::setElementName))
+			.def("setElementName", static_cast<void(xercesc::XMLElementDecl::*)(const xercesc::QName* const)>(&xercesc::XMLElementDecl::setElementName))
+			.def("setCreateReason", &xercesc::XMLElementDecl::setCreateReason)
+			.def("setId", &xercesc::XMLElementDecl::setId)
+			.def("setExternalElemDeclaration", &xercesc::XMLElementDecl::setExternalElemDeclaration)
+			.def("isSerializable", &xercesc::XMLElementDecl::isSerializable)
+			.def("getProtoType", &xercesc::XMLElementDecl::getProtoType, boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("serialize", &xercesc::XMLElementDecl::serialize)
+			.def("getObjectType", &xercesc::XMLElementDecl::getObjectType)
+			.def("storeElementDecl", &xercesc::XMLElementDecl::storeElementDecl)
+			.def("loadElementDecl", &xercesc::XMLElementDecl::loadElementDecl, boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.staticmethod("storeElementDecl")
+			.staticmethod("loadElementDecl")
 			.def_readonly("fgInvalidElemId", &xercesc::XMLElementDecl::fgInvalidElemId)
 			.def_readonly("fgPCDataElemId", &xercesc::XMLElementDecl::fgPCDataElemId)
 			.def_readonly("fgPCDataElemName", &xercesc::XMLElementDecl::fgPCDataElemName)
@@ -84,6 +98,12 @@ void XMLElementDecl_init(void) {
 			.value("SpacesOk", xercesc::XMLElementDecl::SpacesOk)
 			.value("AllCharData", xercesc::XMLElementDecl::AllCharData)
 			.export_values()
+			;
+	//! xercesc::XMLElementDecl::objectType
+	boost::python::enum_<xercesc::XMLElementDecl::objectType>("objectType")
+			.value("Schema", xercesc::XMLElementDecl::Schema)
+			.value("DTD", xercesc::XMLElementDecl::DTD)
+			.value("UnKnown", xercesc::XMLElementDecl::UnKnown)
 			;
 }
 
