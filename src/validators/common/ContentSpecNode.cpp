@@ -8,9 +8,14 @@
 #include "ContentSpecNode.h"
 
 #include <boost/python.hpp>
-#include <xercesc/framework/XMLBuffer.hpp>					//!< for forward declaration
-#include <xercesc/validators/common/Grammar.hpp>			//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/framework/XMLBuffer.hpp>
+#include <xercesc/validators/common/Grammar.hpp>
+
 #include <xercesc/validators/common/ContentSpecNode.hpp>
+
+#include "../../internal/XSerializable.h"
 
 namespace pyxerces {
 
@@ -45,9 +50,7 @@ void ContentSpecNode_init(void) {
 			.def("hasAllContent", &xercesc::ContentSpecNode::hasAllContent)
 			.def("getMinTotalRange", &xercesc::ContentSpecNode::getMinTotalRange)
 			.def("getMaxTotalRange", &xercesc::ContentSpecNode::getMaxTotalRange)
-			.def("isSerializable", &xercesc::ContentSpecNode::isSerializable)
-			.def("getProtoType", &xercesc::ContentSpecNode::getProtoType, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("serialize", &xercesc::ContentSpecNode::serialize)
+			PyDECL_XSERIALIZABLE(ContentSpecNode)
 			;
 	boost::python::scope ContentSpecNodeScope = ContentSpecNode;
 	//! xercesc::ContentSpecNode::NodeTypes

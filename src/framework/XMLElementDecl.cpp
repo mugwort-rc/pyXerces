@@ -8,10 +8,14 @@
 #include "XMLElementDecl.h"
 
 #include <boost/python.hpp>
-#include <xercesc/validators/common/ContentSpecNode.hpp>	//!< for forward declaration
-#include <xercesc/framework/XMLContentModel.hpp>			//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/validators/common/ContentSpecNode.hpp>
+#include <xercesc/framework/XMLContentModel.hpp>
+
 #include <xercesc/framework/XMLElementDecl.hpp>
 
+#include "../internal/XSerializable.h"
 #include "../util/XMLString.h"
 
 namespace pyxerces {
@@ -69,9 +73,7 @@ void XMLElementDecl_init(void) {
 			.def("setCreateReason", &xercesc::XMLElementDecl::setCreateReason)
 			.def("setId", &xercesc::XMLElementDecl::setId)
 			.def("setExternalElemDeclaration", &xercesc::XMLElementDecl::setExternalElemDeclaration)
-			.def("isSerializable", &xercesc::XMLElementDecl::isSerializable)
-			.def("getProtoType", &xercesc::XMLElementDecl::getProtoType, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("serialize", &xercesc::XMLElementDecl::serialize)
+			PyDECL_XSERIALIZABLE(XMLElementDecl)
 			.def("getObjectType", &xercesc::XMLElementDecl::getObjectType)
 			.def("storeElementDecl", &xercesc::XMLElementDecl::storeElementDecl)
 			.def("loadElementDecl", &xercesc::XMLElementDecl::loadElementDecl, boost::python::return_value_policy<boost::python::reference_existing_object>())

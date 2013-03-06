@@ -10,6 +10,8 @@
 #include <boost/python.hpp>
 #include <xercesc/framework/XMLGrammarDescription.hpp>
 
+#include "../internal/XSerializable.h"
+
 namespace pyxerces {
 
 void XMLGrammarDescription_init(void) {
@@ -18,9 +20,7 @@ void XMLGrammarDescription_init(void) {
 			.def("getGrammarType", &xercesc::XMLGrammarDescription::getGrammarType)
 			.def("getGrammarKey", &xercesc::XMLGrammarDescription::getGrammarKey, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getMemoryManager", &xercesc::XMLGrammarDescription::getMemoryManager, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("isSerializable", &xercesc::XMLGrammarDescription::isSerializable)
-			.def("getProtoType", &xercesc::XMLGrammarDescription::getProtoType, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("serialize", &xercesc::XMLGrammarDescription::serialize)
+			PyDECL_XSERIALIZABLE(XMLGrammarDescription)
 			;
 }
 

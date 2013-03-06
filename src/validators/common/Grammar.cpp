@@ -8,32 +8,70 @@
 #include "Grammar.h"
 
 #include <boost/python.hpp>
-#include <xercesc/framework/XMLGrammarDescription.hpp>	//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/framework/XMLGrammarDescription.hpp>
+
+//! DTDGrammar
+#include <xercesc/validators/DTD/DTDGrammar.hpp>
+//! SchemaGrammar
+#include <xercesc/validators/schema/SchemaGrammar.hpp>
+
 #include <xercesc/validators/common/Grammar.hpp>
 
+#include "../../internal/XSerializable.h"
 #include "../../util/XMLString.h"
 
 namespace pyxerces {
 
-//! XercesDOMParser
+//! Grammar
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(GrammarPutElemDeclOverloads, putElemDecl, 5, 6)
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(GrammarPutElemDeclMiniOverloads, putElemDecl, 1, 2)
 
-template <class STR>
 class GrammarDefVisitor
-: public boost::python::def_visitor<GrammarDefVisitor<STR> > {
+: public boost::python::def_visitor<GrammarDefVisitor> {
 friend class def_visitor_access;
 
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("findOrAddElemDecl", &GrammarDefVisitor::findOrAddElemDecl, boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("getElemId", &GrammarDefVisitor::getElemId)
-	.def("getElemDecl", &GrammarDefVisitor::getElemDecl, boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("getNotationDecl", &GrammarDefVisitor::getNotationDecl, boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("putElemDecl", static_cast<xercesc::XMLElementDecl*(*)(xercesc::Grammar&, const unsigned int, const STR&, const STR&, const STR&, unsigned int, const bool)>(&GrammarDefVisitor::putElemDecl), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("putElemDecl", static_cast<xercesc::XMLElementDecl*(*)(xercesc::Grammar&, const unsigned int, const STR&, const STR&, const STR&, unsigned int)>(&GrammarDefVisitor::putElemDecl), boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("toDTDGrammar", &GrammarDefVisitor::toDTDGrammar, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("toSchemaGrammar", &GrammarDefVisitor::toSchemaGrammar, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	;
+}
+
+static xercesc::DTDGrammar* toDTDGrammar(xercesc::Grammar& self) {
+	if(self.getGrammarType() != xercesc::Grammar::DTDGrammarType) {
+		return nullptr;
+	}
+	return reinterpret_cast<xercesc::DTDGrammar*>(&self);
+}
+
+static xercesc::SchemaGrammar* toSchemaGrammar(xercesc::Grammar& self) {
+	if(self.getGrammarType() != xercesc::Grammar::SchemaGrammarType) {
+		return nullptr;
+	}
+	return reinterpret_cast<xercesc::SchemaGrammar*>(&self);
+}
+
+};
+
+template <class STR>
+class GrammarStringDefVisitor
+: public boost::python::def_visitor<GrammarStringDefVisitor<STR> > {
+friend class def_visitor_access;
+
+public:
+template <class T>
+void visit(T& class_) const {
+	class_
+	.def("findOrAddElemDecl", &GrammarStringDefVisitor::findOrAddElemDecl, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("getElemId", &GrammarStringDefVisitor::getElemId)
+	.def("getElemDecl", &GrammarStringDefVisitor::getElemDecl, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("getNotationDecl", &GrammarStringDefVisitor::getNotationDecl, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("putElemDecl", static_cast<xercesc::XMLElementDecl*(*)(xercesc::Grammar&, const unsigned int, const STR&, const STR&, const STR&, unsigned int, const bool)>(&GrammarStringDefVisitor::putElemDecl), boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("putElemDecl", static_cast<xercesc::XMLElementDecl*(*)(xercesc::Grammar&, const unsigned int, const STR&, const STR&, const STR&, unsigned int)>(&GrammarStringDefVisitor::putElemDecl), boost::python::return_value_policy<boost::python::reference_existing_object>())
 	;
 }
 
@@ -72,8 +110,9 @@ static xercesc::XMLElementDecl* putElemDecl(xercesc::Grammar& self, const unsign
 void Grammar_init(void) {
 	//! xercesc::Grammar
 	auto Grammar = boost::python::class_<xercesc::Grammar, boost::noncopyable, boost::python::bases<xercesc::XSerializable> >("Grammar", boost::python::no_init)
-			.def(GrammarDefVisitor<XMLString>())
-			.def(GrammarDefVisitor<std::string>())
+			.def(GrammarDefVisitor())
+			.def(GrammarStringDefVisitor<XMLString>())
+			.def(GrammarStringDefVisitor<std::string>())
 			.def("getGrammarType", &xercesc::Grammar::getGrammarType)
 			.def("getTargetNamespace", &xercesc::Grammar::getTargetNamespace, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getValidated", &xercesc::Grammar::getValidated)
@@ -89,9 +128,7 @@ void Grammar_init(void) {
 			.def("reset", &xercesc::Grammar::reset)
 			.def("setGrammarDescription", &xercesc::Grammar::setGrammarDescription)
 			.def("getGrammarDescription", &xercesc::Grammar::getGrammarDescription, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("isSerializable", &xercesc::Grammar::isSerializable)
-			.def("getProtoType", &xercesc::Grammar::getProtoType, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("serialize", &xercesc::Grammar::serialize)
+			PyDECL_XSERIALIZABLE(Grammar)
 			.def("storeGrammar", &xercesc::Grammar::storeGrammar)
 			.def("loadGrammar", &xercesc::Grammar::loadGrammar, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.staticmethod("storeGrammar")

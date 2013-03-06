@@ -10,6 +10,7 @@
 #include <boost/python.hpp>
 #include <xercesc/util/QName.hpp>
 
+#include "../internal/XSerializable.h"
 #include "XMLString.h"
 
 namespace pyxerces {
@@ -90,9 +91,7 @@ void QName_init(void) {
 			.def("setValues", &xercesc::QName::setValues)
 			.def("__eq__", &xercesc::QName::operator==)
 			.def("cleanUp", &xercesc::QName::cleanUp)
-			.def("isSerializable", &xercesc::QName::isSerializable)
-			.def("getProtoType", &xercesc::QName::getProtoType, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("serialize", &xercesc::QName::serialize)
+			PyDECL_XSERIALIZABLE(QName)
 			;
 }
 
