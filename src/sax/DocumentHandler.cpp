@@ -32,6 +32,7 @@ void visit(T& class_) const {
 	.def("endElement", &DocumentHandlerDefVisitor::endElement)
 	.def("ignorableWhitespace", &DocumentHandlerDefVisitor::ignorableWhitespace)
 	.def("processingInstruction", &DocumentHandlerDefVisitor::processingInstruction)
+	.def("startElement", &DocumentHandlerDefVisitor::startElement)
 	;
 }
 
@@ -53,6 +54,11 @@ static void ignorableWhitespace(xercesc::DocumentHandler& self, const STR& chars
 static void processingInstruction(xercesc::DocumentHandler& self, const STR& target, const STR& data) {
 	XMLString buff1(target), buff2(data);
 	self.processingInstruction(buff1.ptr(), buff2.ptr());
+}
+
+static void startElement(xercesc::DocumentHandler& self, const STR& name, xercesc::AttributeList& attrs) {
+	XMLString buff(name);
+	self.startElement(buff.ptr(), attrs);
 }
 
 };
@@ -94,7 +100,7 @@ void startDocument() {
 }
 
 void startElement(const XMLCh* const name, xercesc::AttributeList& attrs) {
-	this->get_override("startElement")(name, attrs);
+	this->get_override("startElement")(name, &attrs);
 }
 
 };

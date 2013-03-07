@@ -116,9 +116,12 @@
 #include "parsers/XercesDOMParser.h"
 
 // sax
+#include "sax/AttributeList.h"
 #include "sax/DocumentHandler.h"
+#include "sax/DTDHandler.h"
 #include "sax/EntityResolver.h"
 #include "sax/ErrorHandler.h"
+#include "sax/HandlerBase.h"
 #include "sax/InputSource.h"
 #include "sax/Parser.h"
 #include "sax/SAXException.h"
@@ -219,6 +222,7 @@ BOOST_PYTHON_MODULE(__Xerces)
 	// internal
 	pyxerces::XSerializable_init();
 	// sax
+	pyxerces::DTDHandler_init();
 	pyxerces::InputSource_init();
 	pyxerces::Parser_init();
 	// util
@@ -343,9 +347,11 @@ BOOST_PYTHON_MODULE(__Xerces)
 	// ==================================================
 	// sax
 	// --------------------------------------------------
+	pyxerces::AttributeList_init();
 	pyxerces::DocumentHandler_init();
 	pyxerces::EntityResolver_init();
 	pyxerces::ErrorHandler_init();
+	pyxerces::HandlerBase_init();
 	pyxerces::SAXException_init();
 	pyxerces::SAXParseException_init();
 

@@ -4,6 +4,12 @@ from __Xerces import *
 from XercesDOMParser import XercesDOMParser
 
 # Initialize Xerces
+try:
+    XMLPlatformUtils.Initialize()
+except XMLException, toCatch:
+    print 'Error during Xerces-c Initialization.'
+    print '  Exception message:%s'%toCatch.getMessage()
+        
 XMLPlatformUtils.Initialize()
 
 # DOMImplementationImpl
