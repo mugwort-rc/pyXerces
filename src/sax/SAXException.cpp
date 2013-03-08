@@ -22,21 +22,17 @@ void translateSAXException(const xercesc::SAXException& e) {
 }
 
 //! SAXNotSupportedException
-PyObject* pyXercesSAXNotSupportedExceptionType = nullptr;
-
 void translateSAXNotSupportedException(const xercesc::SAXNotSupportedException& e) {
-	assert(pyXercesSAXNotSupportedExceptionType != nullptr);
+	assert(pyXercesSAXExceptionType != nullptr);
 	boost::python::object instance(e);
-	PyErr_SetObject(pyXercesSAXNotSupportedExceptionType, instance.ptr());
+	PyErr_SetObject(pyXercesSAXExceptionType, instance.ptr());
 }
 
 //! SAXNotRecognizedException
-PyObject* pyXercesSAXNotRecognizedExceptionType = nullptr;
-
 void translateSAXNotRecognizedException(const xercesc::SAXNotRecognizedException& e) {
-	assert(pyXercesSAXNotRecognizedExceptionType != nullptr);
+	assert(pyXercesSAXExceptionType != nullptr);
 	boost::python::object instance(e);
-	PyErr_SetObject(pyXercesSAXNotRecognizedExceptionType, instance.ptr());
+	PyErr_SetObject(pyXercesSAXExceptionType, instance.ptr());
 }
 
 void SAXException_init(void) {
@@ -49,18 +45,16 @@ void SAXException_init(void) {
 	pyXercesSAXExceptionType = SAXException.ptr();
 	boost::python::register_exception_translator<xercesc::SAXException>(&translateSAXException);
 	//! xercesc::SAXNotSupportedException
-	auto SAXNotSupportedException = boost::python::class_<xercesc::SAXNotSupportedException, boost::python::bases<xercesc::SAXException> >("SAXNotSupportedException", boost::python::init<boost::python::optional<xercesc::MemoryManager* const> >())
+	boost::python::class_<xercesc::SAXNotSupportedException, boost::python::bases<xercesc::SAXException> >("SAXNotSupportedException", boost::python::init<boost::python::optional<xercesc::MemoryManager* const> >())
 			.def(boost::python::init<const XMLCh* const, boost::python::optional<xercesc::MemoryManager* const> >())
 			.def(boost::python::init<const char* const, boost::python::optional<xercesc::MemoryManager* const> >())
 			;
-	pyXercesSAXNotSupportedExceptionType = SAXNotSupportedException.ptr();
 	boost::python::register_exception_translator<xercesc::SAXNotSupportedException>(&translateSAXNotSupportedException);
 	//! xercesc::SAXNotRecognizedException
-	auto SAXNotRecognizedException = boost::python::class_<xercesc::SAXNotRecognizedException, boost::python::bases<xercesc::SAXException> >("SAXNotRecognizedException", boost::python::init<boost::python::optional<xercesc::MemoryManager* const> >())
+	boost::python::class_<xercesc::SAXNotRecognizedException, boost::python::bases<xercesc::SAXException> >("SAXNotRecognizedException", boost::python::init<boost::python::optional<xercesc::MemoryManager* const> >())
 			.def(boost::python::init<const XMLCh* const, boost::python::optional<xercesc::MemoryManager* const> >())
 			.def(boost::python::init<const char* const, boost::python::optional<xercesc::MemoryManager* const> >())
 			;
-	pyXercesSAXNotRecognizedExceptionType = SAXNotRecognizedException.ptr();
 	boost::python::register_exception_translator<xercesc::SAXNotRecognizedException>(&translateSAXNotRecognizedException);
 }
 

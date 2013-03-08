@@ -8,17 +8,20 @@
 #include "DOMRangeException.h"
 
 #include <boost/python.hpp>
-#include <xercesc/framework/MemoryManager.hpp>	//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/framework/MemoryManager.hpp>
+
 #include <xercesc/dom/DOMRangeException.hpp>
 
 namespace pyxerces {
 
-PyObject* pyXercesDOMRangeExceptionType = nullptr;
+extern PyObject* pyXercesDOMExceptionType;
 
 void translateDOMRangeException(const xercesc::DOMRangeException& e) {
-	assert(pyXercesDOMRangeExceptionType != nullptr);
+	assert(pyXercesDOMExceptionType != nullptr);
 	boost::python::object instance(e);
-	PyErr_SetObject(pyXercesDOMRangeExceptionType, instance.ptr());
+	PyErr_SetObject(pyXercesDOMExceptionType, instance.ptr());
 }
 
 void DOMRangeException_init(void) {
@@ -34,7 +37,6 @@ void DOMRangeException_init(void) {
 			.value("INVALID_NODE_TYPE_ERR", xercesc::DOMRangeException::INVALID_NODE_TYPE_ERR)
 			.export_values()
 			;
-	pyXercesDOMRangeExceptionType = DOMRangeException.ptr();
 	boost::python::register_exception_translator<xercesc::DOMRangeException>(&translateDOMRangeException);
 }
 

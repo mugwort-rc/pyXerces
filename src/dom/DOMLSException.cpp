@@ -8,17 +8,20 @@
 #include "DOMLSException.h"
 
 #include <boost/python.hpp>
-#include <xercesc/framework/MemoryManager.hpp>	//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/framework/MemoryManager.hpp>
+
 #include <xercesc/dom/DOMLSException.hpp>
 
 namespace pyxerces {
 
-PyObject* pyXercesDOMLSExceptionType = nullptr;
+extern PyObject* pyXercesDOMExceptionType;
 
 void translateDOMLSException(const xercesc::DOMLSException& e) {
-	assert(pyXercesDOMLSExceptionType != nullptr);
+	assert(pyXercesDOMExceptionType != nullptr);
 	boost::python::object instance(e);
-	PyErr_SetObject(pyXercesDOMLSExceptionType, instance.ptr());
+	PyErr_SetObject(pyXercesDOMExceptionType, instance.ptr());
 }
 
 void DOMLSException_init(void) {
@@ -34,7 +37,6 @@ void DOMLSException_init(void) {
 			.value("SERIALIZE_ERR", xercesc::DOMLSException::SERIALIZE_ERR)
 			.export_values()
 			;
-	pyXercesDOMLSExceptionType = DOMLSException.ptr();
 	boost::python::register_exception_translator<xercesc::DOMLSException>(&translateDOMLSException);
 }
 

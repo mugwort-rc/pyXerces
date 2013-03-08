@@ -8,17 +8,20 @@
 #include "DOMXPathException.h"
 
 #include <boost/python.hpp>
-#include <xercesc/framework/MemoryManager.hpp>	//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/framework/MemoryManager.hpp>
+
 #include <xercesc/dom/DOMXPathException.hpp>
 
 namespace pyxerces {
 
-PyObject* pyXercesDOMXPathExceptionType = nullptr;
+extern PyObject* pyXercesDOMExceptionType;
 
 void translateDOMXPathException(const xercesc::DOMXPathException& e) {
-	assert(pyXercesDOMXPathExceptionType != nullptr);
+	assert(pyXercesDOMExceptionType != nullptr);
 	boost::python::object instance(e);
-	PyErr_SetObject(pyXercesDOMXPathExceptionType, instance.ptr());
+	PyErr_SetObject(pyXercesDOMExceptionType, instance.ptr());
 }
 
 void DOMXPathException_init(void) {
@@ -27,7 +30,6 @@ void DOMXPathException_init(void) {
 				.def(boost::python::init<short, short, boost::python::optional<xercesc::MemoryManager* const > >())
 				.def(boost::python::init<const xercesc::DOMXPathException&>())
 				;
-	pyXercesDOMXPathExceptionType = DOMXPathException.ptr();
 	boost::python::register_exception_translator<xercesc::DOMXPathException>(&translateDOMXPathException);
 
 	boost::python::scope DOMXPathExceptionScope = DOMXPathException;
