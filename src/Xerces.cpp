@@ -79,6 +79,7 @@
 #include "framework/XMLGrammarDescription.h"
 #include "framework/XMLGrammarPool.h"
 #include "framework/XMLNotationDecl.h"
+#include "framework/XMLPScanToken.h"
 #include "framework/XMLRecognizer.h"
 #include "framework/XMLRefInfo.h"
 #include "framework/XMLSchemaDescription.h"
@@ -310,6 +311,7 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::XMLElementDecl_init();
 	pyxerces::XMLGrammarPool_init();
 	pyxerces::XMLNotationDecl_init();
+	pyxerces::XMLPScanToken_init();
 	pyxerces::XMLRecognizer_init();
 	pyxerces::XMLRefInfo_init();
 	pyxerces::XMLSchemaDescription_init();
