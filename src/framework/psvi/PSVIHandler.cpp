@@ -48,9 +48,31 @@ static void handleAttributesPSVI(xercesc::PSVIHandler& self, const STR& localNam
 
 };
 
+class PSVIHandlerWrapper
+: public xercesc::PSVIHandler, public boost::python::wrapper<xercesc::PSVIHandler>
+{
+public:
+void handleElementPSVI(const XMLCh* const localName, const XMLCh* const uri, xercesc::PSVIElement* elementInfo) {
+	this->get_override("handleElementPSVI")(XMLString(localName), XMLString(uri), elementInfo);
+}
+
+void handlePartialElementPSVI(const XMLCh* const localName, const XMLCh* const uri, xercesc::PSVIElement* elementInfo) {
+	if(boost::python::override handlePartialElementPSVI = this->get_override("handlePartialElementPSVI")){
+		handlePartialElementPSVI(XMLString(localName), XMLString(uri), elementInfo);
+	}else{
+		xercesc::PSVIHandler::handlePartialElementPSVI(localName, uri, elementInfo);
+	}
+}
+
+void handleAttributesPSVI(const XMLCh* const localName, const XMLCh* const uri, xercesc::PSVIAttributeList* psviAttributes) {
+	this->get_override("handleAttributesPSVI")(XMLString(localName), XMLString(uri), psviAttributes);
+}
+
+};
+
 void PSVIHandler_init(void) {
 	//! xercesc::PSVIHandler
-	boost::python::class_<xercesc::PSVIHandler, boost::noncopyable>("PSVIHandler", boost::python::no_init)
+	boost::python::class_<PSVIHandlerWrapper, boost::noncopyable>("PSVIHandler", boost::python::no_init)
 			.def(PSVIHandlerDefVisitor<XMLString>())
 			.def(PSVIHandlerDefVisitor<std::string>())
 			.def("handleElementPSVI", &xercesc::PSVIHandler::handleElementPSVI)

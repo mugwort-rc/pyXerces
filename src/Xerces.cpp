@@ -128,6 +128,12 @@
 #include "sax/SAXException.h"
 #include "sax/SAXParseException.h"
 
+// sax2
+#include "sax2/ContentHandler.h"
+#include "sax2/DeclHandler.h"
+#include "sax2/DefaultHandler.h"
+#include "sax2/LexicalHandler.h"
+
 // util
 #include "util/ArrayIndexOutOfBoundsException.h"
 #include "util/BaseRefVectorOf.h"
@@ -226,6 +232,10 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::DTDHandler_init();
 	pyxerces::InputSource_init();
 	pyxerces::Parser_init();
+	// sax2
+	pyxerces::ContentHandler_init();
+	pyxerces::DeclHandler_init();
+	pyxerces::LexicalHandler_init();
 	// util
 	pyxerces::BaseRefVectorOf_init();
 	pyxerces::XMLEnumerator_init();
@@ -356,6 +366,11 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::HandlerBase_init();
 	pyxerces::SAXException_init();
 	pyxerces::SAXParseException_init();
+
+	// ==================================================
+	// sax2
+	// --------------------------------------------------
+	pyxerces::DefaultHandler_init();
 
 	// ==================================================
 	// util

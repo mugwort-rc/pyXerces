@@ -25,7 +25,7 @@ public:
 
 void XMLEntityResolver_init(void) {
 	//! xercesc::XMLEntityResolver
-	boost::python::class_<xercesc::XMLEntityResolver, boost::noncopyable>("XMLEntityResolver", boost::python::no_init)
+	boost::python::class_<XMLEntityResolverWrapper, boost::noncopyable>("XMLEntityResolver", boost::python::no_init)
 			.def("resolveEntity", &xercesc::XMLEntityResolver::resolveEntity, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			;
 }
