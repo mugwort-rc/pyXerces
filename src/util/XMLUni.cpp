@@ -290,18 +290,13 @@ void XMLUni_init(void) {
 		    .setattr("fgUShortMaxInc", XMLChPtr(xercesc::XMLUni::fgUShortMaxInc))
 		    .setattr("fgUByteMaxInc", XMLChPtr(xercesc::XMLUni::fgUByteMaxInc))
 		    .setattr("fgLangPattern", XMLChPtr(xercesc::XMLUni::fgLangPattern))
-		    //.setattr("", XMLChPtr(xercesc::XMLUni::fgBooleanValueSpace[][8]))
+		    //.setattr("fgBooleanValueSpace", XMLChPtr(xercesc::XMLUni::fgBooleanValueSpace[][8]))
 		    .setattr("fgBooleanValueSpaceArraySize", xercesc::XMLUni::fgBooleanValueSpaceArraySize)
 			;
 	boost::python::list fgBooleanValueSpace;
-	fgBooleanValueSpace.append(XMLChPtr(xercesc::XMLUni::fgBooleanValueSpace[0]));
-	fgBooleanValueSpace.append(XMLChPtr(xercesc::XMLUni::fgBooleanValueSpace[1]));
-	fgBooleanValueSpace.append(XMLChPtr(xercesc::XMLUni::fgBooleanValueSpace[2]));
-	fgBooleanValueSpace.append(XMLChPtr(xercesc::XMLUni::fgBooleanValueSpace[3]));
-	fgBooleanValueSpace.append(XMLChPtr(xercesc::XMLUni::fgBooleanValueSpace[4]));
-	fgBooleanValueSpace.append(XMLChPtr(xercesc::XMLUni::fgBooleanValueSpace[5]));
-	fgBooleanValueSpace.append(XMLChPtr(xercesc::XMLUni::fgBooleanValueSpace[6]));
-	fgBooleanValueSpace.append(XMLChPtr(xercesc::XMLUni::fgBooleanValueSpace[7]));
+	for(unsigned int i = 0; i < xercesc::XMLUni::fgBooleanValueSpaceArraySize; ++i){
+		fgBooleanValueSpace.append(XMLChPtr(xercesc::XMLUni::fgBooleanValueSpace[i]));
+	}
 	XMLUni.setattr("fgBooleanValueSpace", fgBooleanValueSpace);
 }
 
