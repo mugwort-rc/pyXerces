@@ -10,7 +10,8 @@
 
 #include <string>
 #include <boost/python.hpp>
-#include <xercesc/util/Xerces_autoconf_config.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 namespace pyxerces {
 
@@ -243,6 +244,12 @@ static XMLString makeUName(const XMLString& URI, const XMLString& name);
  * @sa xercesc::XMLString::fixURI()
  */
 static XMLString fixURI(const XMLString& str);
+
+public:
+/*!
+ * bin to Text
+ */
+static XMLString binToText(const unsigned int toFormat, const XMLSize_t maxChars, const unsigned int radix, xercesc::MemoryManager* const manager = xercesc::XMLPlatformUtils::fgMemoryManager);
 
 public:
 /*!

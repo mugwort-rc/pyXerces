@@ -7,6 +7,7 @@
 
 #include "XMLString.h"
 
+#include <boost/scoped_ptr.hpp>
 #include <xercesc/util/XMLString.hpp>
 
 namespace pyxerces {
@@ -258,6 +259,12 @@ bool XMLString::isHex(void) const {
 	return true;
 }
 
+XMLString XMLString::binToText(const unsigned int toFormat, const XMLSize_t maxChars, const unsigned int radix, xercesc::MemoryManager* const manager) {
+	boost::scoped_ptr<XMLCh> buffer(new XMLCh[maxChars+1]);
+	xercesc::XMLString::binToText(toFormat, buffer.get(), maxChars, radix, manager);
+	return XMLString(buffer.get());
+}
+
 bool XMLString::isLower(void) const {
 	XMLString lower = this->lower();
 	return this->operator ==(lower);
@@ -425,6 +432,8 @@ public:
 
 // ==================================================
 
+BOOST_PYTHON_FUNCTION_OVERLOADS(XMLStringBinToTextOverloads, XMLString::binToText, 3, 4)
+
 void XMLString_init(void) {
 	//! string <=> XMLCh*
 	boost::python::class_<XMLString>("XMLString", boost::python::init<const std::string&>())
@@ -472,8 +481,10 @@ void XMLString_init(void) {
 			.def("removeWS", &XMLString::removeWS)
 			.def("makeUName", &XMLString::makeUName)
 			.def("fixURI", &XMLString::fixURI)
+			.def("binToText", &XMLString::binToText, XMLStringBinToTextOverloads())
 			.staticmethod("makeUName")
 			.staticmethod("fixURI")
+			.staticmethod("binToText")
 			;
 
 	//! XMLCh pointer wrapper
