@@ -148,6 +148,7 @@
 #include "util/NullPointerException.h"
 #include "util/NumberFormatException.h"
 #include "util/OutOfMemoryException.h"
+#include "util/PanicHandler.h"
 #include "util/ParseException.h"
 #include "util/PlatformUtils.h"
 #include "util/QName.h"
@@ -173,6 +174,7 @@
 #include "util/XMLFileMgr.h"
 #include "util/XMLMsgLoader.h"
 #include "util/XMLMutexMgr.h"
+#include "util/XMLNetAccessor.h"
 #include "util/XMLString.h"
 #include "util/XMLUni.h"
 
@@ -387,6 +389,7 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::NullPointerException_init();
 	pyxerces::NumberFormatException_init();
 	pyxerces::OutOfMemoryException_init();
+	pyxerces::PanicHandler_init();
 	pyxerces::ParseException_init();
 	pyxerces::PlatformUtils_init();
 	pyxerces::QName_init();
@@ -410,6 +413,7 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::XMLFileMgr_init();
 	pyxerces::XMLMsgLoader_init();
 	pyxerces::XMLMutexMgr_init();
+	pyxerces::XMLNetAccessor_init();
 	pyxerces::XMLString_init();
 	pyxerces::XMLUni_init();
 
