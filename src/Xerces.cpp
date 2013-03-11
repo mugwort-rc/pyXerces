@@ -151,6 +151,7 @@
 #include "util/PanicHandler.h"
 #include "util/ParseException.h"
 #include "util/PlatformUtils.h"
+#include "util/PSVIUni.h"
 #include "util/QName.h"
 #include "util/RefArrayVectorOf.h"
 #include "util/RefHash2KeysTableOf.h"
@@ -392,6 +393,7 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::PanicHandler_init();
 	pyxerces::ParseException_init();
 	pyxerces::PlatformUtils_init();
+	pyxerces::PSVIUni_init();
 	pyxerces::QName_init();
 	pyxerces::RefArrayVectorOf_init();
 	pyxerces::RefHash2KeysTableOf_init();
