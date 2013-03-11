@@ -265,6 +265,10 @@ BOOST_PYTHON_MODULE(__Xerces)
 	// dom
 	pyxerces::DOMText_init();
 
+	// --------------------------------------------------
+	// util
+	pyxerces::XMLString_init();
+
 	// ==================================================
 	// dom
 	// --------------------------------------------------
@@ -416,7 +420,6 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::XMLMsgLoader_init();
 	pyxerces::XMLMutexMgr_init();
 	pyxerces::XMLNetAccessor_init();
-	pyxerces::XMLString_init();
 	pyxerces::XMLUni_init();
 
 	// ==================================================
