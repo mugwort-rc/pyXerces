@@ -7,6 +7,7 @@
 
 #include "XMLString.h"
 
+#include <math.h>
 #include <boost/scoped_ptr.hpp>
 #include <xercesc/util/XMLString.hpp>
 
@@ -259,12 +260,6 @@ bool XMLString::isHex(void) const {
 	return true;
 }
 
-XMLString XMLString::binToText(const unsigned int toFormat, const XMLSize_t maxChars, const unsigned int radix, xercesc::MemoryManager* const manager) {
-	boost::scoped_ptr<XMLCh> buffer(new XMLCh[maxChars+1]);
-	xercesc::XMLString::binToText(toFormat, buffer.get(), maxChars, radix, manager);
-	return XMLString(buffer.get());
-}
-
 bool XMLString::isLower(void) const {
 	XMLString lower = this->lower();
 	return this->operator ==(lower);
@@ -350,6 +345,13 @@ XMLString XMLString::fixURI(const XMLString& str) {
 	return result;
 }
 
+XMLString XMLString::binToText(const unsigned int toFormat, const unsigned int radix, xercesc::MemoryManager* const manager) {
+	unsigned int len = (log(toFormat) / log(radix)) + 1;
+	boost::scoped_ptr<XMLCh> buffer(new XMLCh[len+1]);
+	xercesc::XMLString::binToText(toFormat, buffer.get(), len, radix, manager);
+	return XMLString(buffer.get());
+}
+
 std::string XMLString::toString(void) const {
 	return XMLString::transcode(this->ptr());
 }
@@ -432,7 +434,7 @@ public:
 
 // ==================================================
 
-BOOST_PYTHON_FUNCTION_OVERLOADS(XMLStringBinToTextOverloads, XMLString::binToText, 3, 4)
+BOOST_PYTHON_FUNCTION_OVERLOADS(XMLStringBinToTextOverloads, XMLString::binToText, 2, 3)
 
 void XMLString_init(void) {
 	//! string <=> XMLCh*

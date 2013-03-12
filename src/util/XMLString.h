@@ -249,7 +249,7 @@ public:
 /*!
  * bin to Text
  */
-static XMLString binToText(const unsigned int toFormat, const XMLSize_t maxChars, const unsigned int radix, xercesc::MemoryManager* const manager = xercesc::XMLPlatformUtils::fgMemoryManager);
+static XMLString binToText(const unsigned int toFormat, const unsigned int radix, xercesc::MemoryManager* const manager = xercesc::XMLPlatformUtils::fgMemoryManager);
 
 public:
 /*!
