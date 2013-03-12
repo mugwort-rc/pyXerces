@@ -357,6 +357,13 @@ XMLString XMLString::fixURI(const XMLString& str) {
 	return result;
 }
 
+XMLString XMLString::sizeToText(const unsigned int toFormat, const unsigned int radix, xercesc::MemoryManager* const manager) {
+	unsigned int len = (log(toFormat) / log(radix)) + 1;
+	boost::scoped_ptr<XMLCh> buffer(new XMLCh[len+1]);
+	xercesc::XMLString::sizeToText(toFormat, buffer.get(), len, radix, manager);
+	return XMLString(buffer.get());
+}
+
 XMLString XMLString::binToText(const unsigned int toFormat, const unsigned int radix, xercesc::MemoryManager* const manager) {
 	unsigned int len = (log(toFormat) / log(radix)) + 1;
 	boost::scoped_ptr<XMLCh> buffer(new XMLCh[len+1]);
@@ -446,6 +453,7 @@ public:
 
 // ==================================================
 
+BOOST_PYTHON_FUNCTION_OVERLOADS(XMLStringSizeToTextOverloads, XMLString::sizeToText, 2, 3)
 BOOST_PYTHON_FUNCTION_OVERLOADS(XMLStringBinToTextOverloads, XMLString::binToText, 2, 3)
 
 void XMLString_init(void) {
@@ -496,10 +504,12 @@ void XMLString_init(void) {
 			.def("removeWS", &XMLString::removeWS)
 			.def("makeUName", &XMLString::makeUName)
 			.def("fixURI", &XMLString::fixURI)
+			.def("sizeToText", &XMLString::sizeToText, XMLStringSizeToTextOverloads())
 			.def("binToText", &XMLString::binToText, XMLStringBinToTextOverloads())
 			.staticmethod("makeUName")
 			.staticmethod("fixURI")
 			.staticmethod("binToText")
+			.staticmethod("sizeToText")
 			;
 
 	//! XMLCh pointer wrapper

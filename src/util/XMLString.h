@@ -256,6 +256,10 @@ static XMLString fixURI(const XMLString& str);
 
 public:
 /*!
+ * size to Text
+ */
+static XMLString sizeToText(const unsigned int toFormat, const unsigned int radix, xercesc::MemoryManager* const manager = xercesc::XMLPlatformUtils::fgMemoryManager);
+/*!
  * bin to Text
  */
 static XMLString binToText(const unsigned int toFormat, const unsigned int radix, xercesc::MemoryManager* const manager = xercesc::XMLPlatformUtils::fgMemoryManager);
