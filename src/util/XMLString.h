@@ -62,6 +62,15 @@ XMLCh* ptr(void) const;
 operator XMLCh*(void) const;
 
 /*!
+ * operator +
+ */
+XMLString operator +(const XMLString& rhs) const;
+/*!
+ * operator +=
+ */
+XMLString& operator +=(const XMLString& rhs);
+
+/*!
  * operator <
  */
 bool operator <(const XMLString& rhs) const;

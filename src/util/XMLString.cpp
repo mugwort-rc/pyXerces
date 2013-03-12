@@ -98,6 +98,18 @@ XMLCh* XMLString::ptr(void) const {
 	return this->_ch->ptr();
 }
 
+XMLString XMLString::operator +(const XMLString& rhs) const {
+	boost::scoped_ptr<XMLCh> buffer(new XMLCh[this->size() + rhs.size() + 1]);
+	xercesc::XMLString::copyString(buffer.get(), this->ptr());
+	xercesc::XMLString::catString(buffer.get(), rhs.ptr());
+	return XMLString(buffer.get());
+}
+
+XMLString& XMLString::operator +=(const XMLString& rhs) {
+	*this = *this + rhs;
+	return *this;
+}
+
 XMLString::operator XMLCh*(void) const {
 	return this->ptr();
 }
@@ -442,6 +454,7 @@ void XMLString_init(void) {
 			.def(boost::python::init<const XMLCh*>())
 			.def("__str__", &XMLString::toString)
 			.def("__repr__", &XMLString::reprString)
+			.def("__add__", &XMLString::operator +)
 			.def("__lt__", &XMLString::operator <)
 			.def("__le__", &XMLString::operator <=)
 			.def("__gt__", &XMLString::operator >)
