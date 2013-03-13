@@ -113,6 +113,7 @@
 
 // parsers
 #include "parsers/AbstractDOMParser.h"
+#include "parsers/SAX2XMLReaderImpl.h"
 #include "parsers/SAXParser.h"
 #include "parsers/XercesDOMParser.h"
 
@@ -133,6 +134,7 @@
 #include "sax2/DeclHandler.h"
 #include "sax2/DefaultHandler.h"
 #include "sax2/LexicalHandler.h"
+#include "sax2/SAX2XMLReader.h"
 
 // util
 #include "util/ArrayIndexOutOfBoundsException.h"
@@ -239,6 +241,7 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::ContentHandler_init();
 	pyxerces::DeclHandler_init();
 	pyxerces::LexicalHandler_init();
+	pyxerces::SAX2XMLReader_init();
 	// util
 	pyxerces::BaseRefVectorOf_init();
 	pyxerces::XMLEnumerator_init();
@@ -360,6 +363,7 @@ BOOST_PYTHON_MODULE(__Xerces)
 	// ==================================================
 	// parsers
 	// --------------------------------------------------
+	pyxerces::SAX2XMLReaderImpl_init();
 	pyxerces::SAXParser_init();
 	pyxerces::XercesDOMParser_init();
 
