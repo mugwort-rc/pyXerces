@@ -8,8 +8,11 @@
 #include "PSVIHandler.h"
 
 #include <boost/python.hpp>
-#include <xercesc/framework/psvi/PSVIElement.hpp>		//!< for forward declaration
-#include <xercesc/framework/psvi/PSVIAttributeList.hpp>	//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/framework/psvi/PSVIElement.hpp>
+#include <xercesc/framework/psvi/PSVIAttributeList.hpp>
+
 #include <xercesc/framework/psvi/PSVIHandler.hpp>
 
 #include "../../util/XMLString.h"
@@ -72,7 +75,7 @@ void handleAttributesPSVI(const XMLCh* const localName, const XMLCh* const uri, 
 
 void PSVIHandler_init(void) {
 	//! xercesc::PSVIHandler
-	boost::python::class_<PSVIHandlerWrapper, boost::noncopyable>("PSVIHandler", boost::python::no_init)
+	boost::python::class_<PSVIHandlerWrapper, boost::noncopyable>("PSVIHandler")
 			.def(PSVIHandlerDefVisitor<XMLString>())
 			.def(PSVIHandlerDefVisitor<std::string>())
 			.def("handleElementPSVI", &xercesc::PSVIHandler::handleElementPSVI)
