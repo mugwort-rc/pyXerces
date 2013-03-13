@@ -72,9 +72,63 @@ static void XMLDecl(xercesc::XMLDocumentHandler& self, const STR& versionStr, co
 
 };
 
+class XMLDocumentHandlerWrapper
+: public xercesc::XMLDocumentHandler, public boost::python::wrapper<xercesc::XMLDocumentHandler>
+{
+public:
+void docCharacters(const XMLCh* const chars, const XMLSize_t length, const bool cdataSection) {
+	this->get_override("docCharacters")(XMLString(chars), length, cdataSection);
+}
+
+void docComment(const XMLCh* const comment) {
+	this->get_override("docComment")(XMLString(comment));
+}
+
+void docPI(const XMLCh* const target, const XMLCh* const data) {
+	this->get_override("docPI")(XMLString(target), XMLString(data));
+}
+
+void endDocument() {
+	this->get_override("endDocument")();
+}
+
+void endElement(const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const bool isRoot, const XMLCh* const prefixName = 0) {
+	this->get_override("endElement")(elemDecl, uriId, isRoot, XMLString(prefixName));
+}
+
+void endEntityReference(const xercesc::XMLEntityDecl& entDecl) {
+	this->get_override("endEntityReference")(entDecl);
+}
+
+void ignorableWhitespace(const XMLCh* const chars, const XMLSize_t length, const bool cdataSection) {
+	this->get_override("ignorableWhitespace")(XMLString(chars), length, cdataSection);
+}
+
+void resetDocument() {
+	this->get_override("resetDocument")();
+}
+
+void startDocument() {
+	this->get_override("startDocument")();
+}
+
+void startElement(const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const XMLCh* const prefixName, const xercesc::RefVectorOf<xercesc::XMLAttr>& attrList, const XMLSize_t attrCount, const bool isEmpty, const bool isRoot) {
+	this->get_override("startElement")(elemDecl, uriId, XMLString(prefixName), attrList, attrCount, isEmpty, isRoot);
+}
+
+void startEntityReference(const xercesc::XMLEntityDecl& entDecl) {
+	this->get_override("startEntityReference")(entDecl);
+}
+
+void XMLDecl(const XMLCh* const versionStr, const XMLCh* const encodingStr, const XMLCh* const standaloneStr, const XMLCh* const autoEncodingStr) {
+	this->get_override("XMLDecl")(XMLString(versionStr), XMLString(encodingStr), XMLString(standaloneStr), XMLString(autoEncodingStr));
+}
+
+};
+
 void XMLDocumentHandler_init(void) {
 	//! xercesc::XMLDocumentHandler
-	boost::python::class_<xercesc::XMLDocumentHandler, boost::noncopyable>("XMLDocumentHandler", boost::python::no_init)
+	boost::python::class_<XMLDocumentHandlerWrapper, boost::noncopyable>("XMLDocumentHandler")
 			.def(XMLDocumentHandlerDefVisitor<XMLString>())
 			.def(XMLDocumentHandlerDefVisitor<std::string>())
 			.def("docCharacters", &xercesc::XMLDocumentHandler::docCharacters)
