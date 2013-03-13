@@ -68,14 +68,14 @@ void attDef
     , const xercesc::DTDAttDef&          attDef
     , const bool                ignoring
 ) {
-	this->get_override("attDef")(elemDecl, attDef);
+	this->get_override("attDef")(elemDecl, attDef, ignoring);
 }
 
 void doctypeComment
 (
     const   XMLCh* const    comment
 ) {
-	this->get_override("doctypeComment")(comment);
+	this->get_override("doctypeComment")(XMLString(comment));
 }
 
 void doctypeDecl
@@ -86,7 +86,7 @@ void doctypeDecl
     , const bool            hasIntSubset
     , const bool            hasExtSubset = false
 ) {
-	this->get_override("doctypeDecl")(elemDecl, publicId, systemId, hasIntSubset, hasExtSubset);
+	this->get_override("doctypeDecl")(elemDecl, XMLString(publicId), XMLString(systemId), hasIntSubset, hasExtSubset);
 }
 
 void doctypePI
@@ -94,7 +94,7 @@ void doctypePI
     const   XMLCh* const    target
     , const XMLCh* const    data
 ) {
-	this->get_override("doctypePI")(target, data);
+	this->get_override("doctypePI")(XMLString(target), XMLString(data));
 }
 
 void doctypeWhitespace
@@ -102,7 +102,7 @@ void doctypeWhitespace
     const   XMLCh* const    chars
     , const XMLSize_t       length
 ) {
-	this->get_override("doctypeWhitespace")(chars, length);
+	this->get_override("doctypeWhitespace")(XMLString(chars), length);
 }
 
 void elementDecl
@@ -124,11 +124,11 @@ void endIntSubset() {
 	this->get_override("endIntSubset")();
 }
 
-virtual void endExtSubset() {
+void endExtSubset() {
 	this->get_override("endExtSubset")();
 }
 
-virtual void entityDecl
+void entityDecl
 (
     const   xercesc::DTDEntityDecl&  entityDecl
     , const bool            isPEDecl
@@ -169,7 +169,7 @@ void TextDecl
     const   XMLCh* const    versionStr
     , const XMLCh* const    encodingStr
 ) {
-	this->get_override("TextDecl")(versionStr, encodingStr);
+	this->get_override("TextDecl")(XMLString(versionStr), XMLString(encodingStr));
 }
 
 };
