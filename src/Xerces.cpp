@@ -178,6 +178,7 @@
 #include "util/XMLMsgLoader.h"
 #include "util/XMLMutexMgr.h"
 #include "util/XMLNetAccessor.h"
+#include "util/XMLResourceIdentifier.h"
 #include "util/XMLString.h"
 #include "util/XMLUni.h"
 
@@ -424,6 +425,7 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::XMLMsgLoader_init();
 	pyxerces::XMLMutexMgr_init();
 	pyxerces::XMLNetAccessor_init();
+	pyxerces::XMLResourceIdentifier_init();
 	pyxerces::XMLUni_init();
 
 	// ==================================================
