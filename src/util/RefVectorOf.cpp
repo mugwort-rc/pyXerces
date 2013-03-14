@@ -20,6 +20,8 @@
 #include <xercesc/framework/psvi/XSMultiValueFacet.hpp>
 //! XSNamespaceItem
 #include <xercesc/framework/psvi/XSNamespaceItem.hpp>
+//! XSObject
+#include <xercesc/framework/psvi/XSObject.hpp>
 //! XSParticle
 #include <xercesc/framework/psvi/XSParticle.hpp>
 //! XSSimpleTypeDefinition
@@ -45,6 +47,7 @@ void RefVectorOf_init(void) {
 	typedef boost::mpl::string<'XSFa', 'cet'> XSFacetStr;
 	typedef boost::mpl::string<'XSMu', 'ltiV', 'alue', 'Face', 't'> XSMultiValueFacetStr;
 	typedef boost::mpl::string<'XSNa', 'mesp', 'aceI', 'tem'> XSNamespaceItemStr;
+	typedef boost::mpl::string<'XSOb', 'ject'> XSObjectStr;
 	typedef boost::mpl::string<'XSPa', 'rtic', 'le'> XSParticleStr;
 	typedef boost::mpl::string<'XSSi', 'mple', 'Type', 'Defi', 'niti', 'on'> XSSimpleTypeDefinitionStr;
 	typedef boost::mpl::string<'Xerc', 'esLo', 'cati', 'onPa', 'th'> XercesLocationPathStr;
@@ -54,6 +57,7 @@ void RefVectorOf_init(void) {
 	RefVectorOf<XSFacetStr, xercesc::XSFacet>();
 	RefVectorOf<XSMultiValueFacetStr, xercesc::XSMultiValueFacet>();
 	RefVectorOf<XSNamespaceItemStr, xercesc::XSNamespaceItem>();
+	RefVectorOf<XSObjectStr, xercesc::XSObject>();
 	RefVectorOf<XSParticleStr, xercesc::XSParticle>();
 	RefVectorOf<XSSimpleTypeDefinitionStr, xercesc::XSSimpleTypeDefinition>();
 	RefVectorOf<XercesLocationPathStr, xercesc::XercesLocationPath>();

@@ -169,6 +169,7 @@
 #include "util/UnexpectedEOFException.h"
 #include "util/UnsupportedEncodingException.h"
 #include "util/UTFDataFormatException.h"
+#include "util/ValueStackOf.h"
 #include "util/ValueVectorOf.h"
 #include "util/XMLEntityResolver.h"
 #include "util/XMLEnumerator.h"
@@ -418,6 +419,7 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::UnexpectedEOFException_init();
 	pyxerces::UnsupportedEncodingException_init();
 	pyxerces::UTFDataFormatException_init();
+	pyxerces::ValueStackOf_init();
 	pyxerces::ValueVectorOf_init();
 	pyxerces::XMLEntityResolver_init();
 	pyxerces::XMLExceptMsgs_init();

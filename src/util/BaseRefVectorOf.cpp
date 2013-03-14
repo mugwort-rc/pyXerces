@@ -20,6 +20,8 @@
 #include <xercesc/framework/psvi/XSMultiValueFacet.hpp>
 //! XSNamespaceItem
 #include <xercesc/framework/psvi/XSNamespaceItem.hpp>
+//! XSObject
+#include <xercesc/framework/psvi/XSObject.hpp>
 //! XSParticle
 #include <xercesc/framework/psvi/XSParticle.hpp>
 //! XSSimpleTypeDefinition
@@ -56,6 +58,9 @@ void BaseRefVectorOf(void) {
 			.def("ensureExtraCapacity", &xercesc::BaseRefVectorOf<TElem>::ensureExtraCapacity)
 			;
 }
+
+// ------------------------------------------------------
+//! for XMLCh
 
 class BaseRefVectorOfXMLChDefVisitor
 : public boost::python::def_visitor<BaseRefVectorOfXMLChDefVisitor>
@@ -123,7 +128,7 @@ void BaseRefVectorOfXMLCh(void) {
 			.def("addElement", &xercesc::BaseRefVectorOf<XMLCh>::addElement)
 			.def("setElementAt", &xercesc::BaseRefVectorOf<XMLCh>::setElementAt)
 			.def("insertElementAt", &xercesc::BaseRefVectorOf<XMLCh>::insertElementAt)
-			//.def("orphanElementAt", &xercesc::BaseRefVectorOf<XMLCh>::orphanElementAt, boost::python::return_value_policy<boost::python::reference_existing_object>())
+			//.def("orphanElementAt", &xercesc::BaseRefVectorOf<XMLCh>::orphanElementAt, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("removeAllElements", &xercesc::BaseRefVectorOf<XMLCh>::removeAllElements)
 			.def("removeElementAt", &xercesc::BaseRefVectorOf<XMLCh>::removeElementAt)
 			.def("removeLastElement", &xercesc::BaseRefVectorOf<XMLCh>::removeLastElement)
@@ -138,12 +143,118 @@ void BaseRefVectorOfXMLCh(void) {
 			;
 }
 
+// ------------------------------------------------------
+//! for PyObject
+
+class BaseRefVectorOfPyObjectDefVisitor
+: public boost::python::def_visitor<BaseRefVectorOfPyObjectDefVisitor>
+{
+friend class def_visitor_access;
+public:
+template <class T>
+void visit(T& class_) const {
+	class_
+	.def("orphanElementAt", &BaseRefVectorOfPyObjectDefVisitor::orphanElementAt)
+	.def("elementAt", &BaseRefVectorOfPyObjectDefVisitor::elementAt)
+	;
+}
+
+static boost::python::object orphanElementAt(xercesc::BaseRefVectorOf<PyObject>& self, const XMLSize_t orphanAt) {
+	boost::python::handle<> handle(boost::python::borrowed<>(self.orphanElementAt(orphanAt)));
+	return boost::python::object(handle);
+}
+
+static boost::python::object elementAt(xercesc::BaseRefVectorOf<PyObject>& self, const XMLSize_t getAt) {
+	boost::python::handle<> handle(boost::python::borrowed<>(self.elementAt(getAt)));
+	return boost::python::object(handle);
+}
+
+};
+
+class BaseRefVectorOfPyObjectWrapper
+: public xercesc::BaseRefVectorOf<PyObject>, public boost::python::wrapper<xercesc::BaseRefVectorOf<PyObject> >
+{
+public:
+BaseRefVectorOfPyObjectWrapper(const XMLSize_t maxElems, const bool adoptElems = true, xercesc::MemoryManager* const manager = xercesc::XMLPlatformUtils::fgMemoryManager)
+: xercesc::BaseRefVectorOf<PyObject>(maxElems, adoptElems, manager)
+{}
+~BaseRefVectorOfPyObjectWrapper()
+{}
+
+void setElementAt(PyObject* const toSet, const XMLSize_t setAt) {
+	if(boost::python::override setElemenAt = this->get_override("setElementAt")){
+		setElementAt(toSet, setAt);
+	}else{
+		xercesc::BaseRefVectorOf<PyObject>::setElementAt(toSet, setAt);
+	}
+}
+
+void removeAllElements() {
+	if(boost::python::override removeAllElements = this->get_override("removeAllElements")){
+		removeAllElements();
+	}else{
+		xercesc::BaseRefVectorOf<PyObject>::removeAllElements();
+	}
+}
+
+void removeElementAt(const XMLSize_t removeAt) {
+	if(boost::python::override removeElementAt = this->get_override("removeElementAt")){
+		removeElementAt(removeAt);
+	}else{
+		xercesc::BaseRefVectorOf<PyObject>::removeElementAt(removeAt);
+	}
+}
+
+void removeLastElement() {
+	if(boost::python::override removeLastElement = this->get_override("removeLastElement")){
+		removeLastElement();
+	}else{
+		xercesc::BaseRefVectorOf<PyObject>::removeLastElement();
+	}
+}
+
+void cleanup() {
+	if(boost::python::override cleanup = this->get_override("cleanup")){
+		cleanup();
+	}else{
+		xercesc::BaseRefVectorOf<PyObject>::cleanup();
+	}
+}
+
+};
+
+//! for python object
+void BaseRefVectorOfPyObject(void) {
+	//! xercesc::BaseRefVectorOf
+	boost::python::class_<BaseRefVectorOfPyObjectWrapper, boost::noncopyable>("BaseRefVectorOfPyObject", boost::python::init<const XMLSize_t, boost::python::optional<const bool, xercesc::MemoryManager* const> >())
+			.def(BaseRefVectorOfPyObjectDefVisitor())
+			.def("addElement", &xercesc::BaseRefVectorOf<PyObject>::addElement)
+			.def("setElementAt", &xercesc::BaseRefVectorOf<PyObject>::setElementAt)
+			.def("insertElementAt", &xercesc::BaseRefVectorOf<PyObject>::insertElementAt)
+			//.def("orphanElementAt", &xercesc::BaseRefVectorOf<PyObject>::orphanElementAt, boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("removeAllElements", &xercesc::BaseRefVectorOf<PyObject>::removeAllElements)
+			.def("removeElementAt", &xercesc::BaseRefVectorOf<PyObject>::removeElementAt)
+			.def("removeLastElement", &xercesc::BaseRefVectorOf<PyObject>::removeLastElement)
+			.def("containsElement", &xercesc::BaseRefVectorOf<PyObject>::containsElement)
+			.def("cleanup", &xercesc::BaseRefVectorOf<PyObject>::cleanup)
+			.def("reinitialize", &xercesc::BaseRefVectorOf<PyObject>::reinitialize)
+			.def("curCapacity", &xercesc::BaseRefVectorOf<PyObject>::curCapacity)
+			//.def("elementAt", static_cast<const PyObject*(xercesc::BaseRefVectorOf<PyObject>::*)(const XMLSize_t) const>(&xercesc::BaseRefVectorOf<PyObject>::elementAt), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("size", &xercesc::BaseRefVectorOf<PyObject>::size)
+			.def("getMemoryManager", &xercesc::BaseRefVectorOf<PyObject>::getMemoryManager, boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("ensureExtraCapacity", &xercesc::BaseRefVectorOf<PyObject>::ensureExtraCapacity)
+			;
+}
+
+// ------------------------------------------------------
+
 void BaseRefVectorOf_init(void) {
 	typedef boost::mpl::string<'XSAn', 'nota', 'tion'> XSAnnotationStr;
 	typedef boost::mpl::string<'XSAt', 'trib', 'uteU', 'se'> XSAttributeUseStr;
 	typedef boost::mpl::string<'XSFa', 'cet'> XSFacetStr;
 	typedef boost::mpl::string<'XSMu', 'ltiV', 'alue', 'Face', 't'> XSMultiValueFacetStr;
 	typedef boost::mpl::string<'XSNa', 'mesp', 'aceI', 'tem'> XSNamespaceItemStr;
+	typedef boost::mpl::string<'XSOb', 'ject'> XSObjectStr;
 	typedef boost::mpl::string<'XSPa', 'rtic', 'le'> XSParticleStr;
 	typedef boost::mpl::string<'XSSi', 'mple', 'Type', 'Defi', 'niti', 'on'> XSSimpleTypeDefinitionStr;
 	typedef boost::mpl::string<'Xerc', 'esLo', 'cati', 'onPa', 'th'> XercesLocationPathStr;
@@ -153,11 +264,14 @@ void BaseRefVectorOf_init(void) {
 	BaseRefVectorOf<XSFacetStr, xercesc::XSFacet>();
 	BaseRefVectorOf<XSMultiValueFacetStr, xercesc::XSMultiValueFacet>();
 	BaseRefVectorOf<XSNamespaceItemStr, xercesc::XSNamespaceItem>();
+	BaseRefVectorOf<XSObjectStr, xercesc::XSObject>();
 	BaseRefVectorOf<XSParticleStr, xercesc::XSParticle>();
 	BaseRefVectorOf<XSSimpleTypeDefinitionStr, xercesc::XSSimpleTypeDefinition>();
 	BaseRefVectorOf<XercesLocationPathStr, xercesc::XercesLocationPath>();
 	//! XMLCh
 	BaseRefVectorOfXMLCh();
+	//! python object
+	BaseRefVectorOfPyObject();
 }
 
 } /* namespace pyxerces */

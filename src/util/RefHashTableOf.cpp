@@ -68,6 +68,30 @@ void RefHashTableOfEnumerator(void) {
 			;
 }
 
+//! for XMLCh
+void RefHashTableOfXMLCh(void) {
+	//! xercesc::RefHashTableOf
+	boost::python::class_<xercesc::RefHashTableOf<XMLCh>, boost::noncopyable>("RefHashTableOfXMLCh", boost::python::init<const XMLSize_t, boost::python::optional<xercesc::MemoryManager* const> >())
+			.def(boost::python::init<const XMLSize_t, const XMLCh&, boost::python::optional<xercesc::MemoryManager* const> >())
+			.def(boost::python::init<const XMLSize_t, const bool, boost::python::optional<xercesc::MemoryManager* const> >())
+			.def(boost::python::init<const XMLSize_t, const bool, const xercesc::StringHasher&, boost::python::optional<xercesc::MemoryManager* const> >())
+			.def("isEmpty", &xercesc::RefHashTableOf<XMLCh>::isEmpty)
+			.def("containsKey", &xercesc::RefHashTableOf<XMLCh>::containsKey)
+			.def("removeKey", &xercesc::RefHashTableOf<XMLCh>::removeKey)
+			.def("removeAll", &xercesc::RefHashTableOf<XMLCh>::removeAll)
+			.def("cleanup", &xercesc::RefHashTableOf<XMLCh>::cleanup)
+			.def("reinitialize", &xercesc::RefHashTableOf<XMLCh>::reinitialize)
+			.def("transferElement", &xercesc::RefHashTableOf<XMLCh>::transferElement)
+			.def("orphanKey", &xercesc::RefHashTableOf<XMLCh>::orphanKey, boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("get", static_cast<const XMLCh*(xercesc::RefHashTableOf<XMLCh>::*)(const void* const key) const>(&xercesc::RefHashTableOf<XMLCh>::get), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("getMemoryManager", &xercesc::RefHashTableOf<XMLCh>::getMemoryManager, boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("getHashModulus", &xercesc::RefHashTableOf<XMLCh>::getHashModulus)
+			.def("getCount", &xercesc::RefHashTableOf<XMLCh>::getCount)
+			.def("setAdoptElements", &xercesc::RefHashTableOf<XMLCh>::setAdoptElements)
+			.def("put", &xercesc::RefHashTableOf<XMLCh>::put)
+			;
+}
+
 void RefHashTableOf_init(void) {
 	typedef boost::mpl::string<'XMLA', 'ttDe', 'f'> XMLAttDefStr;
 	typedef boost::mpl::string<'XMLR', 'efIn', 'fo'> XMLRefInfoStr;
@@ -86,6 +110,8 @@ void RefHashTableOf_init(void) {
 	RefHashTableOf<ComplexTypeInfoStr, xercesc::ComplexTypeInfo>();
 	RefHashTableOf<XercesAttGroupInfoStr, xercesc::XercesAttGroupInfo>();
 	RefHashTableOf<XercesGroupInfoStr, xercesc::XercesGroupInfo>();
+	//! XMLCh
+	RefHashTableOfXMLCh();
 
 	//! xercesc::RefHashTableOfEnumerator
 	RefHashTableOfEnumerator<GrammarStr, xercesc::Grammar>();

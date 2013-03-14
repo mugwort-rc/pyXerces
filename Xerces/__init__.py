@@ -22,6 +22,20 @@ gRange = XMLString('Range')
 gLS    = XMLString('LS')
 gXPath = XMLString('XPath')
 
+# util
+StringList             = RefArrayVectorOfXMLCh
+ValueVectorOfXMLSize_t = ValueVectorOfUnsignedInt
+
+class RefVectorOfPyObject(BaseRefVectorOfPyObject):
+    def __init__(self, maxElems, adoptElems = True, manager = XMLPlatformUtils.fgMemoryManager):
+        BaseRefVectorOfPyObject.__init__(self, maxElems, adoptElems, manager)
+        
+        self.buffer = []
+    
+    def addElement(self, toAdd):
+        self.buffer.append(toAdd)
+        BaseRefVectorOfPyObject.addElement(self, toAdd)
+
 def tostring(node):
     impl = DOMImplementationRegistry.getDOMImplementation(gLS.ptr())
     serializer = impl.createLSSerializer()
