@@ -9,6 +9,9 @@
 
 #include <math.h>
 #include <boost/scoped_ptr.hpp>
+
+#include <xercesc/util/XMLUniDefs.hpp>
+
 #include <xercesc/util/XMLString.hpp>
 
 namespace pyxerces {
@@ -70,12 +73,32 @@ private:
 
 // ==================================================
 
+boost::shared_ptr<XMLChManager> fromlist(const boost::python::list& li) {
+	std::size_t len = boost::python::len(li);
+	boost::scoped_ptr<XMLCh> buffer(new XMLCh[len+1]);
+	std::size_t i = 0;
+	for(i = 0; i < len; ++i){
+		if( ! boost::python::extract<XMLCh>(li[i]).check()){
+			return boost::shared_ptr<XMLChManager>();
+		}
+		buffer.get()[i] = boost::python::extract<XMLCh>(li[i]);
+	}
+	buffer.get()[i] = xercesc::chNull;
+	return XMLChManager::replicate(buffer.get());
+}
+
+// ==================================================
+
 XMLString::XMLString(const std::string& str)
 	: _ch(XMLChManager::transcode(str))
 {}
 
 XMLString::XMLString(const XMLCh* ptr)
 	: _ch(XMLChManager::replicate(ptr))
+{}
+
+XMLString::XMLString(const boost::python::list& initializeList)
+	: _ch(fromlist(initializeList))
 {}
 
 XMLString::XMLString(const XMLString& copy)
@@ -92,8 +115,7 @@ XMLString& XMLString::operator =(const XMLString& rhs) {
 
 XMLCh* XMLString::ptr(void) const {
 	if( ! this->_ch) {
-		PyErr_SetString(PyExc_RuntimeError, "XMLCh Manager is fail");
-		boost::python::throw_error_already_set();
+		return nullptr;
 	}
 	return this->_ch->ptr();
 }
@@ -372,6 +394,9 @@ XMLString XMLString::binToText(const unsigned int toFormat, const unsigned int r
 }
 
 std::string XMLString::toString(void) const {
+	if( ! this->ptr()){
+		return std::string();
+	}
 	return XMLString::transcode(this->ptr());
 }
 
@@ -397,7 +422,9 @@ std::string XMLString::transcode(const XMLCh* ptr) {
 }
 
 XMLString XMLString::replicate(void) const {
-	assert(this->ptr() != nullptr);
+	if( ! this->ptr()){
+		return XMLString(std::string());
+	}
 	return XMLString(this->ptr());
 }
 
@@ -460,6 +487,7 @@ void XMLString_init(void) {
 	//! string <=> XMLCh*
 	boost::python::class_<XMLString>("XMLString", boost::python::init<const std::string&>())
 			.def(boost::python::init<const XMLCh*>())
+			.def(boost::python::init<const boost::python::list&>())
 			.def("__str__", &XMLString::toString)
 			.def("__repr__", &XMLString::reprString)
 			.def("__add__", &XMLString::operator +)
@@ -471,7 +499,6 @@ void XMLString_init(void) {
 			.def("__ne__", &XMLString::operator !=)
 			.def("__len__", &XMLString::size)
 			.def("__getitem__", &XMLString::at)
-			.def("ptr", &XMLString::ptr, boost::python::return_value_policy<boost::python::return_opaque_pointer>())
 			.def("hash", &XMLString::hash)
 			.def("indexOf", &XMLString::indexOf)
 			.def("lastIndexOf", &XMLString::lastIndexOf)
@@ -514,6 +541,8 @@ void XMLString_init(void) {
 
 	//! XMLCh pointer wrapper
 	boost::python::class_<XMLChPtr>("XMLCh", boost::python::no_init)
+			.def("__add__", static_cast<XMLString(XMLChPtr::*)(const XMLChPtr&)>(&XMLChPtr::operator +))
+			.def("__add__", static_cast<XMLString(XMLChPtr::*)(const XMLString&)>(&XMLChPtr::operator +))
 			.def("ptr", &XMLChPtr::ptr, boost::python::return_value_policy<boost::python::return_opaque_pointer>())
 			.def("toString", &XMLChPtr::toString)
 			;

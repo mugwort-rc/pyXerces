@@ -34,6 +34,12 @@ XMLString(const std::string& str);
  */
 XMLString(const XMLCh* ptr);
 /*!
+ * Constructor
+ * @param [in]		initializeList	initialize XMLCh value list
+ * @type initializeList: boost::python::list
+ */
+XMLString(const boost::python::list& initializeList);
+/*!
  * Copy constructor
  * @param [in]		copy	copy value
  */
@@ -308,6 +314,16 @@ XMLChPtr(const XMLChPtr& copy)
 XMLChPtr& operator =(const XMLChPtr& rhs) {
 	this->_ptr = rhs._ptr;
 	return *this;
+}
+
+XMLString operator +(const XMLChPtr& rhs) {
+	XMLString buff1(this->_ptr), buff2(rhs._ptr);
+	return buff1 + buff2;
+}
+
+XMLString operator +(const XMLString& rhs) {
+	XMLString buff(this->_ptr);
+	return buff + rhs;
 }
 
 XMLCh* ptr(void) const {
