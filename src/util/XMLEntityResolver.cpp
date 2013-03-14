@@ -21,7 +21,7 @@ class XMLEntityResolverWrapper
 {
 public:
 xercesc::InputSource* resolveEntity(xercesc::XMLResourceIdentifier* resourceIdentifier) {
-	return this->get_override("resolveEntity")(resourceIdentifier);
+	return this->get_override("resolveEntity")(boost::python::ptr(resourceIdentifier));
 }
 
 };

@@ -653,7 +653,7 @@ void resetEntities() {
 
 xercesc::InputSource* resolveEntity(xercesc::XMLResourceIdentifier* resourceIdentifier) {
 	if(boost::python::override resolveEntity = this->get_override("resolveEntity")){
-		return resolveEntity(resourceIdentifier);
+		return resolveEntity(boost::python::ptr(resourceIdentifier));
 	}else{
 		return xercesc::SAX2XMLReaderImpl::resolveEntity(resourceIdentifier);
 	}

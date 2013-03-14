@@ -8,7 +8,10 @@
 #include "EntityResolver.h"
 
 #include <boost/python.hpp>
-#include <xercesc/sax/InputSource.hpp>		//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/sax/InputSource.hpp>
+
 #include <xercesc/sax/EntityResolver.hpp>
 
 #include "../util/XMLString.h"
@@ -40,7 +43,7 @@ class EntityResolverWrapper
 {
 public:
 	xercesc::InputSource* resolveEntity(const XMLCh* const publicId, const XMLCh* const systemId) {
-		return this->get_override("resolveEntity")(publicId, systemId);
+		return this->get_override("resolveEntity")(XMLString(publicId), XMLString(systemId));
 	}
 
 };

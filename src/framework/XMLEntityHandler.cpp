@@ -8,9 +8,12 @@
 #include "XMLEntityHandler.h"
 
 #include <boost/python.hpp>
-#include <xercesc/sax/InputSource.hpp>				//!< for forward declaration
-#include <xercesc/framework/XMLBuffer.hpp>			//!< for forward declaration
-#include <xercesc/util/XMLResourceIdentifier.hpp>	//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/sax/InputSource.hpp>
+#include <xercesc/framework/XMLBuffer.hpp>
+#include <xercesc/util/XMLResourceIdentifier.hpp>
+
 #include <xercesc/framework/XMLEntityHandler.hpp>
 
 #include "../util/XMLString.h"
@@ -37,9 +40,35 @@ static bool expandSystemId(xercesc::XMLEntityHandler& self, const STR& systemId,
 
 };
 
+class XMLEntityHandlerWrapper
+: public xercesc::XMLEntityHandler, public boost::python::wrapper<xercesc::XMLEntityHandler>
+{
+public:
+void endInputSource(const xercesc::InputSource& inputSource) {
+	this->get_override("endInputSource")(inputSource);
+}
+
+bool expandSystemId(const XMLCh* const systemId, xercesc::XMLBuffer& toFill) {
+	return this->get_override("expandSystemId")(XMLString(systemId), boost::ref(toFill));
+}
+
+void resetEntities() {
+	this->get_override("resetEntities")();
+}
+
+xercesc::InputSource* resolveEntity(xercesc::XMLResourceIdentifier* resourceIdentifier) {
+	return this->get_override("resolveEntity")(boost::python::ptr(resourceIdentifier));
+}
+
+void startInputSource(const xercesc::InputSource& inputSource) {
+	this->get_override("startInputSource")(inputSource);
+}
+
+};
+
 void XMLEntityHandler_init(void) {
 	//! xercesc::XMLEntityHandler
-	boost::python::class_<xercesc::XMLEntityHandler, boost::noncopyable>("XMLEntityHandler", boost::python::no_init)
+	boost::python::class_<XMLEntityHandlerWrapper, boost::noncopyable>("XMLEntityHandler")
 			.def(XMLEntityHandlerDefVisitor<XMLString>())
 			.def(XMLEntityHandlerDefVisitor<std::string>())
 			.def("endInputSource", &xercesc::XMLEntityHandler::endInputSource)
