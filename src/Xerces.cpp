@@ -131,6 +131,7 @@
 #include "sax/SAXParseException.h"
 
 // sax2
+#include "sax2/Attributes.h"
 #include "sax2/ContentHandler.h"
 #include "sax2/DeclHandler.h"
 #include "sax2/DefaultHandler.h"
@@ -385,6 +386,7 @@ BOOST_PYTHON_MODULE(__Xerces)
 	// ==================================================
 	// sax2
 	// --------------------------------------------------
+	pyxerces::Attributes_init();
 	pyxerces::DefaultHandler_init();
 
 	// ==================================================
