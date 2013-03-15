@@ -10,6 +10,8 @@
 #include <boost/mpl/string.hpp>
 #include <boost/python.hpp>
 
+//! XMLAttr
+#include <xercesc/framework/XMLAttr.hpp>
 //! XSAnnotation
 #include <xercesc/framework/psvi/XSAnnotation.hpp>
 //! XSAttributeUse
@@ -249,6 +251,7 @@ void BaseRefVectorOfPyObject(void) {
 // ------------------------------------------------------
 
 void BaseRefVectorOf_init(void) {
+	typedef boost::mpl::string<'XMLA', 'ttr'> XMLAttrStr;
 	typedef boost::mpl::string<'XSAn', 'nota', 'tion'> XSAnnotationStr;
 	typedef boost::mpl::string<'XSAt', 'trib', 'uteU', 'se'> XSAttributeUseStr;
 	typedef boost::mpl::string<'XSFa', 'cet'> XSFacetStr;
@@ -259,6 +262,7 @@ void BaseRefVectorOf_init(void) {
 	typedef boost::mpl::string<'XSSi', 'mple', 'Type', 'Defi', 'niti', 'on'> XSSimpleTypeDefinitionStr;
 	typedef boost::mpl::string<'Xerc', 'esLo', 'cati', 'onPa', 'th'> XercesLocationPathStr;
 	//! xercesc::BaseRefVectorOf
+	BaseRefVectorOf<XMLAttrStr, xercesc::XMLAttr>();
 	BaseRefVectorOf<XSAnnotationStr, xercesc::XSAnnotation>();
 	BaseRefVectorOf<XSAttributeUseStr, xercesc::XSAttributeUse>();
 	BaseRefVectorOf<XSFacetStr, xercesc::XSFacet>();

@@ -10,9 +10,12 @@
 #include <boost/scoped_ptr.hpp>
 #include <boost/mpl/string.hpp>
 #include <boost/python.hpp>
-#include <xercesc/validators/common/Grammar.hpp>		//!< for forward declaration
-#include <xercesc/validators/DTD/DTDElementDecl.hpp>	//!< for forward declaration
-#include <xercesc/validators/DTD/DTDEntityDecl.hpp>		//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/validators/common/Grammar.hpp>
+#include <xercesc/validators/DTD/DTDElementDecl.hpp>
+#include <xercesc/validators/DTD/DTDEntityDecl.hpp>
+
 #include <xercesc/util/XMLEnumerator.hpp>
 
 namespace pyxerces {

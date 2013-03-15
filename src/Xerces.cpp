@@ -67,6 +67,7 @@
 #include "framework/ValidationContext.h"
 #include "framework/XMLAttDef.h"
 #include "framework/XMLAttDefList.h"
+#include "framework/XMLAttr.h"
 #include "framework/XMLBuffer.h"
 #include "framework/XMLContentModel.h"
 #include "framework/XMLDocumentHandler.h"
@@ -327,6 +328,7 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::ValidationContext_init();
 	pyxerces::XMLAttDef_init();
 	pyxerces::XMLAttDefList_init();
+	pyxerces::XMLAttr_init();
 	pyxerces::XMLBuffer_init();
 	pyxerces::XMLContentModel_init();
 	pyxerces::XMLDTDDescription_init();

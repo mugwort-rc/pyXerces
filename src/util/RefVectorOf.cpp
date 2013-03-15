@@ -10,6 +10,8 @@
 #include <boost/mpl/string.hpp>
 #include <boost/python.hpp>
 
+//! XMLAttr
+#include <xercesc/framework/XMLAttr.hpp>
 //! XSAnnotation
 #include <xercesc/framework/psvi/XSAnnotation.hpp>
 //! XSAttributeUse
@@ -42,6 +44,7 @@ void RefVectorOf(void) {
 }
 
 void RefVectorOf_init(void) {
+	typedef boost::mpl::string<'XMLA', 'ttr'> XMLAttrStr;
 	typedef boost::mpl::string<'XSAn', 'nota', 'tion'> XSAnnotationStr;
 	typedef boost::mpl::string<'XSAt', 'trib', 'uteU', 'se'> XSAttributeUseStr;
 	typedef boost::mpl::string<'XSFa', 'cet'> XSFacetStr;
@@ -52,6 +55,7 @@ void RefVectorOf_init(void) {
 	typedef boost::mpl::string<'XSSi', 'mple', 'Type', 'Defi', 'niti', 'on'> XSSimpleTypeDefinitionStr;
 	typedef boost::mpl::string<'Xerc', 'esLo', 'cati', 'onPa', 'th'> XercesLocationPathStr;
 	//! xercesc::RefVectorOf
+	RefVectorOf<XMLAttrStr, xercesc::XMLAttr>();
 	RefVectorOf<XSAnnotationStr, xercesc::XSAnnotation>();
 	RefVectorOf<XSAttributeUseStr, xercesc::XSAttributeUse>();
 	RefVectorOf<XSFacetStr, xercesc::XSFacet>();
