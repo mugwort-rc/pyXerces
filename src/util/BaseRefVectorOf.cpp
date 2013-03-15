@@ -177,8 +177,8 @@ class BaseRefVectorOfPyObjectWrapper
 : public xercesc::BaseRefVectorOf<PyObject>, public boost::python::wrapper<xercesc::BaseRefVectorOf<PyObject> >
 {
 public:
-BaseRefVectorOfPyObjectWrapper(const XMLSize_t maxElems, const bool adoptElems = true, xercesc::MemoryManager* const manager = xercesc::XMLPlatformUtils::fgMemoryManager)
-: xercesc::BaseRefVectorOf<PyObject>(maxElems, adoptElems, manager)
+BaseRefVectorOfPyObjectWrapper(const XMLSize_t maxElems, xercesc::MemoryManager* const manager = xercesc::XMLPlatformUtils::fgMemoryManager)
+: xercesc::BaseRefVectorOf<PyObject>(maxElems, false, manager)
 {}
 ~BaseRefVectorOfPyObjectWrapper()
 {}
@@ -228,7 +228,7 @@ void cleanup() {
 //! for python object
 void BaseRefVectorOfPyObject(void) {
 	//! xercesc::BaseRefVectorOf
-	boost::python::class_<BaseRefVectorOfPyObjectWrapper, boost::noncopyable>("BaseRefVectorOfPyObject", boost::python::init<const XMLSize_t, boost::python::optional<const bool, xercesc::MemoryManager* const> >())
+	boost::python::class_<BaseRefVectorOfPyObjectWrapper, boost::noncopyable>("BaseRefVectorOfPyObject", boost::python::init<const XMLSize_t, boost::python::optional<xercesc::MemoryManager* const> >())
 			.def(BaseRefVectorOfPyObjectDefVisitor())
 			.def("addElement", &xercesc::BaseRefVectorOf<PyObject>::addElement)
 			.def("setElementAt", &xercesc::BaseRefVectorOf<PyObject>::setElementAt)

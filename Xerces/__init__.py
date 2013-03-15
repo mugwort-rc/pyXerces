@@ -27,8 +27,8 @@ StringList             = RefArrayVectorOfXMLCh
 ValueVectorOfXMLSize_t = ValueVectorOfUnsignedInt
 
 class RefVectorOfPyObject(BaseRefVectorOfPyObject):
-    def __init__(self, maxElems, adoptElems = True, manager = XMLPlatformUtils.fgMemoryManager):
-        BaseRefVectorOfPyObject.__init__(self, maxElems, adoptElems, manager)
+    def __init__(self, maxElems, manager = XMLPlatformUtils.fgMemoryManager):
+        BaseRefVectorOfPyObject.__init__(self, maxElems, manager)
         
         self.buffer = []
     
