@@ -86,7 +86,11 @@
 #include "framework/XMLSchemaDescription.h"
 #include "framework/XMLValidator.h"
 // framework/psvi
+#include "framework/psvi/PSVIAttribute.h"
+#include "framework/psvi/PSVIAttributeList.h"
+#include "framework/psvi/PSVIElement.h"
 #include "framework/psvi/PSVIHandler.h"
+#include "framework/psvi/PSVIItem.h"
 #include "framework/psvi/XSAnnotation.h"
 #include "framework/psvi/XSAttributeDeclaration.h"
 #include "framework/psvi/XSAttributeGroupDefinition.h"
@@ -234,6 +238,7 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::XMLValidator_init();
 	// framework/psvi
 	pyxerces::PSVIHandler_init();
+	pyxerces::PSVIItem_init();
 	pyxerces::XSObject_init();
 	// internal
 	pyxerces::XSerializable_init();
@@ -341,6 +346,9 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::XMLRefInfo_init();
 	pyxerces::XMLSchemaDescription_init();
 	// psvi
+	pyxerces::PSVIAttribute_init();
+	pyxerces::PSVIAttributeList_init();
+	pyxerces::PSVIElement_init();
 	pyxerces::XSAnnotation_init();
 	pyxerces::XSAttributeDeclaration_init();
 	pyxerces::XSAttributeGroupDefinition_init();
