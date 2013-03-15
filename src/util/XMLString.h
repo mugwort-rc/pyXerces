@@ -330,7 +330,13 @@ XMLCh* ptr(void) const {
 	return this->_ptr;
 }
 
-XMLString toString(void) const;
+XMLSize_t size(void) const {
+	return XMLString(this->_ptr).size();
+}
+
+XMLString toString(void) const{
+	return XMLString(this->_ptr);
+}
 
 private:
 XMLCh* _ptr;

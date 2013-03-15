@@ -174,7 +174,7 @@ int XMLString::lastIndexOf(const XMLCh ch) const {
 
 XMLString XMLString::subString(const XMLSize_t start, const XMLSize_t end) const {
 	XMLSize_t size = this->size();
-	if(start >= end || start > size || end > size) {
+	if(start > end || start > size || end > size) {
 		PyErr_SetString(PyExc_IndexError, "Index out of range");
 		boost::python::throw_error_already_set();
 	}
@@ -430,12 +430,6 @@ XMLString XMLString::replicate(void) const {
 
 // ==================================================
 
-XMLString XMLChPtr::toString(void) const {
-	return XMLString(this->ptr());
-}
-
-// ==================================================
-
 unsigned char* unsigned_cast(char* ch) {
 	return reinterpret_cast<unsigned char*>(ch);
 }
@@ -543,6 +537,7 @@ void XMLString_init(void) {
 	boost::python::class_<XMLChPtr>("XMLCh", boost::python::no_init)
 			.def("__add__", static_cast<XMLString(XMLChPtr::*)(const XMLChPtr&)>(&XMLChPtr::operator +))
 			.def("__add__", static_cast<XMLString(XMLChPtr::*)(const XMLString&)>(&XMLChPtr::operator +))
+			.def("__len__", &XMLChPtr::size)
 			.def("ptr", &XMLChPtr::ptr, boost::python::return_value_policy<boost::python::return_opaque_pointer>())
 			.def("toString", &XMLChPtr::toString)
 			;
