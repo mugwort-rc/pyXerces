@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from __Xerces import *
-from XercesDOMParser import XercesDOMParser
 
 # Initialize Xerces
 try:
