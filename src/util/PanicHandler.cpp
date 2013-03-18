@@ -17,6 +17,7 @@ void PanicHandler_init(void) {
 	boost::python::class_<xercesc::PanicHandler, boost::noncopyable>("PanicHandler", boost::python::no_init)
 			.def("panic", &xercesc::PanicHandler::panic)
 			.def("getPanicReasonString", &xercesc::PanicHandler::getPanicReasonString)
+			.staticmethod("getPanicReasonString")
 			;
 }
 
