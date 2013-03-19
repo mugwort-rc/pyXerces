@@ -47,9 +47,81 @@ static unsigned int getId(xercesc::XMLStringPool& self, const STR& toFind) {
 
 };
 
+class XMLStringPoolWrapper
+: public xercesc::XMLStringPool, public boost::python::wrapper<xercesc::XMLStringPool>
+{
+public:
+XMLStringPoolWrapper(const unsigned int modulus = 109, xercesc::MemoryManager* const manager = xercesc::XMLPlatformUtils::fgMemoryManager)
+: xercesc::XMLStringPool(modulus, manager)
+{}
+
+XMLStringPoolWrapper(xercesc::MemoryManager* const manager)
+: xercesc::XMLStringPool(manager)
+{}
+
+unsigned int addOrFind(const XMLCh* const newString) {
+	if(boost::python::override addOrFind = this->get_override("addOrFind")){
+		return addOrFind(XMLString(newString));
+	}else{
+		return xercesc::XMLStringPool::addOrFind(newString);
+	}
+}
+
+bool exists(const XMLCh* const newString) const {
+	if(boost::python::override exists = this->get_override("exists")){
+		return exists(XMLString(newString));
+	}else{
+		return xercesc::XMLStringPool::exists(newString);
+	}
+}
+
+bool exists(const unsigned int id) const {
+	if(boost::python::override exists = this->get_override("exists")){
+		return exists(id);
+	}else{
+		return xercesc::XMLStringPool::exists(id);
+	}
+}
+
+void flushAll() {
+	if(boost::python::override flushAll = this->get_override("flushAll")){
+		flushAll();
+	}else{
+		xercesc::XMLStringPool::flushAll();
+	}
+}
+
+unsigned int getId(const XMLCh* const toFind) const {
+	if(boost::python::override getId = this->get_override("getId")){
+		return getId(XMLString(toFind));
+	}else{
+		return xercesc::XMLStringPool::getId(toFind);
+	}
+}
+
+const XMLCh* getValueForId(const unsigned int id) const {
+	if(boost::python::override getValueForId = this->get_override("getValueForId")){
+		return getValueForId(id);
+	}else{
+		return xercesc::XMLStringPool::getValueForId(id);
+	}
+}
+
+unsigned int getStringCount() const {
+	if(boost::python::override getStringCount = this->get_override("getStringCount")){
+		return getStringCount();
+	}else{
+		return xercesc::XMLStringPool::getStringCount();
+	}
+}
+
+PyDECL_XSERIALIZABLEWrapper
+
+};
+
 void StringPool_init(void) {
 	//! xercesc::XMLStringPool
-	boost::python::class_<xercesc::XMLStringPool, boost::noncopyable, boost::python::bases<xercesc::XSerializable> >("XMLStringPool", boost::python::init<boost::python::optional<const unsigned int, xercesc::MemoryManager* const> >())
+	boost::python::class_<XMLStringPoolWrapper, boost::noncopyable, boost::python::bases<xercesc::XSerializable> >("XMLStringPool", boost::python::init<boost::python::optional<const unsigned int, xercesc::MemoryManager* const> >())
 			.def(boost::python::init<boost::python::optional<xercesc::MemoryManager* const> >())
 			.def(XMLStringPoolDefVisitor<XMLString>())
 			.def(XMLStringPoolDefVisitor<std::string>())

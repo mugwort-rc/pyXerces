@@ -8,8 +8,11 @@
 #include "MemBufInputSource.h"
 
 #include <boost/python.hpp>
-#include <xercesc/util/BinInputStream.hpp>		//!< for forward declaration
-#include <xercesc/framework/MemoryManager.hpp>	//!< for forward declaration
+
+//!< for forward declaration
+#include <xercesc/util/BinInputStream.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
+
 #include <xercesc/framework/MemBufInputSource.hpp>
 
 namespace pyxerces {

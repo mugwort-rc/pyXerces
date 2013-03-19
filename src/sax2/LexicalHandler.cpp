@@ -91,13 +91,13 @@ void LexicalHandler_init(void) {
 	boost::python::class_<LexicalHandlerWrapper, boost::noncopyable>("LexicalHandler")
 			.def(LexicalHandlerDefVisitor<XMLString>())
 			.def(LexicalHandlerDefVisitor<std::string>())
-			.def("comment", &xercesc::LexicalHandler::comment)
-			.def("endCDATA", &xercesc::LexicalHandler::endCDATA)
-			.def("endDTD", &xercesc::LexicalHandler::endDTD)
-			.def("endEntity", &xercesc::LexicalHandler::endEntity)
-			.def("startCDATA", &xercesc::LexicalHandler::startCDATA)
-			.def("startDTD", &xercesc::LexicalHandler::startDTD)
-			.def("startEntity", &xercesc::LexicalHandler::startEntity)
+			.def("comment", boost::python::pure_virtual(&xercesc::LexicalHandler::comment))
+			.def("endCDATA", boost::python::pure_virtual(&xercesc::LexicalHandler::endCDATA))
+			.def("endDTD", boost::python::pure_virtual(&xercesc::LexicalHandler::endDTD))
+			.def("endEntity", boost::python::pure_virtual(&xercesc::LexicalHandler::endEntity))
+			.def("startCDATA", boost::python::pure_virtual(&xercesc::LexicalHandler::startCDATA))
+			.def("startDTD", boost::python::pure_virtual(&xercesc::LexicalHandler::startDTD))
+			.def("startEntity", boost::python::pure_virtual(&xercesc::LexicalHandler::startEntity))
 			;
 }
 

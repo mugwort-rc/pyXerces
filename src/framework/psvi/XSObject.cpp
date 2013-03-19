@@ -170,9 +170,51 @@ xercesc::XSWildcard* toXSWildcard(xercesc::XSObject& self) {
 
 };
 
+class XSObjectWrapper
+: public xercesc::XSObject, public boost::python::wrapper<xercesc::XSObject>
+{
+public:
+XSObjectWrapper(xercesc::XSConstants::COMPONENT_TYPE compType, xercesc::XSModel* const xsModel, xercesc::MemoryManager* const manager = xercesc::XMLPlatformUtils::fgMemoryManager)
+: xercesc::XSObject(compType, xsModel, manager)
+{}
+
+const XMLCh* getName() const {
+	if(boost::python::override getName = this->get_override("getName")){
+		return getName();
+	}else{
+		return xercesc::XSObject::getName();
+	}
+}
+
+const XMLCh* getNamespace() {
+	if(boost::python::override getNamespace = this->get_override("getNamespace")){
+		return getNamespace();
+	}else{
+		return xercesc::XSObject::getNamespace();
+	}
+}
+
+xercesc::XSNamespaceItem *getNamespaceItem() {
+	if(boost::python::override getNamespaceItem = this->get_override("getNamespaceItem")){
+		return getNamespaceItem();
+	}else{
+		return xercesc::XSObject::getNamespaceItem();
+	}
+}
+
+XMLSize_t getId() const {
+	if(boost::python::override getId = this->get_override("getId")){
+		return getId();
+	}else{
+		return xercesc::XSObject::getId();
+	}
+}
+
+};
+
 void XSObject_init(void) {
 	//! xercesc::XSObject
-	boost::python::class_<xercesc::XSObject, boost::noncopyable>("XSObject", boost::python::init<xercesc::XSConstants::COMPONENT_TYPE, xercesc::XSModel* const, boost::python::optional<xercesc::MemoryManager* const> >())
+	boost::python::class_<XSObjectWrapper, boost::noncopyable>("XSObject", boost::python::init<xercesc::XSConstants::COMPONENT_TYPE, xercesc::XSModel* const, boost::python::optional<xercesc::MemoryManager* const> >())
 			.def(XSObjectDefVisitor())
 			.def("getType", &xercesc::XSObject::getType)
 			.def("getName", &xercesc::XSObject::getName, boost::python::return_value_policy<boost::python::return_by_value>())

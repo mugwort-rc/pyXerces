@@ -8,11 +8,14 @@
 #include "PlatformUtils.h"
 
 #include <boost/python.hpp>
-#include <xercesc/util/XMLNetAccessor.hpp>		//!< for forward declaration
-#include <xercesc/util/TransService.hpp>		//!< for forward declaration
-#include <xercesc/util/Mutexes.hpp>				//!< for forward declaration
-#include <xercesc/util/XMLMsgLoader.hpp>		//!< for forward declaration
-#include <xercesc/framework/MemoryManager.hpp>	//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/util/XMLNetAccessor.hpp>
+#include <xercesc/util/TransService.hpp>
+#include <xercesc/util/Mutexes.hpp>
+#include <xercesc/util/XMLMsgLoader.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
+
 #include <xercesc/util/PlatformUtils.hpp>
 
 namespace pyxerces {

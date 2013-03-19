@@ -8,8 +8,11 @@
 #include "XMLDocumentHandler.h"
 
 #include <boost/python.hpp>
-#include <xercesc/framework/XMLElementDecl.hpp>		//!< for forward declaration
-#include <xercesc/framework/XMLEntityDecl.hpp>		//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/framework/XMLElementDecl.hpp>
+#include <xercesc/framework/XMLEntityDecl.hpp>
+
 #include <xercesc/framework/XMLDocumentHandler.hpp>
 
 #include "../util/XMLString.h"
@@ -93,11 +96,11 @@ void endDocument() {
 }
 
 void endElement(const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const bool isRoot, const XMLCh* const prefixName = 0) {
-	this->get_override("endElement")(elemDecl, uriId, isRoot, XMLString(prefixName));
+	this->get_override("endElement")(boost::ref(elemDecl), uriId, isRoot, XMLString(prefixName));
 }
 
 void endEntityReference(const xercesc::XMLEntityDecl& entDecl) {
-	this->get_override("endEntityReference")(entDecl);
+	this->get_override("endEntityReference")(boost::ref(entDecl));
 }
 
 void ignorableWhitespace(const XMLCh* const chars, const XMLSize_t length, const bool cdataSection) {
@@ -113,11 +116,11 @@ void startDocument() {
 }
 
 void startElement(const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const XMLCh* const prefixName, const xercesc::RefVectorOf<xercesc::XMLAttr>& attrList, const XMLSize_t attrCount, const bool isEmpty, const bool isRoot) {
-	this->get_override("startElement")(elemDecl, uriId, XMLString(prefixName), attrList, attrCount, isEmpty, isRoot);
+	this->get_override("startElement")(boost::ref(elemDecl), uriId, XMLString(prefixName), boost::ref(attrList), attrCount, isEmpty, isRoot);
 }
 
 void startEntityReference(const xercesc::XMLEntityDecl& entDecl) {
-	this->get_override("startEntityReference")(entDecl);
+	this->get_override("startEntityReference")(boost::ref(entDecl));
 }
 
 void XMLDecl(const XMLCh* const versionStr, const XMLCh* const encodingStr, const XMLCh* const standaloneStr, const XMLCh* const autoEncodingStr) {
@@ -131,18 +134,18 @@ void XMLDocumentHandler_init(void) {
 	boost::python::class_<XMLDocumentHandlerWrapper, boost::noncopyable>("XMLDocumentHandler")
 			.def(XMLDocumentHandlerDefVisitor<XMLString>())
 			.def(XMLDocumentHandlerDefVisitor<std::string>())
-			.def("docCharacters", &xercesc::XMLDocumentHandler::docCharacters)
-			.def("docComment", &xercesc::XMLDocumentHandler::docComment)
-			.def("docPI", &xercesc::XMLDocumentHandler::docPI)
-			.def("endDocument", &xercesc::XMLDocumentHandler::endDocument)
-			.def("endElement", &xercesc::XMLDocumentHandler::endElement)
-			.def("endEntityReference", &xercesc::XMLDocumentHandler::endEntityReference)
-			.def("ignorableWhitespace", &xercesc::XMLDocumentHandler::ignorableWhitespace)
-			.def("resetDocument", &xercesc::XMLDocumentHandler::resetDocument)
-			.def("startDocument", &xercesc::XMLDocumentHandler::startDocument)
-			.def("startElement", &xercesc::XMLDocumentHandler::startElement)
-			.def("startEntityReference", &xercesc::XMLDocumentHandler::startEntityReference)
-			.def("XMLDecl", &xercesc::XMLDocumentHandler::XMLDecl)
+			.def("docCharacters", boost::python::pure_virtual(&xercesc::XMLDocumentHandler::docCharacters))
+			.def("docComment", boost::python::pure_virtual(&xercesc::XMLDocumentHandler::docComment))
+			.def("docPI", boost::python::pure_virtual(&xercesc::XMLDocumentHandler::docPI))
+			.def("endDocument", boost::python::pure_virtual(&xercesc::XMLDocumentHandler::endDocument))
+			.def("endElement", boost::python::pure_virtual(&xercesc::XMLDocumentHandler::endElement))
+			.def("endEntityReference", boost::python::pure_virtual(&xercesc::XMLDocumentHandler::endEntityReference))
+			.def("ignorableWhitespace", boost::python::pure_virtual(&xercesc::XMLDocumentHandler::ignorableWhitespace))
+			.def("resetDocument", boost::python::pure_virtual(&xercesc::XMLDocumentHandler::resetDocument))
+			.def("startDocument", boost::python::pure_virtual(&xercesc::XMLDocumentHandler::startDocument))
+			.def("startElement", boost::python::pure_virtual(&xercesc::XMLDocumentHandler::startElement))
+			.def("startEntityReference", boost::python::pure_virtual(&xercesc::XMLDocumentHandler::startEntityReference))
+			.def("XMLDecl", boost::python::pure_virtual(&xercesc::XMLDocumentHandler::XMLDecl))
 			;
 }
 

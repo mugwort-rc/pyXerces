@@ -34,13 +34,27 @@ static void error(xercesc::XMLErrorReporter& self, const unsigned int errCode, c
 
 };
 
+class XMLErrorReporterWrapper
+: public xercesc::XMLErrorReporter, public boost::python::wrapper<xercesc::XMLErrorReporter>
+{
+public:
+void error(const unsigned int errCode, const XMLCh* const errDomain, const xercesc::XMLErrorReporter::ErrTypes type, const XMLCh* const errorText, const XMLCh* const systemId, const XMLCh* const publicId, const XMLFileLoc lineNum, const XMLFileLoc colNum) {
+	this->get_override("error")(errCode, XMLString(errDomain), type, XMLString(errorText), XMLString(systemId), XMLString(publicId), lineNum, colNum);
+}
+
+void resetErrors() {
+	this->get_override("resetErrors")();
+}
+
+};
+
 void XMLErrorReporter_init(void) {
 	//! xercesc::XMLErrorReporter
-	auto XMLErrorReporter = boost::python::class_<xercesc::XMLErrorReporter, boost::noncopyable>("XMLErrorReporter", boost::python::no_init)
+	auto XMLErrorReporter = boost::python::class_<XMLErrorReporterWrapper, boost::noncopyable>("XMLErrorReporter")
 			.def(XMLErrorReporterDefVisitor<XMLString>())
 			.def(XMLErrorReporterDefVisitor<std::string>())
-			.def("error", &xercesc::XMLErrorReporter::error)
-			.def("resetErrors", &xercesc::XMLErrorReporter::resetErrors)
+			.def("error", boost::python::pure_virtual(&xercesc::XMLErrorReporter::error))
+			.def("resetErrors", boost::python::pure_virtual(&xercesc::XMLErrorReporter::resetErrors))
 			;
 	boost::python::scope XMLErrorReporterScope = XMLErrorReporter;
 	//! xercesc::XMLErrorReporter::ErrTypes
@@ -51,7 +65,6 @@ void XMLErrorReporter_init(void) {
 			.value("ErrTypes_Unknown", xercesc::XMLErrorReporter::ErrTypes_Unknown)
 			.export_values()
 			;
-
 }
 
 } /* namespace pyxerces */

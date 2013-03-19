@@ -8,14 +8,15 @@
 #include "XMLRecognizer.h"
 
 #include <boost/python.hpp>
-#include <xercesc/framework/MemoryManager.hpp>	//!< for forward declaration
+
+//!< for forward declaration
+#include <xercesc/framework/MemoryManager.hpp>
+
 #include <xercesc/framework/XMLRecognizer.hpp>
 
 #include "../util/XMLString.h"
 
 namespace pyxerces {
-
-BOOST_PYTHON_FUNCTION_OVERLOADS(XMLRecognizerNameForEncodingOverloads, xercesc::XMLRecognizer::nameForEncoding, 1, 2)
 
 class XMLRecognizerDefVisitor
 : public boost::python::def_visitor<XMLRecognizerDefVisitor> {
@@ -54,6 +55,8 @@ static xercesc::XMLRecognizer::Encodings encodingForName(const STR& theEncName) 
 }
 
 };
+
+BOOST_PYTHON_FUNCTION_OVERLOADS(XMLRecognizerNameForEncodingOverloads, xercesc::XMLRecognizer::nameForEncoding, 1, 2)
 
 void XMLRecognizer_init(void) {
 	//! xercesc::XMLRecognizer

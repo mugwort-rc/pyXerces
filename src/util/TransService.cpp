@@ -8,7 +8,10 @@
 #include "TransService.h"
 
 #include <boost/python.hpp>
-#include <xercesc/util/TransENameMap.hpp>	//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/util/TransENameMap.hpp>
+
 #include <xercesc/util/TransService.hpp>
 
 namespace pyxerces {

@@ -70,9 +70,55 @@ static void endElement(xercesc::XPathMatcher& self, const xercesc::XMLElementDec
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(XPathMatcherStartElementOverloads, startElement, 5, 6)
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(XPathMatcherEndElementOverloads, endElement, 2, 4)
 
+class XPathMatcherWrapper
+: public xercesc::XPathMatcher, public boost::python::wrapper<xercesc::XPathMatcher>
+{
+public:
+XPathMatcherWrapper(xercesc::XercesXPath* const xpath, xercesc::MemoryManager* const manager = xercesc::XMLPlatformUtils::fgMemoryManager)
+: xercesc::XPathMatcher(xpath, manager)
+{}
+
+XPathMatcherWrapper(xercesc::XercesXPath* const xpath, xercesc::IdentityConstraint* const ic, xercesc::MemoryManager* const manager = xercesc::XMLPlatformUtils::fgMemoryManager)
+: xercesc::XPathMatcher(xpath, ic, manager)
+{}
+
+int getInitialDepth() const {
+	if(boost::python::override getInitialDepth = this->get_override("getInitialDepth")){
+		return getInitialDepth();
+	}else{
+		return xercesc::XPathMatcher::getInitialDepth();
+	}
+}
+
+void startDocumentFragment() {
+	if(boost::python::override startDocumentFragment = this->get_override("startDocumentFragment")){
+		startDocumentFragment();
+	}else{
+		xercesc::XPathMatcher::startDocumentFragment();
+	}
+}
+
+void startElement(const xercesc::XMLElementDecl& elemDecl, const unsigned int urlId, const XMLCh* const elemPrefix, const xercesc::RefVectorOf<xercesc::XMLAttr>& attrList, const XMLSize_t attrCount, xercesc::ValidationContext* validationContext = 0) {
+	if(boost::python::override startElement = this->get_override("startElement")){
+		startElement(boost::ref(elemDecl), urlId, XMLString(elemPrefix), boost::ref(attrList), attrCount, boost::python::ptr(validationContext));
+	}else{
+		xercesc::XPathMatcher::startElement(elemDecl, urlId, elemPrefix, attrList, attrCount, validationContext);
+	}
+}
+
+void endElement(const xercesc::XMLElementDecl& elemDecl, const XMLCh* const elemContent, xercesc::ValidationContext* validationContext = 0, xercesc::DatatypeValidator* actualValidator = 0) {
+	if(boost::python::override endElement = this->get_override("endElement")){
+		endElement(boost::ref(elemDecl), XMLString(elemContent), boost::python::ptr(validationContext), boost::python::ptr(actualValidator));
+	}else{
+		xercesc::XPathMatcher::endElement(elemDecl, elemContent, validationContext, actualValidator);
+	}
+}
+
+};
+
 void XPathMatcher_init(void) {
 	//! xercesc::XPathMatcher
-	boost::python::class_<xercesc::XPathMatcher, boost::noncopyable>("XPathMatcher", boost::python::init<xercesc::XercesXPath* const, boost::python::optional<xercesc::MemoryManager* const> >())
+	boost::python::class_<XPathMatcherWrapper, boost::noncopyable>("XPathMatcher", boost::python::init<xercesc::XercesXPath* const, boost::python::optional<xercesc::MemoryManager* const> >())
 			.def(boost::python::init<xercesc::XercesXPath* const, xercesc::IdentityConstraint* const, boost::python::optional<xercesc::MemoryManager* const> >())
 			.def(XPathMatcherDefVisitor<XMLString>())
 			.def(XPathMatcherDefVisitor<std::string>())

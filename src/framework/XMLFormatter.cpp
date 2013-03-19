@@ -8,15 +8,15 @@
 #include "XMLFormatter.h"
 
 #include <boost/python.hpp>
-#include <xercesc/util/TransService.hpp>		//!< for forward declaration
+
+//!< for forward declaration
+#include <xercesc/util/TransService.hpp>
+
 #include <xercesc/framework/XMLFormatter.hpp>
 
 #include "../util/XMLString.h"
 
 namespace pyxerces {
-
-//! XMLFormatter
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(XMLFormatterFormatBufOverloads, formatBuf, 2, 4)
 
 class XMLFormatterDefVisitor
 : public boost::python::def_visitor<XMLFormatterDefVisitor> {
@@ -75,6 +75,27 @@ static xercesc::XMLFormatter& __lshift__(xercesc::XMLFormatter& self, const STR&
 
 };
 
+class XMLFormatTargetWrapper
+: public xercesc::XMLFormatTarget, public boost::python::wrapper<xercesc::XMLFormatTarget>
+{
+public:
+void writeChars(const XMLByte* const toWrite, const XMLSize_t count, xercesc::XMLFormatter* const formatter) {
+	this->get_override("writeChars")(std::string(reinterpret_cast<const char*>(toWrite)), count, boost::python::ptr(formatter));
+}
+
+void flush() {
+	if(boost::python::override flush = this->get_override("flush")) {
+		flush();
+	}else{
+		xercesc::XMLFormatTarget::flush();
+	}
+}
+
+};
+
+//! XMLFormatter
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(XMLFormatterFormatBufOverloads, formatBuf, 2, 4)
+
 void XMLFormatter_init(void) {
 	//! xercesc::XMLFormatter
 	auto XMLFormatter = boost::python::class_<xercesc::XMLFormatter, boost::noncopyable>("XMLFormatter", boost::python::init<const XMLCh* const, const XMLCh* const, xercesc::XMLFormatTarget* const, boost::python::optional<const xercesc::XMLFormatter::EscapeFlags, const xercesc::XMLFormatter::UnRepFlags, xercesc::MemoryManager* const> >())
@@ -97,8 +118,8 @@ void XMLFormatter_init(void) {
 			.def("getUnRepFlags", &xercesc::XMLFormatter::getUnRepFlags)
 			;
 	//! xercesc::XMLFormatTarget
-	boost::python::class_<xercesc::XMLFormatTarget, boost::noncopyable>("XMLFormatTarget", boost::python::no_init)
-			.def("writeChars", &xercesc::XMLFormatTarget::writeChars)
+	boost::python::class_<XMLFormatTargetWrapper, boost::noncopyable>("XMLFormatTarget")
+			.def("writeChars", boost::python::pure_virtual(&xercesc::XMLFormatTarget::writeChars))
 			.def("flush", &xercesc::XMLFormatTarget::flush)
 			;
 	boost::python::scope XMLFormatterScope = XMLFormatter;

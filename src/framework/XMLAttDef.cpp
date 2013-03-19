@@ -19,10 +19,6 @@
 
 namespace pyxerces {
 
-//! XMLAttDef
-BOOST_PYTHON_FUNCTION_OVERLOADS(XMLAttDefGetAttTypeString, xercesc::XMLAttDef::getAttTypeString, 1, 2)
-BOOST_PYTHON_FUNCTION_OVERLOADS(XMLAttDefGetDefAttTypeString, xercesc::XMLAttDef::getDefAttTypeString, 1, 2)
-
 template <class STR>
 class XMLAttDefDefVisitor
 : public boost::python::def_visitor<XMLAttDefDefVisitor<STR> >
@@ -49,9 +45,29 @@ static void setEnumeration(xercesc::XMLAttDef& self, const STR& newValue) {
 
 };
 
+class XMLAttDefWrapper
+: public xercesc::XMLAttDef, public boost::python::wrapper<xercesc::XMLAttDef>
+{
+public:
+const XMLCh* getFullName() const {
+	return this->get_override("getFullName")();
+}
+
+void reset() {
+	this->get_override("reset")();
+}
+
+PyDECL_XSERIALIZABLEWrapper
+
+};
+
+//! XMLAttDef
+BOOST_PYTHON_FUNCTION_OVERLOADS(XMLAttDefGetAttTypeString, xercesc::XMLAttDef::getAttTypeString, 1, 2)
+BOOST_PYTHON_FUNCTION_OVERLOADS(XMLAttDefGetDefAttTypeString, xercesc::XMLAttDef::getDefAttTypeString, 1, 2)
+
 void XMLAttDef_init(void) {
 	//! xercesc::XMLAttDef
-	auto XMLAttDef = boost::python::class_<xercesc::XMLAttDef, boost::noncopyable, boost::python::bases<xercesc::XSerializable> >("XMLAttDef", boost::python::no_init)
+	auto XMLAttDef = boost::python::class_<XMLAttDefWrapper, boost::noncopyable, boost::python::bases<xercesc::XSerializable> >("XMLAttDef")
 			.def_readonly("fgInvalidAttrId", &xercesc::XMLAttDef::fgInvalidAttrId)
 			.def("getAttTypeString", &xercesc::XMLAttDef::getAttTypeString, XMLAttDefGetAttTypeString()[boost::python::return_value_policy<boost::python::return_by_value>()])
 			.def("getDefAttTypeString", &xercesc::XMLAttDef::getDefAttTypeString, XMLAttDefGetDefAttTypeString()[boost::python::return_value_policy<boost::python::return_by_value>()])
@@ -59,8 +75,8 @@ void XMLAttDef_init(void) {
 			.staticmethod("getDefAttTypeString")
 			.def(XMLAttDefDefVisitor<XMLString>())
 			.def(XMLAttDefDefVisitor<std::string>())
-			.def("getFullName", &xercesc::XMLAttDef::getFullName, boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("reset", &xercesc::XMLAttDef::reset)
+			.def("getFullName", boost::python::pure_virtual(&xercesc::XMLAttDef::getFullName), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("reset", boost::python::pure_virtual(&xercesc::XMLAttDef::reset))
 			.def("getDefaultType", &xercesc::XMLAttDef::getDefaultType)
 			.def("getEnumeration", &xercesc::XMLAttDef::getEnumeration, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getId", &xercesc::XMLAttDef::getId)

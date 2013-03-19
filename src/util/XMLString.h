@@ -65,7 +65,7 @@ XMLCh* ptr(void) const;
 /*!
  * Cast operator
  */
-operator XMLCh*(void) const;
+operator const XMLCh*(void) const;
 
 /*!
  * operator +

@@ -12,10 +12,20 @@
 
 namespace pyxerces {
 
+class PanicHandlerWrapper
+: public xercesc::PanicHandler, public boost::python::wrapper<xercesc::PanicHandler>
+{
+public:
+void panic(const PanicHandler::PanicReasons reason) {
+	this->get_override("panic")(reason);
+}
+
+};
+
 void PanicHandler_init(void) {
 	//! xercesc::PanicHandler
-	boost::python::class_<xercesc::PanicHandler, boost::noncopyable>("PanicHandler", boost::python::no_init)
-			.def("panic", &xercesc::PanicHandler::panic)
+	boost::python::class_<PanicHandlerWrapper, boost::noncopyable>("PanicHandler")
+			.def("panic", boost::python::pure_virtual(&xercesc::PanicHandler::panic))
 			.def("getPanicReasonString", &xercesc::PanicHandler::getPanicReasonString)
 			.staticmethod("getPanicReasonString")
 			;

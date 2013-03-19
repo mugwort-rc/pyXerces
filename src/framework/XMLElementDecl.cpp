@@ -46,19 +46,68 @@ static void setElementName(xercesc::XMLElementDecl& self, const STR& rawName, co
 
 };
 
+class XMLElementDeclWrapper
+: public xercesc::XMLElementDecl, public boost::python::wrapper<xercesc::XMLElementDecl>
+{
+public:
+xercesc::XMLAttDefList& getAttDefList() const {
+	// XXX: reference return
+	return this->get_override("getAttDefList")();
+}
+
+CharDataOpts getCharDataOpts() const {
+	return this->get_override("getCharDataOpts")();
+}
+
+bool hasAttDefs() const {
+	return this->get_override("hasAttDefs")();
+}
+
+const xercesc::ContentSpecNode* getContentSpec() const {
+	return this->get_override("getContentSpec")();
+}
+
+xercesc::ContentSpecNode* getContentSpec() {
+	return this->get_override("getContentSpec")();
+}
+
+void setContentSpec(xercesc::ContentSpecNode* toAdopt) {
+	this->get_override("setContentSpec")(boost::python::ptr(toAdopt));
+}
+
+xercesc::XMLContentModel* getContentModel() {
+	return this->get_override("getContentModel")();
+}
+
+void setContentModel(xercesc::XMLContentModel* const newModelToAdopt) {
+	this->get_override("setContentModel")(boost::python::ptr(newModelToAdopt));
+}
+
+const XMLCh* getFormattedContentModel ()   const {
+	return this->get_override("getFormattedContentModel")();
+}
+
+PyDECL_XSERIALIZABLEWrapper
+
+XMLElementDecl::objectType  getObjectType() const {
+	return this->get_override("getObjectType")();
+}
+
+};
+
 void XMLElementDecl_init(void) {
 	//! xercesc::XMLElementDecl
-	auto XMLElementDecl = boost::python::class_<xercesc::XMLElementDecl, boost::noncopyable, boost::python::bases<xercesc::XSerializable> >("XMLElementDecl", boost::python::no_init)
+	auto XMLElementDecl = boost::python::class_<XMLElementDeclWrapper, boost::noncopyable, boost::python::bases<xercesc::XSerializable> >("XMLElementDecl")
 			.def(XMLElementDeclDefVisitor<XMLString>())
 			.def(XMLElementDeclDefVisitor<std::string>())
-			.def("getAttDefList", &xercesc::XMLElementDecl::getAttDefList, boost::python::return_internal_reference<>())
-			.def("getCharDataOpts", &xercesc::XMLElementDecl::getCharDataOpts)
-			.def("hasAttDefs", &xercesc::XMLElementDecl::hasAttDefs)
-			.def("getContentSpec", static_cast<xercesc::ContentSpecNode*(xercesc::XMLElementDecl::*)(void)>(&xercesc::XMLElementDecl::getContentSpec), boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("setContentSpec", &xercesc::XMLElementDecl::setContentSpec)
-			.def("getContentModel", &xercesc::XMLElementDecl::getContentModel, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("setContentModel", &xercesc::XMLElementDecl::setContentModel)
-			.def("getFormattedContentModel", &xercesc::XMLElementDecl::getFormattedContentModel, boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("getAttDefList", boost::python::pure_virtual(&xercesc::XMLElementDecl::getAttDefList), boost::python::return_internal_reference<>())
+			.def("getCharDataOpts", boost::python::pure_virtual(&xercesc::XMLElementDecl::getCharDataOpts))
+			.def("hasAttDefs", boost::python::pure_virtual(&xercesc::XMLElementDecl::hasAttDefs))
+			.def("getContentSpec", boost::python::pure_virtual(static_cast<xercesc::ContentSpecNode*(xercesc::XMLElementDecl::*)(void)>(&xercesc::XMLElementDecl::getContentSpec)), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("setContentSpec", boost::python::pure_virtual(&xercesc::XMLElementDecl::setContentSpec))
+			.def("getContentModel", boost::python::pure_virtual(&xercesc::XMLElementDecl::getContentModel), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("setContentModel", boost::python::pure_virtual(&xercesc::XMLElementDecl::setContentModel))
+			.def("getFormattedContentModel", boost::python::pure_virtual(&xercesc::XMLElementDecl::getFormattedContentModel), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getBaseName", static_cast<const XMLCh*(xercesc::XMLElementDecl::*)(void) const>(&xercesc::XMLElementDecl::getBaseName), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getURI", &xercesc::XMLElementDecl::getURI)
 			.def("getElementName", static_cast<xercesc::QName*(xercesc::XMLElementDecl::*)(void)>(&xercesc::XMLElementDecl::getElementName), boost::python::return_value_policy<boost::python::reference_existing_object>())
@@ -74,7 +123,7 @@ void XMLElementDecl_init(void) {
 			.def("setId", &xercesc::XMLElementDecl::setId)
 			.def("setExternalElemDeclaration", &xercesc::XMLElementDecl::setExternalElemDeclaration)
 			PyDECL_XSERIALIZABLE(XMLElementDecl)
-			.def("getObjectType", &xercesc::XMLElementDecl::getObjectType)
+			.def("getObjectType", boost::python::pure_virtual(&xercesc::XMLElementDecl::getObjectType))
 			.def("storeElementDecl", &xercesc::XMLElementDecl::storeElementDecl)
 			.def("loadElementDecl", &xercesc::XMLElementDecl::loadElementDecl, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.staticmethod("storeElementDecl")

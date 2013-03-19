@@ -68,9 +68,9 @@ void DTDHandler_init(void) {
 	boost::python::class_<DTDHandlerWrapper, boost::noncopyable>("DTDHandler")
 			.def(DTDHandlerDefVisitor<XMLString>())
 			.def(DTDHandlerDefVisitor<std::string>())
-			.def("notationDecl", &xercesc::DTDHandler::notationDecl)
-			.def("unparsedEntityDecl", &xercesc::DTDHandler::unparsedEntityDecl)
-			.def("resetDocType", &xercesc::DTDHandler::resetDocType)
+			.def("notationDecl", boost::python::pure_virtual(&xercesc::DTDHandler::notationDecl))
+			.def("unparsedEntityDecl", boost::python::pure_virtual(&xercesc::DTDHandler::unparsedEntityDecl))
+			.def("resetDocType", boost::python::pure_virtual(&xercesc::DTDHandler::resetDocType))
 			;
 }
 

@@ -59,6 +59,14 @@ xercesc::XSSimpleTypeDefinition *getMemberTypeDefinition() {
 	return this->get_override("getMemberTypeDefinition")();
 }
 
+xercesc::XSValue *getActualValue() const {
+	if(boost::python::override getActualValue = this->get_override("getActualValue")){
+		return getActualValue();
+	}else{
+		return xercesc::PSVIItem::getActualValue();
+	}
+}
+
 };
 
 void PSVIItem_init(void) {
@@ -70,8 +78,8 @@ void PSVIItem_init(void) {
 			.def("getValidity", &xercesc::PSVIItem::getValidity)
 			.def("getValidationAttempted", &xercesc::PSVIItem::getValidationAttempted)
 			.def("getSchemaNormalizedValue", &xercesc::PSVIItem::getSchemaNormalizedValue, boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("getTypeDefinition", &xercesc::PSVIItem::getTypeDefinition, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("getMemberTypeDefinition", &xercesc::PSVIItem::getMemberTypeDefinition, boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("getTypeDefinition", boost::python::pure_virtual(&xercesc::PSVIItem::getTypeDefinition), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("getMemberTypeDefinition", boost::python::pure_virtual(&xercesc::PSVIItem::getMemberTypeDefinition), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getSchemaDefault", &xercesc::PSVIItem::getSchemaDefault, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getIsSchemaSpecified", &xercesc::PSVIItem::getIsSchemaSpecified)
 			.def("getCanonicalRepresentation", &xercesc::PSVIItem::getCanonicalRepresentation, boost::python::return_value_policy<boost::python::return_by_value>())

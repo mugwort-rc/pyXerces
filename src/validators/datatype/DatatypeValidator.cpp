@@ -88,6 +88,24 @@ static void setTypeName(xercesc::DatatypeValidator& self, const STR& name, const
 
 };
 
+class DatatypeValidatorWrapper
+: public xercesc::DatatypeValidator, public boost::python::wrapper<xercesc::DatatypeValidator>
+{
+public:
+const xercesc::RefArrayVectorOf<XMLCh>* getEnumString(void) const {
+	return this->get_override("getEnumString")();
+}
+
+void validate(const XMLCh* const content, xercesc::ValidationContext* const context = nullptr, xercesc::MemoryManager* const manager = xercesc::XMLPlatformUtils::fgMemoryManager) {
+	this->get_override("validate")(XMLString(content), boost::python::ptr(context), boost::python::ptr(manager));
+}
+
+DatatypeValidator* newInstance(xercesc::RefHashTableOf<xercesc::KVStringPair>* const facets, xercesc::RefArrayVectorOf<XMLCh>* const enums, const int finalSet, xercesc::MemoryManager* const manager = xercesc::XMLPlatformUtils::fgMemoryManager) {
+	return this->get_override("newInstance")(boost::python::ptr(facets), boost::python::ptr(enums), finalSet, boost::python::ptr(manager));
+}
+
+};
+
 void DatatypeValidator_init(void) {
 	//! xercesc::DatatypeValidator
 	auto DatatypeValidator = boost::python::class_<xercesc::DatatypeValidator, boost::noncopyable, boost::python::bases<xercesc::XSerializable> >("DatatypeValidator", boost::python::no_init)
@@ -99,7 +117,7 @@ void DatatypeValidator_init(void) {
 			.def("getBaseValidator", &xercesc::DatatypeValidator::getBaseValidator, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getType", &xercesc::DatatypeValidator::getType)
 			.def("isAtomic", &xercesc::DatatypeValidator::isAtomic)
-			.def("getEnumString", &xercesc::DatatypeValidator::getEnumString, boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("getEnumString", boost::python::pure_virtual(&xercesc::DatatypeValidator::getEnumString), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getAnonymous", &xercesc::DatatypeValidator::getAnonymous)
 			.def("setAnonymous", &xercesc::DatatypeValidator::setAnonymous)
 			.def("getOrdered", &xercesc::DatatypeValidator::getOrdered)
@@ -107,10 +125,10 @@ void DatatypeValidator_init(void) {
 			.def("getBounded", &xercesc::DatatypeValidator::getBounded)
 			.def("getNumeric", &xercesc::DatatypeValidator::getNumeric)
 			.def("getCanonicalRepresentation", &xercesc::DatatypeValidator::getCanonicalRepresentation, boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("validate", &xercesc::DatatypeValidator::validate)
+			.def("validate", boost::python::pure_virtual(&xercesc::DatatypeValidator::validate))
 			.def("isSubstitutableBy", &xercesc::DatatypeValidator::isSubstitutableBy)
 			.def("compare", &xercesc::DatatypeValidator::compare)
-			.def("newInstance", &xercesc::DatatypeValidator::newInstance, boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("newInstance", boost::python::pure_virtual(&xercesc::DatatypeValidator::newInstance), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getTypeName", &xercesc::DatatypeValidator::getTypeName, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("setTypeName", static_cast<void(xercesc::DatatypeValidator::*)(const XMLCh* const)>(&xercesc::DatatypeValidator::setTypeName))
 			.def("setTypeName", static_cast<void(xercesc::DatatypeValidator::*)(const XMLCh* const, const XMLCh* const)>(&xercesc::DatatypeValidator::setTypeName))

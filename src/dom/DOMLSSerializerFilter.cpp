@@ -12,11 +12,25 @@
 
 namespace pyxerces {
 
+class DOMLSSerializerFilterWrapper
+: public xercesc::DOMLSSerializerFilter, public boost::python::wrapper<xercesc::DOMLSSerializerFilter>
+{
+public:
+FilterAction acceptNode(const xercesc::DOMNode* node) const {
+	return this->get_override("acceptNode")(boost::python::ptr(node));
+}
+
+ShowType getWhatToShow() const {
+	return this->get_override("getWhatToShow")();
+}
+
+};
+
 void DOMLSSerializerFilter_init(void) {
 	//! xercesc::DOMLSSerializerFilter
-	boost::python::class_<xercesc::DOMLSSerializerFilter, boost::noncopyable, boost::python::bases<xercesc::DOMNodeFilter> >("DOMLSSerializerFilter", boost::python::no_init)
-			.def("acceptNode", &xercesc::DOMLSSerializerFilter::acceptNode)
-			.def("getWhatToShow", &xercesc::DOMLSSerializerFilter::getWhatToShow)
+	boost::python::class_<DOMLSSerializerFilterWrapper, boost::noncopyable, boost::python::bases<xercesc::DOMNodeFilter> >("DOMLSSerializerFilter")
+			.def("acceptNode", boost::python::pure_virtual(&xercesc::DOMLSSerializerFilter::acceptNode))
+			.def("getWhatToShow", boost::python::pure_virtual(&xercesc::DOMLSSerializerFilter::getWhatToShow))
 			;
 }
 

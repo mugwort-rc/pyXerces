@@ -218,7 +218,7 @@ void startDocument() {
 
 void startElement(const XMLCh* const uri, const XMLCh* const localname, const XMLCh* const qname, const xercesc::Attributes& attrs) {
 	if(boost::python::override startElement = this->get_override("startElement")){
-		startElement(XMLString(uri), XMLString(localname), XMLString(qname), attrs);
+		startElement(XMLString(uri), XMLString(localname), XMLString(qname), boost::ref(attrs));
 	}else{
 		xercesc::DefaultHandler::startElement(uri, localname, qname, attrs);
 	}
@@ -427,24 +427,6 @@ void DefaultHandler_init(void) {
 			.def("notationDecl", &xercesc::DefaultHandler::notationDecl)
 			.def("resetDocType", &xercesc::DefaultHandler::resetDocType)
 			.def("unparsedEntityDecl", &xercesc::DefaultHandler::unparsedEntityDecl)
-			.def("comment", &xercesc::DefaultHandler::comment)
-			.def("endCDATA", &xercesc::DefaultHandler::endCDATA)
-			.def("endDTD", &xercesc::DefaultHandler::endDTD)
-			.def("endEntity", &xercesc::DefaultHandler::endEntity)
-			.def("startCDATA", &xercesc::DefaultHandler::startCDATA)
-			.def("startDTD", &xercesc::DefaultHandler::startDTD)
-			.def("startEntity", &xercesc::DefaultHandler::startEntity)
-			.def("elementDecl", &xercesc::DefaultHandler::elementDecl)
-			.def("attributeDecl", &xercesc::DefaultHandler::attributeDecl)
-			.def("internalEntityDecl", &xercesc::DefaultHandler::internalEntityDecl)
-			.def("externalEntityDecl", &xercesc::DefaultHandler::externalEntityDecl)
-			.def("warning", &xercesc::DefaultHandler::warning)
-			.def("error", &xercesc::DefaultHandler::error)
-			.def("fatalError", &xercesc::DefaultHandler::fatalError)
-			.def("resetErrors", &xercesc::DefaultHandler::resetErrors)
-			.def("notationDecl", &xercesc::DefaultHandler::notationDecl)
-			.def("unparsedEntityDecl", &xercesc::DefaultHandler::unparsedEntityDecl)
-			.def("resetDocType", &xercesc::DefaultHandler::resetDocType)
 			.def("comment", &xercesc::DefaultHandler::comment)
 			.def("endCDATA", &xercesc::DefaultHandler::endCDATA)
 			.def("endDTD", &xercesc::DefaultHandler::endDTD)

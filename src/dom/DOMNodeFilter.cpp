@@ -12,10 +12,20 @@
 
 namespace pyxerces {
 
+class DOMNodeFilterWrapper
+: public xercesc::DOMNodeFilter, public boost::python::wrapper<xercesc::DOMNodeFilter>
+{
+public:
+FilterAction acceptNode (const xercesc::DOMNode* node) const {
+	return this->get_override("acceptNode")(boost::python::ptr(node));
+}
+
+};
+
 void DOMNodeFilter_init(void) {
 	//! xercesc::DOMNodeFilter
-	auto DOMNodeFilter = boost::python::class_<xercesc::DOMNodeFilter, boost::noncopyable>("DOMNodeFilter", boost::python::no_init)
-			.def("acceptNode", &xercesc::DOMNodeFilter::acceptNode)
+	auto DOMNodeFilter = boost::python::class_<DOMNodeFilterWrapper, boost::noncopyable>("DOMNodeFilter")
+			.def("acceptNode", boost::python::pure_virtual(&xercesc::DOMNodeFilter::acceptNode))
 			;
 	boost::python::scope DOMNodeFilterScope = DOMNodeFilter;
 	//! xercesc::DOMNodeFilter::FilterAction

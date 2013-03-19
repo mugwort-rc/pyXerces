@@ -8,11 +8,18 @@
 #include "AbstractDOMParser.h"
 
 #include <boost/python.hpp>
-#include <xercesc/framework/XMLValidator.hpp>			//!< for forward declaration
-#include <xercesc/sax/InputSource.hpp>					//!< for forward declaration
-#include <xercesc/framework/XMLPScanToken.hpp>			//!< for forward declaration
-#include <xercesc/framework/psvi/PSVIElement.hpp>		//!< for forward declaration
-#include <xercesc/framework/psvi/PSVIAttributeList.hpp>	//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/framework/XMLValidator.hpp>
+#include <xercesc/sax/InputSource.hpp>
+#include <xercesc/framework/XMLPScanToken.hpp>
+#include <xercesc/framework/psvi/PSVIElement.hpp>
+#include <xercesc/framework/psvi/PSVIAttributeList.hpp>
+//! XMLEntityHandler
+#include <xercesc/sax/InputSource.hpp>
+#include <xercesc/framework/XMLBuffer.hpp>
+#include <xercesc/util/XMLResourceIdentifier.hpp>
+
 #include <xercesc/parsers/AbstractDOMParser.hpp>
 
 #include "../util/XMLString.h"
@@ -135,9 +142,304 @@ static void TextDecl(xercesc::AbstractDOMParser& self, const STR& versionStr, co
 
 };
 
+class AbstractDOMParserWrapper
+: public xercesc::AbstractDOMParser, public boost::python::wrapper<xercesc::AbstractDOMParser>
+{
+public:
+void setPSVIHandler(PSVIHandler* const handler) {
+	if(boost::python::override setPSVIHandler = this->get_override("setPSVIHandler")){
+		setPSVIHandler(boost::python::ptr(handler));
+	}else{
+		xercesc::AbstractDOMParser::setPSVIHandler(handler);
+	}
+}
+
+// ---------- PSVIHandler ----------
+void handleElementPSVI(const XMLCh* const localName, const XMLCh* const uri, xercesc::PSVIElement* elementInfo) {
+	if(boost::python::override handleElementPSVI = this->get_override("handleElementPSVI")){
+		handleElementPSVI(XMLString(localName), XMLString(uri), boost::python::ptr(elementInfo));
+	}else{
+		xercesc::AbstractDOMParser::handleElementPSVI(localName, uri, elementInfo);
+	}
+}
+
+void handlePartialElementPSVI(const XMLCh* const localName, const XMLCh* const uri, xercesc::PSVIElement* elementInfo) {
+	if(boost::python::override handlePartialElementPSVI = this->get_override("handlePartialElementPSVI")){
+		handlePartialElementPSVI(XMLString(localName), XMLString(uri), boost::python::ptr(elementInfo));
+	}else{
+		xercesc::PSVIHandler::handlePartialElementPSVI(localName, uri, elementInfo);
+	}
+}
+
+void handleAttributesPSVI(const XMLCh* const localName, const XMLCh* const uri, xercesc::PSVIAttributeList* psviAttributes) {
+	if(boost::python::override handleAttributesPSVI = this->get_override("handleAttributesPSVI")){
+		handleAttributesPSVI(XMLString(localName), XMLString(uri), boost::python::ptr(psviAttributes));
+	}else{
+		xercesc::AbstractDOMParser::handleAttributesPSVI(localName, uri, psviAttributes);
+	}
+}
+
+// ---------- XMLDocumentHandler ----------
+void docCharacters(const XMLCh* const chars, const XMLSize_t length, const bool cdataSection) {
+	if(boost::python::override docCharacters = this->get_override("docCharacters")){
+		docCharacters(XMLString(chars), length, cdataSection);
+	}else{
+		xercesc::AbstractDOMParser::docCharacters(chars, length, cdataSection);
+	}
+}
+
+void docComment(const XMLCh* const comment) {
+	if(boost::python::override docComment = this->get_override("docComment")){
+		docComment(XMLString(comment));
+	}else{
+		xercesc::AbstractDOMParser::docComment(comment);
+	}
+}
+
+void docPI(const XMLCh* const target, const XMLCh* const data) {
+	if(boost::python::override docPI = this->get_override("docPI")){
+		docPI(XMLString(target), XMLString(data));
+	}else{
+		xercesc::AbstractDOMParser::docPI(target, data);
+	}
+}
+
+void endDocument() {
+	if(boost::python::override endDocument = this->get_override("endDocument")){
+		endDocument();
+	}else{
+		xercesc::AbstractDOMParser::endDocument();
+	}
+}
+
+void endElement(const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const bool isRoot, const XMLCh* const prefixName = 0) {
+	if(boost::python::override endElement = this->get_override("endElement")){
+		endElement(boost::ref(elemDecl), uriId, isRoot, XMLString(prefixName));
+	}else{
+		xercesc::AbstractDOMParser::endElement(elemDecl, uriId, isRoot, prefixName);
+	}
+}
+
+void endEntityReference(const xercesc::XMLEntityDecl& entDecl) {
+	if(boost::python::override endEntityReference = this->get_override("endEntityReference")){
+		endEntityReference(boost::ref(entDecl));
+	}else{
+		xercesc::AbstractDOMParser::endEntityReference(entDecl);
+	}
+}
+
+void ignorableWhitespace(const XMLCh* const chars, const XMLSize_t length, const bool cdataSection) {
+	if(boost::python::override ignorableWhitespace = this->get_override("ignorableWhitespace")){
+		ignorableWhitespace(XMLString(chars), length, cdataSection);
+	}else{
+		xercesc::AbstractDOMParser::ignorableWhitespace(chars, length, cdataSection);
+	}
+}
+
+void resetDocument() {
+	if(boost::python::override resetDocument = this->get_override("resetDocument")){
+		resetDocument();
+	}else{
+		xercesc::AbstractDOMParser::resetDocument();
+	}
+}
+
+void startDocument() {
+	if(boost::python::override startDocument = this->get_override("startDocument")){
+		startDocument();
+	}else{
+		xercesc::AbstractDOMParser::startDocument();
+	}
+}
+
+void startElement(const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const XMLCh* const prefixName, const xercesc::RefVectorOf<xercesc::XMLAttr>& attrList, const XMLSize_t attrCount, const bool isEmpty, const bool isRoot) {
+	if(boost::python::override startElement = this->get_override("startElement")){
+		startElement(boost::ref(elemDecl), uriId, XMLString(prefixName), boost::ref(attrList), attrCount, isEmpty, isRoot);
+	}else{
+		xercesc::AbstractDOMParser::startElement(elemDecl, uriId, prefixName, attrList, attrCount, isEmpty, isRoot);
+	}
+}
+
+void startEntityReference(const xercesc::XMLEntityDecl& entDecl) {
+	if(boost::python::override startEntityReference = this->get_override("startEntityReference")){
+		startEntityReference(boost::ref(entDecl));
+	}else{
+		xercesc::AbstractDOMParser::startEntityReference(entDecl);
+	}
+}
+
+void XMLDecl(const XMLCh* const versionStr, const XMLCh* const encodingStr, const XMLCh* const standaloneStr, const XMLCh* const autoEncodingStr) {
+	if(boost::python::override XMLDecl = this->get_override("XMLDecl")){
+		XMLDecl(XMLString(versionStr), XMLString(encodingStr), XMLString(standaloneStr), XMLString(autoEncodingStr));
+	}else{
+		xercesc::AbstractDOMParser::XMLDecl(versionStr, encodingStr, standaloneStr, autoEncodingStr);
+	}
+}
+
+// ---------- DocTypeHandler ----------
+void attDef(const xercesc::DTDElementDecl& elemDecl, const xercesc::DTDAttDef& attDef, const bool ignoring) {
+	if(boost::python::override _attDef = this->get_override("attDef")){
+		_attDef(boost::ref(elemDecl), boost::ref(attDef), ignoring);
+	}else{
+		xercesc::AbstractDOMParser::attDef(elemDecl, attDef, ignoring);
+	}
+}
+
+void doctypeComment(const XMLCh* const comment) {
+	if(boost::python::override doctypeComment = this->get_override("doctypeComment")){
+		doctypeComment(XMLString(comment));
+	}else{
+		xercesc::AbstractDOMParser::doctypeComment(comment);
+	}
+}
+
+void doctypeDecl(const xercesc::DTDElementDecl& elemDecl, const XMLCh* const publicId, const XMLCh* const systemId, const bool hasIntSubset, const bool hasExtSubset = false) {
+	if(boost::python::override doctypeDecl = this->get_override("doctypeDecl")){
+		doctypeDecl(boost::ref(elemDecl), XMLString(publicId), XMLString(systemId), hasIntSubset, hasExtSubset);
+	}else{
+		xercesc::AbstractDOMParser::doctypeDecl(elemDecl, publicId, systemId, hasIntSubset, hasExtSubset);
+	}
+}
+
+void doctypePI(const XMLCh* const target, const XMLCh* const data) {
+	if(boost::python::override doctypePI = this->get_override("doctypePI")){
+		doctypePI(XMLString(target), XMLString(data));
+	}else{
+		xercesc::AbstractDOMParser::doctypePI(target, data);
+	}
+}
+
+void doctypeWhitespace(const XMLCh* const chars, const XMLSize_t length) {
+	if(boost::python::override doctypeWhitespace = this->get_override("doctypeWhitespace")){
+		doctypeWhitespace(XMLString(chars), length);
+	}else{
+		xercesc::AbstractDOMParser::doctypeWhitespace(chars, length);
+	}
+}
+
+void elementDecl(const xercesc::DTDElementDecl& decl, const bool isIgnored) {
+	if(boost::python::override elementDecl = this->get_override("elementDecl")){
+		elementDecl(boost::ref(decl), isIgnored);
+	}else{
+		xercesc::AbstractDOMParser::elementDecl(decl, isIgnored);
+	}
+}
+
+void endAttList(const xercesc::DTDElementDecl& elemDecl) {
+	if(boost::python::override endAttList = this->get_override("endAttList")){
+		endAttList(boost::ref(elemDecl));
+	}else{
+		xercesc::AbstractDOMParser::endAttList(elemDecl);
+	}
+}
+
+void endIntSubset() {
+	if(boost::python::override endIntSubset = this->get_override("endIntSubset")){
+		endIntSubset();
+	}else{
+		xercesc::AbstractDOMParser::endIntSubset();
+	}
+}
+
+void endExtSubset() {
+	if(boost::python::override endExtSubset = this->get_override("endExtSubset")){
+		endExtSubset();
+	}else{
+		xercesc::AbstractDOMParser::endExtSubset();
+	}
+}
+
+void entityDecl(const xercesc::DTDEntityDecl& entityDecl, const bool isPEDecl, const bool isIgnored) {
+	if(boost::python::override _entityDecl = this->get_override("entityDecl")){
+		_entityDecl(boost::ref(entityDecl), isPEDecl, isIgnored);
+	}else{
+		xercesc::AbstractDOMParser::entityDecl(entityDecl, isPEDecl, isIgnored);
+	}
+}
+
+void resetDocType() {
+	if(boost::python::override resetDocType = this->get_override("resetDocType")){
+		resetDocType();
+	}else{
+		xercesc::AbstractDOMParser::resetDocType();
+	}
+}
+
+void notationDecl(const xercesc::XMLNotationDecl& notDecl, const bool isIgnored) {
+	if(boost::python::override notationDecl = this->get_override("notationDecl")){
+		notationDecl(boost::ref(notDecl), isIgnored);
+	}else{
+		xercesc::AbstractDOMParser::notationDecl(notDecl, isIgnored);
+	}
+}
+
+void startAttList(const xercesc::DTDElementDecl& elemDecl) {
+	if(boost::python::override startAttList = this->get_override("startAttList")){
+		startAttList(boost::ref(elemDecl));
+	}else{
+		xercesc::AbstractDOMParser::startAttList(elemDecl);
+	}
+}
+
+void startIntSubset() {
+	if(boost::python::override startIntSubset = this->get_override("startIntSubset")){
+		startIntSubset();
+	}else{
+		xercesc::AbstractDOMParser::startIntSubset();
+	}
+}
+
+void startExtSubset() {
+	if(boost::python::override startExtSubset = this->get_override("startExtSubset")){
+		startExtSubset();
+	}else{
+		xercesc::AbstractDOMParser::startExtSubset();
+	}
+}
+
+void TextDecl(const XMLCh* const versionStr, const XMLCh* const encodingStr) {
+	if(boost::python::override TextDecl = this->get_override("TextDecl")){
+		TextDecl(XMLString(versionStr), XMLString(encodingStr));
+	}else{
+		xercesc::AbstractDOMParser::TextDecl(versionStr, encodingStr);
+	}
+}
+
+// ---------- XMLErrorReporter ----------
+void error(const unsigned int errCode, const XMLCh* const errDomain, const xercesc::XMLErrorReporter::ErrTypes type, const XMLCh* const errorText, const XMLCh* const systemId, const XMLCh* const publicId, const XMLFileLoc lineNum, const XMLFileLoc colNum) {
+	this->get_override("error")(errCode, XMLString(errDomain), type, XMLString(errorText), XMLString(systemId), XMLString(publicId), lineNum, colNum);
+}
+
+void resetErrors() {
+	this->get_override("resetErrors")();
+}
+
+// ---------- XMLEntityHandler ----------
+void endInputSource(const xercesc::InputSource& inputSource) {
+	this->get_override("endInputSource")(inputSource);
+}
+
+bool expandSystemId(const XMLCh* const systemId, xercesc::XMLBuffer& toFill) {
+	return this->get_override("expandSystemId")(XMLString(systemId), boost::ref(toFill));
+}
+
+void resetEntities() {
+	this->get_override("resetEntities")();
+}
+
+xercesc::InputSource* resolveEntity(xercesc::XMLResourceIdentifier* resourceIdentifier) {
+	return this->get_override("resolveEntity")(boost::python::ptr(resourceIdentifier));
+}
+
+void startInputSource(const xercesc::InputSource& inputSource) {
+	this->get_override("startInputSource")(boost::ref(inputSource));
+}
+
+};
+
 void AbstractDOMParser_init(void) {
 	//! xercesc::AbstractDOMParser
-	auto AbstractDOMParser = boost::python::class_<xercesc::AbstractDOMParser, boost::noncopyable, boost::python::bases<xercesc::XMLDocumentHandler, xercesc::XMLErrorReporter, xercesc::XMLEntityHandler, xercesc::DocTypeHandler, xercesc::PSVIHandler> >("AbstractDOMParser", boost::python::no_init)
+	auto AbstractDOMParser = boost::python::class_<AbstractDOMParserWrapper, boost::noncopyable, boost::python::bases<xercesc::XMLDocumentHandler, xercesc::XMLErrorReporter, xercesc::XMLEntityHandler, xercesc::DocTypeHandler, xercesc::PSVIHandler> >("AbstractDOMParser")
 			.def(AbstractDOMParserDefVisitor<XMLString>())
 			.def(AbstractDOMParserDefVisitor<std::string>())
 			.def("reset", &xercesc::AbstractDOMParser::reset)

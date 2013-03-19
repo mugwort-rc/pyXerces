@@ -12,6 +12,20 @@ namespace pyxerces {
 
 void XSerializable_init(void);
 
+#define PyDECL_XSERIALIZABLEWrapper \
+bool isSerializable() const { \
+	return this->get_override("isSerializable")(); \
+} \
+ \
+xercesc::XProtoType* getProtoType() const { \
+	return this->get_override("getProtoType")(); \
+} \
+ \
+void serialize(xercesc::XSerializeEngine& engine) { \
+	this->get_override("serialize")(boost::ref(engine)); \
+}
+
+
 #define PyDECL_XSERIALIZABLE(class_name) \
 		.def("createObject", &xercesc::class_name::createObject, boost::python::return_value_policy<boost::python::reference_existing_object>()) \
 		.staticmethod("createObject") \

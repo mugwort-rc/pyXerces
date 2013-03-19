@@ -8,7 +8,10 @@
 #include "XMLMutexMgr.h"
 
 #include <boost/python.hpp>
-#include <xercesc/framework/MemoryManager.hpp>	//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/framework/MemoryManager.hpp>
+
 #include <xercesc/util/XMLMutexMgr.hpp>
 
 namespace pyxerces {
@@ -37,10 +40,10 @@ public:
 void XMLMutexMgr_init(void) {
 	//! xercesc::XMLMutexMgr
 	boost::python::class_<XMLMutexMgrWrapper, boost::noncopyable>("XMLMutexMgr")
-			.def("create", &xercesc::XMLMutexMgr::create, boost::python::return_value_policy<boost::python::return_opaque_pointer>())
-			.def("destroy", &xercesc::XMLMutexMgr::destroy)
-			.def("lock", &xercesc::XMLMutexMgr::lock)
-			.def("unlock", &xercesc::XMLMutexMgr::unlock)
+			.def("create", boost::python::pure_virtual(&xercesc::XMLMutexMgr::create), boost::python::return_value_policy<boost::python::return_opaque_pointer>())
+			.def("destroy", boost::python::pure_virtual(&xercesc::XMLMutexMgr::destroy))
+			.def("lock", boost::python::pure_virtual(&xercesc::XMLMutexMgr::lock))
+			.def("unlock", boost::python::pure_virtual(&xercesc::XMLMutexMgr::unlock))
 			;
 }
 

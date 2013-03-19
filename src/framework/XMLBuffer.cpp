@@ -49,6 +49,16 @@ static void set(xercesc::XMLBuffer& self, const std::string& chars) {
 
 };
 
+class XMLBufferFullHandlerWrapper
+: public xercesc::XMLBufferFullHandler, public boost::python::wrapper<xercesc::XMLBufferFullHandler>
+{
+public:
+bool bufferFull(xercesc::XMLBuffer& buffer) {
+	return this->get_override("bufferFull")(boost::ref(buffer));
+}
+
+};
+
 void XMLBuffer_init(void) {
 	//! xercesc::XMLBuffer
 	boost::python::class_<xercesc::XMLBuffer, boost::noncopyable>("XMLBuffer", boost::python::init<boost::python::optional<const XMLSize_t, xercesc::MemoryManager* const> >())
@@ -67,7 +77,7 @@ void XMLBuffer_init(void) {
 			.def("setInUse", &xercesc::XMLBuffer::setInUse)
 			;
 	//! xercesc::XMLBufferFullHandler
-	boost::python::class_<xercesc::XMLBufferFullHandler, boost::noncopyable>("XMLBufferFullHandler", boost::python::no_init)
+	boost::python::class_<XMLBufferFullHandlerWrapper, boost::noncopyable>("XMLBufferFullHandler")
 			.def("bufferFull", &xercesc::XMLBufferFullHandler::bufferFull)
 			;
 }

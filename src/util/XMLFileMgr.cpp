@@ -8,7 +8,10 @@
 #include "XMLFileMgr.h"
 
 #include <boost/python.hpp>
-#include <xercesc/framework/MemoryManager.hpp>	//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/framework/MemoryManager.hpp>
+
 #include <xercesc/util/XMLFileMgr.hpp>
 
 namespace pyxerces {
@@ -69,18 +72,18 @@ bool isRelative(const XMLCh* const toCheck, xercesc::MemoryManager* const manage
 void XMLFileMgr_init(void) {
 	//! xercesc::XMLFileMgr
 	boost::python::class_<XMLFileMgrWrapper, boost::noncopyable>("XMLFileMgr")
-			.def("fileOpen", static_cast<xercesc::FileHandle(xercesc::XMLFileMgr::*)(const XMLCh*, bool, xercesc::MemoryManager* const)>(&xercesc::XMLFileMgr::fileOpen), boost::python::return_value_policy<boost::python::return_opaque_pointer>())  //!< void*
-			.def("fileOpen", static_cast<xercesc::FileHandle(xercesc::XMLFileMgr::*)(const char*, bool, xercesc::MemoryManager* const)>(&xercesc::XMLFileMgr::fileOpen), boost::python::return_value_policy<boost::python::return_opaque_pointer>())  //!< void*
-			.def("fileOpen", &xercesc::XMLFileMgr::openStdIn, boost::python::return_value_policy<boost::python::return_opaque_pointer>())  //!< void*
-			.def("fileClose", &xercesc::XMLFileMgr::fileClose)
-			.def("fileReset", &xercesc::XMLFileMgr::fileReset)
-			.def("curPos", &xercesc::XMLFileMgr::curPos)
-			.def("fileSize", &xercesc::XMLFileMgr::fileSize)
-			.def("fileRead", &xercesc::XMLFileMgr::fileRead)
-			.def("fileWrite", &xercesc::XMLFileMgr::fileWrite)
-			.def("getFullPath", &xercesc::XMLFileMgr::getFullPath, boost::python::return_value_policy<boost::python::return_opaque_pointer>())
-			.def("getCurrentDirectory", &xercesc::XMLFileMgr::getCurrentDirectory, boost::python::return_value_policy<boost::python::return_opaque_pointer>())
-			.def("isRelative", &xercesc::XMLFileMgr::isRelative)
+			.def("fileOpen", boost::python::pure_virtual(static_cast<xercesc::FileHandle(xercesc::XMLFileMgr::*)(const XMLCh*, bool, xercesc::MemoryManager* const)>(&xercesc::XMLFileMgr::fileOpen)), boost::python::return_value_policy<boost::python::return_opaque_pointer>())  //!< void*
+			.def("fileOpen", boost::python::pure_virtual(static_cast<xercesc::FileHandle(xercesc::XMLFileMgr::*)(const char*, bool, xercesc::MemoryManager* const)>(&xercesc::XMLFileMgr::fileOpen)), boost::python::return_value_policy<boost::python::return_opaque_pointer>())  //!< void*
+			.def("fileOpen", boost::python::pure_virtual(&xercesc::XMLFileMgr::openStdIn), boost::python::return_value_policy<boost::python::return_opaque_pointer>())  //!< void*
+			.def("fileClose", boost::python::pure_virtual(&xercesc::XMLFileMgr::fileClose))
+			.def("fileReset", boost::python::pure_virtual(&xercesc::XMLFileMgr::fileReset))
+			.def("curPos", boost::python::pure_virtual(&xercesc::XMLFileMgr::curPos))
+			.def("fileSize", boost::python::pure_virtual(&xercesc::XMLFileMgr::fileSize))
+			.def("fileRead", boost::python::pure_virtual(&xercesc::XMLFileMgr::fileRead))
+			.def("fileWrite", boost::python::pure_virtual(&xercesc::XMLFileMgr::fileWrite))
+			.def("getFullPath", boost::python::pure_virtual(&xercesc::XMLFileMgr::getFullPath), boost::python::return_value_policy<boost::python::return_opaque_pointer>())
+			.def("getCurrentDirectory", boost::python::pure_virtual(&xercesc::XMLFileMgr::getCurrentDirectory), boost::python::return_value_policy<boost::python::return_opaque_pointer>())
+			.def("isRelative", boost::python::pure_virtual(&xercesc::XMLFileMgr::isRelative))
 			;
 }
 

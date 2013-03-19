@@ -55,9 +55,9 @@ void XMLEnumerator(void) {
 	char pyName[13 + BOOST_MPL_LIMIT_STRING_SIZE + 1] = "XMLEnumerator";
 	//! xercesc::XMLEnumerator
 	boost::python::class_<XMLEnumeratorWrapper<TVal> >(strcat(pyName, boost::mpl::c_str<NAME>::value))
-			.def("hasMoreElements", &xercesc::XMLEnumerator<TVal>::hasMoreElements)
-			.def("nextElement", &xercesc::XMLEnumerator<TVal>::nextElement, boost::python::return_internal_reference<>())
-			.def("Reset", &xercesc::XMLEnumerator<TVal>::Reset)
+			.def("hasMoreElements", boost::python::pure_virtual(&xercesc::XMLEnumerator<TVal>::hasMoreElements))
+			.def("nextElement", boost::python::pure_virtual(&xercesc::XMLEnumerator<TVal>::nextElement), boost::python::return_internal_reference<>())
+			.def("Reset", boost::python::pure_virtual(&xercesc::XMLEnumerator<TVal>::Reset))
 			;
 }
 

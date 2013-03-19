@@ -8,7 +8,10 @@
 #include "SAXParseException.h"
 
 #include <boost/python.hpp>
-#include <xercesc/sax/Locator.hpp>				//!< for forward declaration
+
+//!< for forward declaration
+#include <xercesc/sax/Locator.hpp>
+
 #include <xercesc/sax/SAXParseException.hpp>
 
 namespace pyxerces {

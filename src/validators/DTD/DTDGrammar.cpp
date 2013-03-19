@@ -15,10 +15,6 @@
 
 namespace pyxerces {
 
-//! DTDGrammar
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(DTDGrammarPutElemDeclOverloads, putElemDecl, 5, 6)
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(DTDGrammarPutElemDeclMiniOverloads, putElemDecl, 1, 2)
-
 template <class STR>
 class DTDGrammarDefVisitor
 : public boost::python::def_visitor<DTDGrammarDefVisitor<STR> >
@@ -75,9 +71,171 @@ static xercesc::DTDEntityDecl* getEntityDecl(xercesc::DTDGrammar& self, const ST
 
 };
 
+class DTDGrammarWrapper
+: public xercesc::DTDGrammar, public boost::python::wrapper<xercesc::DTDGrammar>
+{
+public:
+DTDGrammarWrapper(xercesc::MemoryManager* const manager = xercesc::XMLPlatformUtils::fgMemoryManager)
+: xercesc::DTDGrammar(manager)
+{}
+// ---------- Grammar ----------
+GrammarType getGrammarType() const {
+	if(boost::python::override getGrammarType = this->get_override("getGrammarType")){
+		return getGrammarType();
+	}else{
+		return xercesc::DTDGrammar::getGrammarType();
+	}
+}
+
+const XMLCh* getTargetNamespace() const {
+	if(boost::python::override getTargetNamespace = this->get_override("getTargetNamespace")){
+		return getTargetNamespace();
+	}else{
+		return xercesc::DTDGrammar::getTargetNamespace();
+	}
+}
+
+bool getValidated() const {
+	if(boost::python::override getValidated = this->get_override("getValidated")){
+		return getValidated();
+	}else{
+		return xercesc::DTDGrammar::getValidated();
+	}
+}
+
+xercesc::XMLElementDecl* findOrAddElemDecl(const unsigned int uriId, const XMLCh* const baseName, const XMLCh* const prefixName, const XMLCh* const qName, unsigned int scope, bool& wasAdded) {
+	if(boost::python::override findOrAddElemDecl = this->get_override("findOrAddElemDecl")){
+		boost::python::tuple result = findOrAddElemDecl(uriId, XMLString(baseName), XMLString(prefixName), XMLString(qName), scope);
+		wasAdded = boost::python::extract<bool>(result[1]);
+		return boost::python::extract<xercesc::XMLElementDecl*>(result[0]);
+	}else{
+		return xercesc::DTDGrammar::findOrAddElemDecl(uriId, baseName, prefixName, qName, scope, wasAdded);
+	}
+}
+
+XMLSize_t getElemId(const unsigned int uriId, const XMLCh* const baseName, const XMLCh* const qName, unsigned int scope) const {
+	if(boost::python::override getElemId = this->get_override("getElemId")){
+		return getElemId(uriId, XMLString(baseName), XMLString(qName), scope);
+	}else{
+		return xercesc::DTDGrammar::getElemId(uriId, baseName, qName, scope);
+	}
+}
+
+const xercesc::XMLElementDecl* getElemDecl(const unsigned int uriId, const XMLCh* const baseName, const XMLCh* const qName, unsigned int scope) const {
+	if(boost::python::override getElemDecl = this->get_override("getElemDecl")){
+		return getElemDecl(uriId, XMLString(baseName), XMLString(qName), scope);
+	}else{
+		return xercesc::DTDGrammar::getElemDecl(uriId, baseName, qName, scope);
+	}
+}
+
+xercesc::XMLElementDecl* getElemDecl(const unsigned int uriId, const XMLCh* const baseName, const XMLCh* const qName, unsigned int scope) {
+	if(boost::python::override getElemDecl = this->get_override("getElemDecl")){
+		return getElemDecl(uriId, XMLString(baseName), XMLString(qName), scope);
+	}else{
+		return xercesc::DTDGrammar::getElemDecl(uriId, baseName, qName, scope);
+	}
+}
+
+const xercesc::XMLElementDecl* getElemDecl(const unsigned int elemId) const {
+	if(boost::python::override getElemDecl = this->get_override("getElemDecl")){
+		return getElemDecl(elemId);
+	}else{
+		return xercesc::DTDGrammar::getElemDecl(elemId);
+	}
+}
+
+xercesc::XMLElementDecl* getElemDecl(const unsigned int elemId) {
+	if(boost::python::override getElemDecl = this->get_override("getElemDecl")){
+		return getElemDecl(elemId);
+	}else{
+		return xercesc::DTDGrammar::getElemDecl(elemId);
+	}
+}
+
+const xercesc::XMLNotationDecl* getNotationDecl(const XMLCh* const notName) const {
+	if(boost::python::override getNotationDecl = this->get_override("getNotationDecl")){
+		return getNotationDecl(XMLString(notName));
+	}else{
+		return xercesc::DTDGrammar::getNotationDecl(notName);
+	}
+}
+
+xercesc::XMLNotationDecl* getNotationDecl(const XMLCh* const notName) {
+	if(boost::python::override getNotationDecl = this->get_override("getNotationDecl")){
+		return getNotationDecl(XMLString(notName));
+	}else{
+		return xercesc::DTDGrammar::getNotationDecl(notName);
+	}
+}
+
+xercesc::XMLElementDecl* putElemDecl(const unsigned int uriId, const XMLCh* const baseName, const XMLCh* const prefixName, const XMLCh* const qName, unsigned int scope, const bool notDeclared = false) {
+	if(boost::python::override putElemDecl = this->get_override("putElemDecl")){
+		return putElemDecl(uriId, XMLString(baseName), XMLString(prefixName), XMLString(qName), scope, notDeclared);
+	}else{
+		return xercesc::DTDGrammar::putElemDecl(uriId, baseName, prefixName, qName, notDeclared);
+	}
+}
+
+XMLSize_t putElemDecl(xercesc::XMLElementDecl* const elemDecl, const bool notDeclared = false) {
+	if(boost::python::override putElemDecl = this->get_override("putElemDecl")){
+		return putElemDecl(boost::python::ptr(elemDecl), notDeclared);
+	}else{
+		return xercesc::DTDGrammar::putElemDecl(elemDecl, notDeclared);
+	}
+}
+
+XMLSize_t putNotationDecl(xercesc::XMLNotationDecl* const notationDecl) const {
+	if(boost::python::override putNotationDecl = this->get_override("putNotationDecl")){
+		return putNotationDecl(boost::python::ptr(notationDecl));
+	}else{
+		return xercesc::DTDGrammar::putNotationDecl(notationDecl);
+	}
+}
+
+void setValidated(const bool newState) {
+	if(boost::python::override setValidated = this->get_override("setValidated")){
+		setValidated(newState);
+	}else{
+		xercesc::DTDGrammar::setValidated(newState);
+	}
+}
+
+void reset() {
+	if(boost::python::override reset = this->get_override("reset")){
+		reset();
+	}else{
+		return xercesc::DTDGrammar::reset();
+	}
+}
+
+void setGrammarDescription(xercesc::XMLGrammarDescription* desc) {
+	if(boost::python::override setGrammarDescription = this->get_override("setGrammarDescription")){
+		setGrammarDescription(boost::python::ptr(desc));
+	}else{
+		return xercesc::DTDGrammar::setGrammarDescription(desc);
+	}
+}
+
+xercesc::XMLGrammarDescription* getGrammarDescription() const {
+	if(boost::python::override getGrammarDescription = this->get_override("getGrammarDescription")){
+		return getGrammarDescription();
+	}else{
+		return xercesc::DTDGrammar::getGrammarDescription();
+	}
+}
+
+PyDECL_XSERIALIZABLEWrapper
+
+};
+
+//! DTDGrammar
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(DTDGrammarPutElemDeclOverloads, putElemDecl, 5, 6)
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(DTDGrammarPutElemDeclMiniOverloads, putElemDecl, 1, 2)
+
 void DTDGrammar_init(void) {
 	//! xercesc::DTDGrammar
-	boost::python::class_<xercesc::DTDGrammar, boost::noncopyable, boost::python::bases<xercesc::Grammar> >("DTDGrammar", boost::python::init<boost::python::optional<xercesc::MemoryManager* const> >())
+	boost::python::class_<DTDGrammarWrapper, boost::noncopyable, boost::python::bases<xercesc::Grammar> >("DTDGrammar", boost::python::init<boost::python::optional<xercesc::MemoryManager* const> >())
 			.def("getGrammarType", &xercesc::DTDGrammar::getGrammarType)
 			.def("getTargetNamespace", &xercesc::DTDGrammar::getTargetNamespace, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("findOrAddElemDecl", &xercesc::DTDGrammar::findOrAddElemDecl, boost::python::return_value_policy<boost::python::reference_existing_object>())

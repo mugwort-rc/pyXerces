@@ -8,8 +8,11 @@
 #include "DOMLSParserFilter.h"
 
 #include <boost/python.hpp>
-#include <xercesc/dom/DOMNode.hpp>		//!< for forward declaration
-#include <xercesc/dom/DOMElement.hpp>	//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/dom/DOMNode.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+
 #include <xercesc/dom/DOMLSParserFilter.hpp>
 
 namespace pyxerces {
@@ -24,11 +27,11 @@ DOMLSParserFilterWrapper()
 {}
 
 xercesc::DOMLSParserFilter::FilterAction acceptNode(xercesc::DOMNode* node) {
-	return this->get_override("acceptNode")(node);
+	return this->get_override("acceptNode")(boost::python::ptr(node));
 }
 
 xercesc::DOMLSParserFilter::FilterAction startElement(xercesc::DOMElement* node) {
-	return this->get_override("startElement")(node);
+	return this->get_override("startElement")(boost::python::ptr(node));
 }
 
 xercesc::DOMNodeFilter::ShowType getWhatToShow() const {
@@ -40,9 +43,9 @@ xercesc::DOMNodeFilter::ShowType getWhatToShow() const {
 void DOMLSParserFilter_init(void) {
 	//! xercesc::DOMLSParserFilter
 	auto DOMLSParserFilter = boost::python::class_<DOMLSParserFilterWrapper, boost::noncopyable>("DOMLSParserFilter")
-			.def("acceptNode", &xercesc::DOMLSParserFilter::acceptNode)
-			.def("startElement", &xercesc::DOMLSParserFilter::startElement)
-			.def("getWhatToShow", &xercesc::DOMLSParserFilter::getWhatToShow)
+			.def("acceptNode", boost::python::pure_virtual(&xercesc::DOMLSParserFilter::acceptNode))
+			.def("startElement", boost::python::pure_virtual(&xercesc::DOMLSParserFilter::startElement))
+			.def("getWhatToShow", boost::python::pure_virtual(&xercesc::DOMLSParserFilter::getWhatToShow))
 			;
 
 	boost::python::scope DOMLSParserFilterScope = DOMLSParserFilter;

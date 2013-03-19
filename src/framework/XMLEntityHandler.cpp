@@ -61,7 +61,7 @@ xercesc::InputSource* resolveEntity(xercesc::XMLResourceIdentifier* resourceIden
 }
 
 void startInputSource(const xercesc::InputSource& inputSource) {
-	this->get_override("startInputSource")(inputSource);
+	this->get_override("startInputSource")(boost::ref(inputSource));
 }
 
 };
@@ -71,11 +71,11 @@ void XMLEntityHandler_init(void) {
 	boost::python::class_<XMLEntityHandlerWrapper, boost::noncopyable>("XMLEntityHandler")
 			.def(XMLEntityHandlerDefVisitor<XMLString>())
 			.def(XMLEntityHandlerDefVisitor<std::string>())
-			.def("endInputSource", &xercesc::XMLEntityHandler::endInputSource)
-			.def("expandSystemId", &xercesc::XMLEntityHandler::expandSystemId)
-			.def("resetEntities", &xercesc::XMLEntityHandler::resetEntities)
-			.def("resolveEntity", &xercesc::XMLEntityHandler::resolveEntity, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("startInputSource", &xercesc::XMLEntityHandler::startInputSource)
+			.def("endInputSource", boost::python::pure_virtual(&xercesc::XMLEntityHandler::endInputSource))
+			.def("expandSystemId", boost::python::pure_virtual(&xercesc::XMLEntityHandler::expandSystemId))
+			.def("resetEntities", boost::python::pure_virtual(&xercesc::XMLEntityHandler::resetEntities))
+			.def("resolveEntity", boost::python::pure_virtual(&xercesc::XMLEntityHandler::resolveEntity), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("startInputSource", boost::python::pure_virtual(&xercesc::XMLEntityHandler::startInputSource))
 			;
 }
 

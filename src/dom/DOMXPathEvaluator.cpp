@@ -8,9 +8,12 @@
 #include "DOMXPathEvaluator.h"
 
 #include <boost/python.hpp>
-#include <xercesc/dom/DOMXPathNSResolver.hpp>	//!< for forward declaration
-#include <xercesc/dom/DOMXPathExpression.hpp>	//!< for forward declaration
-#include <xercesc/dom/DOMNode.hpp>				//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/dom/DOMXPathNSResolver.hpp>
+#include <xercesc/dom/DOMXPathExpression.hpp>
+#include <xercesc/dom/DOMNode.hpp>
+
 #include <xercesc/dom/DOMXPathEvaluator.hpp>
 
 #include "../util/XMLString.h"
@@ -43,14 +46,32 @@ static xercesc::DOMXPathResult* evaluate(xercesc::DOMXPathEvaluator& self, const
 
 };
 
+class DOMXPathEvaluatorWrapper
+: public xercesc::DOMXPathEvaluator, public boost::python::wrapper<xercesc::DOMXPathEvaluator>
+{
+public:
+xercesc::DOMXPathExpression* createExpression(const XMLCh *expression, const xercesc::DOMXPathNSResolver *resolver) {
+	return this->get_override("createExpression")(XMLString(expression), boost::python::ptr(resolver));
+}
+
+xercesc::DOMXPathNSResolver* createNSResolver(const xercesc::DOMNode *nodeResolver) {
+	return this->get_override("createNSResolver")(boost::python::ptr(nodeResolver));
+}
+
+xercesc::DOMXPathResult* evaluate(const XMLCh *expression, const xercesc::DOMNode *contextNode, const xercesc::DOMXPathNSResolver *resolver, xercesc::DOMXPathResult::ResultType type, xercesc::DOMXPathResult* result) {
+	return this->get_override("evaluate")(XMLString(expression), boost::python::ptr(contextNode), boost::python::ptr(resolver), type, boost::python::ptr(result));
+}
+
+};
+
 void DOMXPathEvaluator_init(void) {
 	//! xercesc::DOMXPathEvaluator
-	boost::python::class_<xercesc::DOMXPathEvaluator, boost::noncopyable>("DOMXPathEvaluator", boost::python::no_init)
+	boost::python::class_<DOMXPathEvaluatorWrapper, boost::noncopyable>("DOMXPathEvaluator")
 			.def(DOMXPathEvaluatorDefVisitor<XMLString>())
 			.def(DOMXPathEvaluatorDefVisitor<std::string>())
-			.def("createExpression", &xercesc::DOMXPathEvaluator::createExpression, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("createNSResolver", &xercesc::DOMXPathEvaluator::createNSResolver, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("evaluate", &xercesc::DOMXPathEvaluator::evaluate, boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("createExpression", boost::python::pure_virtual(&xercesc::DOMXPathEvaluator::createExpression), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("createNSResolver", boost::python::pure_virtual(&xercesc::DOMXPathEvaluator::createNSResolver), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("evaluate", boost::python::pure_virtual(&xercesc::DOMXPathEvaluator::evaluate), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			;
 }
 

@@ -22,10 +22,6 @@
 
 namespace pyxerces {
 
-//! DTDGrammar
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(SchemaGrammarPutElemDeclOverloads, putElemDecl, 5, 6)
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(SchemaGrammarPutElemDeclMiniOverloads, putElemDecl, 1, 2)
-
 template <class STR>
 class SchemaGrammarDefVisitor
 : public boost::python::def_visitor<SchemaGrammarDefVisitor<STR> >
@@ -75,6 +71,10 @@ static xercesc::XMLElementDecl* putElemDecl(xercesc::SchemaGrammar& self, const 
 }
 
 };
+
+//! DTDGrammar
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(SchemaGrammarPutElemDeclOverloads, putElemDecl, 5, 6)
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(SchemaGrammarPutElemDeclMiniOverloads, putElemDecl, 1, 2)
 
 void SchemaGrammar_init(void) {
 	//! xercesc::SchemaGrammar

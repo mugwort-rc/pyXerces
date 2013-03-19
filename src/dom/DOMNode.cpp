@@ -8,21 +8,24 @@
 #include "DOMNode.h"
 
 #include <boost/python.hpp>
-#include <xercesc/dom/DOMDocument.hpp>			//!< for forward declaration
-#include <xercesc/dom/DOMNamedNodeMap.hpp>		//!< for forward declaration
-#include <xercesc/dom/DOMNodeList.hpp>			//!< for forward declaration
-#include <xercesc/dom/DOMUserDataHandler.hpp>	//!< for forward declaration
-#include <xercesc/dom/DOMXPathNamespace.hpp>	//!< for forward declaration
-#include <xercesc/dom/DOMAttr.hpp>				//!< for forward declaration
-#include <xercesc/dom/DOMCharacterData.hpp>		//!< for forward declaration
-#include <xercesc/dom/DOMDocumentFragment.hpp>	//!< for forward declaration
-#include <xercesc/dom/DOMDocumentType.hpp>		//!< for forward declaration
-#include <xercesc/dom/DOMElement.hpp>			//!< for forward declaration
-#include <xercesc/dom/DOMEntity.hpp>			//!< for forward declaration
-#include <xercesc/dom/DOMEntityReference.hpp>	//!< for forward declaration
-#include <xercesc/dom/DOMNotation.hpp>			//!< for forward declaration
-#include <xercesc/dom/DOMProcessingInstruction.hpp>	//!< for forward declaration
-#include <xercesc/dom/DOMXPathNamespace.hpp>	//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMNamedNodeMap.hpp>
+#include <xercesc/dom/DOMNodeList.hpp>
+#include <xercesc/dom/DOMUserDataHandler.hpp>
+#include <xercesc/dom/DOMXPathNamespace.hpp>
+#include <xercesc/dom/DOMAttr.hpp>
+#include <xercesc/dom/DOMCharacterData.hpp>
+#include <xercesc/dom/DOMDocumentFragment.hpp>
+#include <xercesc/dom/DOMDocumentType.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/DOMEntity.hpp>
+#include <xercesc/dom/DOMEntityReference.hpp>
+#include <xercesc/dom/DOMNotation.hpp>
+#include <xercesc/dom/DOMProcessingInstruction.hpp>
+#include <xercesc/dom/DOMXPathNamespace.hpp>
+
 #include <xercesc/dom/DOMNode.hpp>
 
 #include "../util/XMLString.h"
@@ -209,50 +212,209 @@ static void* getFeature(xercesc::DOMNode& self, const STR& feature, const STR& v
 
 };
 
+class DOMNodeWrapper
+: public xercesc::DOMNode, public boost::python::wrapper<xercesc::DOMNode>
+{
+public:
+const XMLCh* getNodeName() const {
+	return this->get_override("getNodeName")();
+}
+
+const XMLCh* getNodeValue() const {
+	return this->get_override("getNodeValue")();
+}
+
+NodeType getNodeType() const {
+	return this->get_override("getNodeType")();
+}
+
+xercesc::DOMNode *getParentNode() const {
+	return this->get_override("getParentNode")();
+}
+
+xercesc::DOMNodeList *getChildNodes() const {
+	return this->get_override("getChildNodes")();
+}
+
+xercesc::DOMNode *getFirstChild() const {
+	return this->get_override("getFirstChild")();
+}
+
+xercesc::DOMNode *getLastChild() const {
+	return this->get_override("getLastChild")();
+}
+
+xercesc::DOMNode *getPreviousSibling() const {
+	return this->get_override("getPreviousSibling")();
+}
+
+xercesc::DOMNode *getNextSibling() const {
+	return this->get_override("getNextSibling")();
+}
+
+xercesc::DOMNamedNodeMap *getAttributes() const {
+	return this->get_override("getAttributes")();
+}
+
+xercesc::DOMDocument *getOwnerDocument() const {
+	return this->get_override("getOwnerDocument")();
+}
+
+xercesc::DOMNode * cloneNode(bool deep) const {
+	return this->get_override("cloneNode")(deep);
+}
+
+xercesc::DOMNode *insertBefore(xercesc::DOMNode *newChild, xercesc::DOMNode *refChild) {
+	return this->get_override("insertBefore")(boost::python::ptr(newChild), boost::python::ptr(refChild));
+}
+
+xercesc::DOMNode *replaceChild(xercesc::DOMNode *newChild, xercesc::DOMNode *oldChild) {
+	return this->get_override("replaceChild")(boost::python::ptr(newChild), boost::python::ptr(oldChild));
+}
+
+xercesc::DOMNode *removeChild(xercesc::DOMNode *oldChild) {
+	return this->get_override("removeChild")(boost::python::ptr(oldChild));
+}
+
+xercesc::DOMNode *appendChild(xercesc::DOMNode *newChild) {
+	return this->get_override("appendChild")(boost::python::ptr(newChild));
+}
+
+bool hasChildNodes() const {
+	return this->get_override("hasChildNodes")();
+}
+
+void setNodeValue(const XMLCh *nodeValue) {
+	this->get_override("setNodeValue")(XMLString(nodeValue));
+}
+
+void normalize() {
+	this->get_override("normalize")();
+}
+
+bool isSupported(const XMLCh *feature, const XMLCh *version) const {
+	return this->get_override("isSupported")(XMLString(feature), XMLString(version));
+}
+
+const XMLCh* getNamespaceURI() const {
+	return this->get_override("getNamespaceURI")();
+}
+
+const XMLCh* getPrefix() const {
+	return this->get_override("getPrefix")();
+}
+
+const XMLCh* getLocalName() const {
+	return this->get_override("getLocalName")();
+}
+
+void setPrefix(const XMLCh * prefix) {
+	this->get_override("setPrefix")(XMLString(prefix));
+}
+
+bool hasAttributes() const {
+	return this->get_override("hasAttributes")();
+}
+
+bool isSameNode(const xercesc::DOMNode* other) const {
+	return this->get_override("isSameNode")(boost::python::ptr(other));
+}
+
+bool isEqualNode(const xercesc::DOMNode* arg) const {
+	return this->get_override("isEqualNode")(boost::python::ptr(arg));
+}
+
+void* setUserData(const XMLCh* key, void* data, xercesc::DOMUserDataHandler* handler) {
+	// XXX: data
+	return this->get_override("setUserData")(XMLString(key), data, boost::python::ptr(handler));
+}
+
+void* getUserData(const XMLCh* key) const {
+	return this->get_override("getUserData")(XMLString(key));
+}
+
+const XMLCh* getBaseURI() const {
+	return this->get_override("getBaseURI")();
+}
+
+short compareDocumentPosition(const xercesc::DOMNode* other) const {
+	return this->get_override("compareDocumentPosition")(boost::python::ptr(other));
+}
+
+const XMLCh* getTextContent() const {
+	return this->get_override("getTextContent")();
+}
+
+void setTextContent(const XMLCh* textContent) {
+	this->get_override("setTextContent")(XMLString(textContent));
+}
+
+const XMLCh* lookupPrefix(const XMLCh* namespaceURI) const {
+	return this->get_override("lookupPrefix")(XMLString(namespaceURI));
+}
+
+bool isDefaultNamespace(const XMLCh* namespaceURI) const {
+	return this->get_override("isDefaultNamespace")(XMLString(namespaceURI));
+}
+
+const XMLCh* lookupNamespaceURI(const XMLCh* prefix) const  {
+	return this->get_override("lookupNamespaceURI")(XMLString(prefix));
+}
+
+void* getFeature(const XMLCh* feature, const XMLCh* version) const {
+	return this->get_override("getFeature")(XMLString(feature), XMLString(version));
+}
+
+void release() {
+	this->get_override("release")();
+}
+
+};
+
 void DOMNode_init(void) {
 	//! xercesc::DOMNode
-	auto DOMNode = boost::python::class_<xercesc::DOMNode, boost::noncopyable>("DOMNode", boost::python::no_init)
+	auto DOMNode = boost::python::class_<DOMNodeWrapper, boost::noncopyable>("DOMNode")
 			.def(DOMNodeDefVisitor())
 			.def(DOMNodeStringDefVisitor<XMLString>())
 			.def(DOMNodeStringDefVisitor<std::string>())
-			.def("getNodeName", &xercesc::DOMNode::getNodeName, boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("getNodeValue", &xercesc::DOMNode::getNodeValue, boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("getNodeType", &xercesc::DOMNode::getNodeType)
-			.def("getParentNode", &xercesc::DOMNode::getParentNode, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("getChildNodes", &xercesc::DOMNode::getChildNodes, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("getFirstChild", &xercesc::DOMNode::getFirstChild, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("getLastChild", &xercesc::DOMNode::getLastChild, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("getPreviousSibling", &xercesc::DOMNode::getPreviousSibling, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("getNextSibling", &xercesc::DOMNode::getNextSibling, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("getAttributes", &xercesc::DOMNode::getAttributes, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("getOwnerDocument", &xercesc::DOMNode::getOwnerDocument, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("cloneNode", &xercesc::DOMNode::cloneNode, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("insertBefore", &xercesc::DOMNode::insertBefore, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("replaceChild", &xercesc::DOMNode::replaceChild, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("removeChild", &xercesc::DOMNode::removeChild, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("appendChild", &xercesc::DOMNode::appendChild, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("hasChildNodes", &xercesc::DOMNode::hasChildNodes)
-			.def("setNodeValue", &xercesc::DOMNode::setNodeValue)
-			.def("normalize", &xercesc::DOMNode::normalize)
-			.def("isSupported", &xercesc::DOMNode::isSupported)
-			.def("getNamespaceURI", &xercesc::DOMNode::getNamespaceURI, boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("getPrefix", &xercesc::DOMNode::getPrefix, boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("getLocalName", &xercesc::DOMNode::getLocalName, boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("setPrefix", &xercesc::DOMNode::setPrefix)
-			.def("hasAttributes", &xercesc::DOMNode::hasAttributes)
-			.def("isSameNode", &xercesc::DOMNode::isSameNode)
-			.def("isEqualNode", &xercesc::DOMNode::isEqualNode)
-			.def("setUserData", &xercesc::DOMNode::setUserData, boost::python::return_value_policy<boost::python::return_opaque_pointer>())  //!< void*
-			.def("getUserData", &xercesc::DOMNode::getUserData, boost::python::return_value_policy<boost::python::return_opaque_pointer>())  //!< void*
-			.def("getBaseURI", &xercesc::DOMNode::getBaseURI, boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("compareDocumentPosition", &xercesc::DOMNode::compareDocumentPosition)
-			.def("getTextContent", &xercesc::DOMNode::getTextContent, boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("setTextContent", &xercesc::DOMNode::setTextContent)
-			.def("lookupPrefix", &xercesc::DOMNode::lookupPrefix, boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("isDefaultNamespace", &xercesc::DOMNode::isDefaultNamespace)
-			.def("lookupNamespaceURI", &xercesc::DOMNode::lookupNamespaceURI, boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("getFeature", &xercesc::DOMNode::getFeature, boost::python::return_value_policy<boost::python::return_opaque_pointer>())  //!< void*
-			.def("release", &xercesc::DOMNode::release)
+			.def("getNodeName", boost::python::pure_virtual(&xercesc::DOMNode::getNodeName), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("getNodeValue", boost::python::pure_virtual(&xercesc::DOMNode::getNodeValue), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("getNodeType", boost::python::pure_virtual(&xercesc::DOMNode::getNodeType))
+			.def("getParentNode", boost::python::pure_virtual(&xercesc::DOMNode::getParentNode), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("getChildNodes", boost::python::pure_virtual(&xercesc::DOMNode::getChildNodes), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("getFirstChild", boost::python::pure_virtual(&xercesc::DOMNode::getFirstChild), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("getLastChild", boost::python::pure_virtual(&xercesc::DOMNode::getLastChild), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("getPreviousSibling", boost::python::pure_virtual(&xercesc::DOMNode::getPreviousSibling), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("getNextSibling", boost::python::pure_virtual(&xercesc::DOMNode::getNextSibling), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("getAttributes", boost::python::pure_virtual(&xercesc::DOMNode::getAttributes), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("getOwnerDocument", boost::python::pure_virtual(&xercesc::DOMNode::getOwnerDocument), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("cloneNode", boost::python::pure_virtual(&xercesc::DOMNode::cloneNode), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("insertBefore", boost::python::pure_virtual(&xercesc::DOMNode::insertBefore), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("replaceChild", boost::python::pure_virtual(&xercesc::DOMNode::replaceChild), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("removeChild", boost::python::pure_virtual(&xercesc::DOMNode::removeChild), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("appendChild", boost::python::pure_virtual(&xercesc::DOMNode::appendChild), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("hasChildNodes", boost::python::pure_virtual(&xercesc::DOMNode::hasChildNodes))
+			.def("setNodeValue", boost::python::pure_virtual(&xercesc::DOMNode::setNodeValue))
+			.def("normalize", boost::python::pure_virtual(&xercesc::DOMNode::normalize))
+			.def("isSupported", boost::python::pure_virtual(&xercesc::DOMNode::isSupported))
+			.def("getNamespaceURI", boost::python::pure_virtual(&xercesc::DOMNode::getNamespaceURI), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("getPrefix", boost::python::pure_virtual(&xercesc::DOMNode::getPrefix), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("getLocalName", boost::python::pure_virtual(&xercesc::DOMNode::getLocalName), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("setPrefix", boost::python::pure_virtual(&xercesc::DOMNode::setPrefix))
+			.def("hasAttributes", boost::python::pure_virtual(&xercesc::DOMNode::hasAttributes))
+			.def("isSameNode", boost::python::pure_virtual(&xercesc::DOMNode::isSameNode))
+			.def("isEqualNode", boost::python::pure_virtual(&xercesc::DOMNode::isEqualNode))
+			.def("setUserData", boost::python::pure_virtual(&xercesc::DOMNode::setUserData), boost::python::return_value_policy<boost::python::return_opaque_pointer>())  //!< void*
+			.def("getUserData", boost::python::pure_virtual(&xercesc::DOMNode::getUserData), boost::python::return_value_policy<boost::python::return_opaque_pointer>())  //!< void*
+			.def("getBaseURI", boost::python::pure_virtual(&xercesc::DOMNode::getBaseURI), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("compareDocumentPosition", boost::python::pure_virtual(&xercesc::DOMNode::compareDocumentPosition))
+			.def("getTextContent", boost::python::pure_virtual(&xercesc::DOMNode::getTextContent), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("setTextContent", boost::python::pure_virtual(&xercesc::DOMNode::setTextContent))
+			.def("lookupPrefix", boost::python::pure_virtual(&xercesc::DOMNode::lookupPrefix), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("isDefaultNamespace", boost::python::pure_virtual(&xercesc::DOMNode::isDefaultNamespace))
+			.def("lookupNamespaceURI", boost::python::pure_virtual(&xercesc::DOMNode::lookupNamespaceURI), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("getFeature", boost::python::pure_virtual(&xercesc::DOMNode::getFeature), boost::python::return_value_policy<boost::python::return_opaque_pointer>())  //!< void*
+			.def("release", boost::python::pure_virtual(&xercesc::DOMNode::release))
 			;
 	boost::python::scope DOMNodeScope = DOMNode;
 	//! xercesc::DOMNode::NodeType

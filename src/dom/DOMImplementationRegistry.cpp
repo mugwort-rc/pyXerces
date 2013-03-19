@@ -8,9 +8,12 @@
 #include "DOMImplementationRegistry.h"
 
 #include <boost/python.hpp>
-#include <xercesc/dom/DOMImplementation.hpp>		//!< for forward declaration
-#include <xercesc/dom/DOMImplementationSource.hpp>	//!< for forward declaration
-#include <xercesc/dom/DOMImplementationList.hpp>	//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/dom/DOMImplementation.hpp>
+#include <xercesc/dom/DOMImplementationSource.hpp>
+#include <xercesc/dom/DOMImplementationList.hpp>
+
 #include <xercesc/dom/DOMImplementationRegistry.hpp>
 
 #include "../util/XMLString.h"

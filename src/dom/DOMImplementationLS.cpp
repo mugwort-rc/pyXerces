@@ -8,22 +8,19 @@
 #include "DOMImplementationLS.h"
 
 #include <boost/python.hpp>
-#include <xercesc/dom/DOMLSInput.hpp>					//!< for forward declaration
-#include <xercesc/dom/DOMLSOutput.hpp>					//!< for forward declaration
-#include <xercesc/dom/DOMLSSerializer.hpp>				//!< for forward declaration
-#include <xercesc/dom/DOMLSParser.hpp>					//!< for forward declaration
-#include <xercesc/framework/XMLGrammarPool.hpp>			//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/dom/DOMLSInput.hpp>
+#include <xercesc/dom/DOMLSOutput.hpp>
+#include <xercesc/dom/DOMLSSerializer.hpp>
+#include <xercesc/dom/DOMLSParser.hpp>
+#include <xercesc/framework/XMLGrammarPool.hpp>
+
 #include <xercesc/dom/DOMImplementationLS.hpp>
 
 #include "../util/XMLString.h"
 
 namespace pyxerces {
-
-//! DOMImplementationLS
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(DOMImplementationLSCreateLSParserOverloads, createLSParser, 2, 4)
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(DOMImplementationLSCreateLSSerializerOverloads, createLSSerializer, 0, 1)
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(DOMImplementationLSCreateLSInputOverloads, createLSInput, 0, 1)
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(DOMImplementationLSCreateLSOutputOverloads, createLSOutput, 0, 1)
 
 template <class STR>
 class DOMImplementationLSDefVisitor
@@ -57,15 +54,44 @@ static xercesc::DOMLSParser* createLSParser(xercesc::DOMImplementationLS& self, 
 
 };
 
+class DOMImplementationLSWrapper
+: public xercesc::DOMImplementationLS, public boost::python::wrapper<xercesc::DOMImplementationLS>
+{
+public:
+xercesc::DOMLSParser* createLSParser(const DOMImplementationLSMode mode, const XMLCh* const schemaType, xercesc::MemoryManager* const manager = xercesc::XMLPlatformUtils::fgMemoryManager, xercesc::XMLGrammarPool*  const gramPool = 0) {
+	return this->get_override("createLSParser")(mode, XMLString(schemaType), boost::python::ptr(manager), boost::python::ptr(gramPool));
+}
+
+xercesc::DOMLSSerializer* createLSSerializer(xercesc::MemoryManager* const manager = xercesc::XMLPlatformUtils::fgMemoryManager) {
+	return this->get_override("createLSSerializer")(boost::python::ptr(manager));
+}
+
+xercesc::DOMLSInput* createLSInput(xercesc::MemoryManager* const manager = xercesc::XMLPlatformUtils::fgMemoryManager) {
+	return this->get_override("createLSInput")(boost::python::ptr(manager));
+}
+
+xercesc::DOMLSOutput* createLSOutput(xercesc::MemoryManager* const manager = xercesc::XMLPlatformUtils::fgMemoryManager) {
+	return this->get_override("createLSOutput")(boost::python::ptr(manager));
+}
+
+};
+
+//! DOMImplementationLS
+//BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(DOMImplementationLSCreateLSParserOverloads, createLSParser, 2, 4)
+//BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(DOMImplementationLSCreateLSSerializerOverloads, createLSSerializer, 0, 1)
+//BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(DOMImplementationLSCreateLSInputOverloads, createLSInput, 0, 1)
+//BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(DOMImplementationLSCreateLSOutputOverloads, createLSOutput, 0, 1)
+
 void DOMImplementationLS_init(void) {
 	//! xercesc::DOMImplementationLS
-	auto DOMImplementationLS = boost::python::class_<xercesc::DOMImplementationLS, boost::noncopyable>("DOMImplementationLS", boost::python::no_init)
+	auto DOMImplementationLS = boost::python::class_<DOMImplementationLSWrapper, boost::noncopyable>("DOMImplementationLS")
 			.def(DOMImplementationLSDefVisitor<XMLString>())
 			.def(DOMImplementationLSDefVisitor<std::string>())
-			.def("createLSParser", &xercesc::DOMImplementationLS::createLSParser, DOMImplementationLSCreateLSParserOverloads()[boost::python::return_value_policy<boost::python::reference_existing_object>()])
-			.def("createLSSerializer", &xercesc::DOMImplementationLS::createLSSerializer, DOMImplementationLSCreateLSSerializerOverloads()[boost::python::return_value_policy<boost::python::reference_existing_object>()])
-			.def("createLSInput", &xercesc::DOMImplementationLS::createLSInput, DOMImplementationLSCreateLSInputOverloads()[boost::python::return_value_policy<boost::python::reference_existing_object>()])
-			.def("createLSOutput", &xercesc::DOMImplementationLS::createLSOutput, DOMImplementationLSCreateLSOutputOverloads()[boost::python::return_value_policy<boost::python::reference_existing_object>()])
+			// TODO: overloads
+			.def("createLSParser", boost::python::pure_virtual(&xercesc::DOMImplementationLS::createLSParser), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("createLSSerializer", boost::python::pure_virtual(&xercesc::DOMImplementationLS::createLSSerializer), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("createLSInput", boost::python::pure_virtual(&xercesc::DOMImplementationLS::createLSInput), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("createLSOutput", boost::python::pure_virtual(&xercesc::DOMImplementationLS::createLSOutput), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			;
 	boost::python::scope DOMImplementationLSScope = DOMImplementationLS;
 	//! xercesc::DOMImplementationLS::DOMImplementationLSMode

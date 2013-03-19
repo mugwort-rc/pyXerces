@@ -41,24 +41,93 @@ static void setLocationHints(xercesc::XMLSchemaDescription& self, const STR& hin
 
 };
 
+class XMLSchemaDescriptionWrapper
+: public xercesc::XMLSchemaDescription, public boost::python::wrapper<xercesc::XMLSchemaDescription>
+{
+public:
+xercesc::Grammar::GrammarType getGrammarType() const {
+    if(boost::python::override getGrammarType = this->get_override("getGrammarType")){
+    	return getGrammarType();
+    }else{
+    	return xercesc::XMLSchemaDescription::getGrammarType();
+    }
+}
+
+ContextType getContextType() const {
+	return this->get_override("getContextType")();
+}
+
+const XMLCh* getTargetNamespace() const {
+	return this->get_override("getTargetNamespace")();
+}
+
+const xercesc::RefArrayVectorOf<XMLCh>* getLocationHints() const {
+	return this->get_override("getLocationHints")();
+}
+
+const xercesc::QName* getTriggeringComponent() const {
+	return this->get_override("getTriggeringComponent")();
+}
+
+const xercesc::QName* getEnclosingElementName() const {
+	return this->get_override("getEnclosingElementName")();
+}
+
+const xercesc::XMLAttDef* getAttributes() const {
+	return this->get_override("getAttributes")();
+}
+
+void setContextType(ContextType type) {
+	this->get_override("setContextType")(type);
+}
+
+void setTargetNamespace(const XMLCh* const target) {
+	this->get_override("setTargetNamespace")(XMLString(target));
+}
+
+void setLocationHints(const XMLCh* const hints) {
+	this->get_override("setLocationHints")(XMLString(hints));
+}
+
+void setTriggeringComponent(xercesc::QName* const component) {
+	this->get_override("setTriggeringComponent")(boost::python::ptr(component));
+}
+
+void setEnclosingElementName(xercesc::QName* const name) {
+	this->get_override("setEnclosingElementName")(boost::python::ptr(name));
+}
+
+void setAttributes(xercesc::XMLAttDef* const attr) {
+	this->get_override("setAttributes")(boost::python::ptr(attr));
+}
+
+// ---------- XMLGrammarDescription ----------
+const XMLCh* getGrammarKey() const {
+	return this->get_override("getGrammarKey")();
+}
+
+PyDECL_XSERIALIZABLEWrapper;
+
+};
+
 void XMLSchemaDescription_init(void) {
 	//! xercesc::XMLSchemaDescription
-	auto XMLSchemaDescription = boost::python::class_<xercesc::XMLSchemaDescription, boost::noncopyable, boost::python::bases<xercesc::XMLGrammarDescription> >("XMLSchemaDescription", boost::python::no_init)
+	auto XMLSchemaDescription = boost::python::class_<XMLSchemaDescriptionWrapper, boost::noncopyable, boost::python::bases<xercesc::XMLGrammarDescription> >("XMLSchemaDescription")
 			.def(XMLSchemaDescriptionDefVisitor<XMLString>())
 			.def(XMLSchemaDescriptionDefVisitor<std::string>())
 			.def("getGrammarType", &xercesc::XMLSchemaDescription::getGrammarType)
-			.def("getContextType", &xercesc::XMLSchemaDescription::getContextType)
-			.def("getTargetNamespace", &xercesc::XMLSchemaDescription::getTargetNamespace, boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("getLocationHints", &xercesc::XMLSchemaDescription::getLocationHints, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("getTriggeringComponent", &xercesc::XMLSchemaDescription::getTriggeringComponent, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("getEnclosingElementName", &xercesc::XMLSchemaDescription::getEnclosingElementName, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("getAttributes", &xercesc::XMLSchemaDescription::getAttributes, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("setContextType", &xercesc::XMLSchemaDescription::setContextType)
-			.def("setTargetNamespace", &xercesc::XMLSchemaDescription::setTargetNamespace)
-			.def("setLocationHints", &xercesc::XMLSchemaDescription::setLocationHints)
-			.def("setTriggeringComponent", &xercesc::XMLSchemaDescription::setTriggeringComponent)
-			.def("setEnclosingElementName", &xercesc::XMLSchemaDescription::setEnclosingElementName)
-			.def("setAttributes", &xercesc::XMLSchemaDescription::setAttributes)
+			.def("getContextType", boost::python::pure_virtual(&xercesc::XMLSchemaDescription::getContextType))
+			.def("getTargetNamespace", boost::python::pure_virtual(&xercesc::XMLSchemaDescription::getTargetNamespace), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("getLocationHints", boost::python::pure_virtual(&xercesc::XMLSchemaDescription::getLocationHints), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("getTriggeringComponent", boost::python::pure_virtual(&xercesc::XMLSchemaDescription::getTriggeringComponent), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("getEnclosingElementName", boost::python::pure_virtual(&xercesc::XMLSchemaDescription::getEnclosingElementName), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("getAttributes", boost::python::pure_virtual(&xercesc::XMLSchemaDescription::getAttributes), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("setContextType", boost::python::pure_virtual(&xercesc::XMLSchemaDescription::setContextType))
+			.def("setTargetNamespace", boost::python::pure_virtual(&xercesc::XMLSchemaDescription::setTargetNamespace))
+			.def("setLocationHints", boost::python::pure_virtual(&xercesc::XMLSchemaDescription::setLocationHints))
+			.def("setTriggeringComponent", boost::python::pure_virtual(&xercesc::XMLSchemaDescription::setTriggeringComponent))
+			.def("setEnclosingElementName", boost::python::pure_virtual(&xercesc::XMLSchemaDescription::setEnclosingElementName))
+			.def("setAttributes", boost::python::pure_virtual(&xercesc::XMLSchemaDescription::setAttributes))
 			PyDECL_XSERIALIZABLE(XMLSchemaDescription)
 			;
 	boost::python::scope XMLSchemaDescriptionScope = XMLSchemaDescription;

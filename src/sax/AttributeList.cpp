@@ -80,11 +80,11 @@ void AttributeList_init(void) {
 			.def(AttributeListDefVisitor<std::string>())
 			.def("getLength", &xercesc::AttributeList::getLength)
 			.def("getName", &xercesc::AttributeList::getName, boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("getType", static_cast<const XMLCh*(xercesc::AttributeList::*)(const XMLSize_t) const>(&xercesc::AttributeList::getType), boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("getValue", static_cast<const XMLCh*(xercesc::AttributeList::*)(const XMLSize_t) const>(&xercesc::AttributeList::getValue), boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("getType", static_cast<const XMLCh*(xercesc::AttributeList::*)(const XMLCh* const) const>(&xercesc::AttributeList::getType), boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("getValue", static_cast<const XMLCh*(xercesc::AttributeList::*)(const XMLCh* const) const>(&xercesc::AttributeList::getValue), boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("getValue", static_cast<const XMLCh*(xercesc::AttributeList::*)(const char* const) const>(&xercesc::AttributeList::getValue), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("getType", boost::python::pure_virtual(static_cast<const XMLCh*(xercesc::AttributeList::*)(const XMLSize_t) const>(&xercesc::AttributeList::getType)), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("getValue", boost::python::pure_virtual(static_cast<const XMLCh*(xercesc::AttributeList::*)(const XMLSize_t) const>(&xercesc::AttributeList::getValue)), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("getType", boost::python::pure_virtual(static_cast<const XMLCh*(xercesc::AttributeList::*)(const XMLCh* const) const>(&xercesc::AttributeList::getType)), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("getValue", boost::python::pure_virtual(static_cast<const XMLCh*(xercesc::AttributeList::*)(const XMLCh* const) const>(&xercesc::AttributeList::getValue)), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("getValue", boost::python::pure_virtual(static_cast<const XMLCh*(xercesc::AttributeList::*)(const char* const) const>(&xercesc::AttributeList::getValue)), boost::python::return_value_policy<boost::python::return_by_value>())
 			;
 }
 

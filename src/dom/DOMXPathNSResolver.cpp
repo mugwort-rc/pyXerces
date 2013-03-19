@@ -46,15 +46,37 @@ static void addNamespaceBinding(xercesc::DOMXPathNSResolver& self, const STR& pr
 
 };
 
+class DOMXPathNSResolverWrapper
+: public xercesc::DOMXPathNSResolver, public boost::python::wrapper<xercesc::DOMXPathNSResolver>
+{
+public:
+const XMLCh* lookupNamespaceURI(const XMLCh* prefix) const {
+	return this->get_override("lookupNamespaceURI")(XMLString(prefix));
+}
+
+const XMLCh* lookupPrefix(const XMLCh* URI) const {
+	return this->get_override("lookupPrefix")(XMLString(URI));
+}
+
+void addNamespaceBinding(const XMLCh* prefix, const XMLCh* uri) {
+	this->get_override("addNamespaceBinding")(XMLString(prefix), XMLString(uri));
+}
+
+void release() {
+	this->get_override("release")();
+}
+
+};
+
 void DOMXPathNSResolver_init(void) {
 	//! xercesc::DOMXPathNSResolver
-	boost::python::class_<xercesc::DOMXPathNSResolver, boost::noncopyable>("DOMXPathNSResolver", boost::python::no_init)
+	boost::python::class_<DOMXPathNSResolverWrapper, boost::noncopyable>("DOMXPathNSResolver")
 			.def(DOMXPathNSResolverDefVisitor<XMLString>())
 			.def(DOMXPathNSResolverDefVisitor<std::string>())
-			.def("lookupNamespaceURI", &xercesc::DOMXPathNSResolver::lookupNamespaceURI, boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("lookupPrefix", &xercesc::DOMXPathNSResolver::lookupPrefix, boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("addNamespaceBinding", &xercesc::DOMXPathNSResolver::addNamespaceBinding)
-			.def("release", &xercesc::DOMXPathNSResolver::release)
+			.def("lookupNamespaceURI", boost::python::pure_virtual(&xercesc::DOMXPathNSResolver::lookupNamespaceURI), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("lookupPrefix", boost::python::pure_virtual(&xercesc::DOMXPathNSResolver::lookupPrefix), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("addNamespaceBinding", boost::python::pure_virtual(&xercesc::DOMXPathNSResolver::addNamespaceBinding))
+			.def("release", boost::python::pure_virtual(&xercesc::DOMXPathNSResolver::release))
 			;
 }
 

@@ -183,6 +183,353 @@ static void parse(xercesc::SAXParser& self, const XMLString& systemId) {
 
 };
 
+class SAXParserWrapper
+: public xercesc::SAXParser, public boost::python::wrapper<xercesc::SAXParser>
+{
+public:
+// ---------- Parser ----------
+void parse(const xercesc::InputSource& source) {
+	if(boost::python::override parse = this->get_override("parse")){
+		parse(boost::ref(source));
+	}else{
+		xercesc::SAXParser::parse(source);
+	}
+}
+
+void parse(const XMLCh* const systemId) {
+	if(boost::python::override parse = this->get_override("parse")){
+		parse(XMLString(systemId));
+	}else{
+		xercesc::SAXParser::parse(systemId);
+	}
+}
+
+void parse(const char* const systemId) {
+	if(boost::python::override parse = this->get_override("parse")){
+		parse(systemId);
+	}else{
+		xercesc::SAXParser::parse(systemId);
+	}
+}
+
+void setDocumentHandler(xercesc::DocumentHandler* const handler) {
+	if(boost::python::override setDocumentHandler = this->get_override("setDocumentHandler")){
+		setDocumentHandler(boost::python::ptr(handler));
+	}else{
+		xercesc::SAXParser::setDocumentHandler(handler);
+	}
+}
+
+void setDTDHandler(xercesc::DTDHandler* const handler) {
+	if(boost::python::override setDTDHandler = this->get_override("setDTDHandler")){
+		setDTDHandler(boost::python::ptr(handler));
+	}else{
+		xercesc::SAXParser::setDTDHandler(handler);
+	}
+}
+
+void setErrorHandler(xercesc::ErrorHandler* const handler) {
+	if(boost::python::override setErrorHandler = this->get_override("setErrorHandler")){
+		setErrorHandler(boost::python::ptr(handler));
+	}else{
+		xercesc::SAXParser::setErrorHandler(handler);
+	}
+}
+
+void setEntityResolver(xercesc::EntityResolver* const resolver) {
+	if(boost::python::override setEntityResolver = this->get_override("setEntityResolver")){
+		setEntityResolver(boost::python::ptr(resolver));
+	}else{
+		xercesc::SAXParser::setEntityResolver(resolver);
+	}
+}
+
+// ---------- XMLDocumentHandler ----------
+void docCharacters(const XMLCh* const chars, const XMLSize_t length, const bool cdataSection) {
+	if(boost::python::override docCharacters = this->get_override("docCharacters")){
+		docCharacters(XMLString(chars), length, cdataSection);
+	}else{
+		xercesc::SAXParser::docCharacters(chars, length, cdataSection);
+	}
+}
+
+void docComment(const XMLCh* const comment) {
+	if(boost::python::override docComment = this->get_override("docComment")){
+		docComment(XMLString(comment));
+	}else{
+		xercesc::SAXParser::docComment(comment);
+	}
+}
+
+void docPI(const XMLCh* const target, const XMLCh* const data) {
+	if(boost::python::override docPI = this->get_override("docPI")){
+		docPI(XMLString(target), XMLString(data));
+	}else{
+		xercesc::SAXParser::docPI(target, data);
+	}
+}
+
+void endDocument() {
+	if(boost::python::override endDocument = this->get_override("endDocument")){
+		endDocument();
+	}else{
+		xercesc::SAXParser::endDocument();
+	}
+}
+
+void endElement(const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const bool isRoot, const XMLCh* const prefixName = 0) {
+	if(boost::python::override endElement = this->get_override("endElement")){
+		endElement(boost::ref(elemDecl), uriId, isRoot, XMLString(prefixName));
+	}else{
+		xercesc::SAXParser::endElement(elemDecl, uriId, isRoot, prefixName);
+	}
+}
+
+void endEntityReference(const xercesc::XMLEntityDecl& entDecl) {
+	if(boost::python::override endEntityReference = this->get_override("endEntityReference")){
+		endEntityReference(boost::ref(entDecl));
+	}else{
+		xercesc::SAXParser::endEntityReference(entDecl);
+	}
+}
+
+void ignorableWhitespace(const XMLCh* const chars, const XMLSize_t length, const bool cdataSection) {
+	if(boost::python::override ignorableWhitespace = this->get_override("ignorableWhitespace")){
+		ignorableWhitespace(XMLString(chars), length, cdataSection);
+	}else{
+		xercesc::SAXParser::ignorableWhitespace(chars, length, cdataSection);
+	}
+}
+
+void resetDocument() {
+	if(boost::python::override resetDocument = this->get_override("resetDocument")){
+		resetDocument();
+	}else{
+		xercesc::SAXParser::resetDocument();
+	}
+}
+
+void startDocument() {
+	if(boost::python::override startDocument = this->get_override("startDocument")){
+		startDocument();
+	}else{
+		xercesc::SAXParser::startDocument();
+	}
+}
+
+void startElement(const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const XMLCh* const prefixName, const xercesc::RefVectorOf<xercesc::XMLAttr>& attrList, const XMLSize_t attrCount, const bool isEmpty, const bool isRoot) {
+	if(boost::python::override startElement = this->get_override("startElement")){
+		startElement(boost::ref(elemDecl), uriId, XMLString(prefixName), boost::ref(attrList), attrCount, isEmpty, isRoot);
+	}else{
+		xercesc::SAXParser::startElement(elemDecl, uriId, prefixName, attrList, attrCount, isEmpty, isRoot);
+	}
+}
+
+void startEntityReference(const xercesc::XMLEntityDecl& entDecl) {
+	if(boost::python::override startEntityReference = this->get_override("startEntityReference")){
+		startEntityReference(boost::ref(entDecl));
+	}else{
+		xercesc::SAXParser::startEntityReference(entDecl);
+	}
+}
+
+void XMLDecl(const XMLCh* const versionStr, const XMLCh* const encodingStr, const XMLCh* const standaloneStr, const XMLCh* const autoEncodingStr) {
+	if(boost::python::override XMLDecl = this->get_override("XMLDecl")){
+		XMLDecl(XMLString(versionStr), XMLString(encodingStr), XMLString(standaloneStr), XMLString(autoEncodingStr));
+	}else{
+		xercesc::SAXParser::XMLDecl(versionStr, encodingStr, standaloneStr, autoEncodingStr);
+	}
+}
+
+// ---------- XMLErrorReporter ----------
+void error(const unsigned int errCode, const XMLCh* const errDomain, const xercesc::XMLErrorReporter::ErrTypes type, const XMLCh* const errorText, const XMLCh* const systemId, const XMLCh* const publicId, const XMLFileLoc lineNum, const XMLFileLoc colNum) {
+	if(boost::python::override error = this->get_override("error")){
+		error(errCode, XMLString(errDomain), type, XMLString(errorText), XMLString(systemId), XMLString(publicId), lineNum, colNum);
+	}else{
+		xercesc::SAXParser::error(errCode, errDomain, type, errorText, systemId, publicId, lineNum, colNum);
+	}
+}
+
+void resetErrors() {
+	if(boost::python::override resetErrors = this->get_override("resetErrors")){
+		resetErrors();
+	}else{
+		xercesc::SAXParser::resetErrors();
+	}
+}
+
+// ---------- XMLEntityHandler ----------
+void endInputSource(const xercesc::InputSource& inputSource) {
+	if(boost::python::override endInputSource = this->get_override("endInputSource")){
+		endInputSource(boost::ref(inputSource));
+	}else{
+		xercesc::SAXParser::endInputSource(inputSource);
+	}
+}
+
+bool expandSystemId(const XMLCh* const systemId, xercesc::XMLBuffer& toFill) {
+	if(boost::python::override expandSystemId = this->get_override("expandSystemId")){
+		return expandSystemId(XMLString(systemId), boost::ref(toFill));
+	}else{
+		return xercesc::SAXParser::expandSystemId(systemId, toFill);
+	}
+}
+
+void resetEntities() {
+	if(boost::python::override resetEntities = this->get_override("resetEntities")){
+		resetEntities();
+	}else{
+		xercesc::SAXParser::resetEntities();
+	}
+}
+
+xercesc::InputSource* resolveEntity(xercesc::XMLResourceIdentifier* resourceIdentifier) {
+	if(boost::python::override resolveEntity = this->get_override("resolveEntity")){
+		return resolveEntity(boost::python::ptr(resourceIdentifier));
+	}else{
+		return xercesc::SAXParser::resolveEntity(resourceIdentifier);
+	}
+}
+
+void startInputSource(const xercesc::InputSource& inputSource) {
+	if(boost::python::override startInputSource = this->get_override("startInputSource")){
+		startInputSource(inputSource);
+	}else{
+		xercesc::SAXParser::startInputSource(inputSource);
+	}
+}
+
+// ---------- DocTypeHandler ----------
+void attDef(const xercesc::DTDElementDecl& elemDecl, const xercesc::DTDAttDef& attDef, const bool ignoring) {
+	if(boost::python::override _attDef = this->get_override("attDef")){
+		_attDef(boost::ref(elemDecl), boost::ref(attDef), ignoring);
+	}else{
+		xercesc::SAXParser::attDef(elemDecl, attDef, ignoring);
+	}
+}
+
+void doctypeComment(const XMLCh* const comment) {
+	if(boost::python::override doctypeComment = this->get_override("doctypeComment")){
+		doctypeComment(XMLString(comment));
+	}else{
+		xercesc::SAXParser::doctypeComment(comment);
+	}
+}
+
+void doctypeDecl(const xercesc::DTDElementDecl& elemDecl, const XMLCh* const publicId, const XMLCh* const systemId, const bool hasIntSubset, const bool hasExtSubset = false) {
+	if(boost::python::override doctypeDecl = this->get_override("doctypeDecl")){
+		doctypeDecl(boost::ref(elemDecl), XMLString(publicId), XMLString(systemId), hasIntSubset, hasExtSubset);
+	}else{
+		xercesc::SAXParser::doctypeDecl(elemDecl, publicId, systemId, hasIntSubset, hasExtSubset);
+	}
+}
+
+void doctypePI(const XMLCh* const target, const XMLCh* const data) {
+	if(boost::python::override doctypePI = this->get_override("doctypePI")){
+		doctypePI(XMLString(target), XMLString(data));
+	}else{
+		xercesc::SAXParser::doctypePI(target, data);
+	}
+}
+
+void doctypeWhitespace(const XMLCh* const chars, const XMLSize_t length) {
+	if(boost::python::override doctypeWhitespace = this->get_override("doctypeWhitespace")){
+		doctypeWhitespace(XMLString(chars), length);
+	}else{
+		xercesc::SAXParser::doctypeWhitespace(chars, length);
+	}
+}
+
+void elementDecl(const xercesc::DTDElementDecl& decl, const bool isIgnored) {
+	if(boost::python::override elementDecl = this->get_override("elementDecl")){
+		elementDecl(boost::ref(decl), isIgnored);
+	}else{
+		xercesc::SAXParser::elementDecl(decl, isIgnored);
+	}
+}
+
+void endAttList(const xercesc::DTDElementDecl& elemDecl) {
+	if(boost::python::override endAttList = this->get_override("endAttList")){
+		endAttList(boost::ref(elemDecl));
+	}else{
+		xercesc::SAXParser::endAttList(elemDecl);
+	}
+}
+
+void endIntSubset() {
+	if(boost::python::override endIntSubset = this->get_override("endIntSubset")){
+		endIntSubset();
+	}else{
+		xercesc::SAXParser::endIntSubset();
+	}
+}
+
+void endExtSubset() {
+	if(boost::python::override endExtSubset = this->get_override("endExtSubset")){
+		endExtSubset();
+	}else{
+		xercesc::SAXParser::endExtSubset();
+	}
+}
+
+void entityDecl(const xercesc::DTDEntityDecl& entityDecl, const bool isPEDecl, const bool isIgnored) {
+	if(boost::python::override _entityDecl = this->get_override("entityDecl")){
+		_entityDecl(boost::ref(entityDecl), isPEDecl, isIgnored);
+	}else{
+		xercesc::SAXParser::entityDecl(entityDecl, isPEDecl, isIgnored);
+	}
+}
+
+void resetDocType() {
+	if(boost::python::override resetDocType = this->get_override("resetDocType")){
+		resetDocType();
+	}else{
+		xercesc::SAXParser::resetDocType();
+	}
+}
+
+void notationDecl(const xercesc::XMLNotationDecl& notDecl, const bool isIgnored) {
+	if(boost::python::override notationDecl = this->get_override("notationDecl")){
+		notationDecl(boost::ref(notDecl), isIgnored);
+	}else{
+		xercesc::SAXParser::notationDecl(notDecl, isIgnored);
+	}
+}
+
+void startAttList(const xercesc::DTDElementDecl& elemDecl) {
+	if(boost::python::override startAttList = this->get_override("startAttList")){
+		startAttList(boost::ref(elemDecl));
+	}else{
+		xercesc::SAXParser::startAttList(elemDecl);
+	}
+}
+
+void startIntSubset() {
+	if(boost::python::override startIntSubset = this->get_override("startIntSubset")){
+		startIntSubset();
+	}else{
+		xercesc::SAXParser::startIntSubset();
+	}
+}
+
+void startExtSubset() {
+	if(boost::python::override startExtSubset = this->get_override("startExtSubset")){
+		startExtSubset();
+	}else{
+		xercesc::SAXParser::startExtSubset();
+	}
+}
+
+void TextDecl(const XMLCh* const versionStr, const XMLCh* const encodingStr) {
+	if(boost::python::override TextDecl = this->get_override("TextDecl")){
+		TextDecl(XMLString(versionStr), XMLString(encodingStr));
+	}else{
+		xercesc::SAXParser::TextDecl(versionStr, encodingStr);
+	}
+}
+
+};
+
 void SAXParser_init(void) {
 	//! xercesc::SAXParser
 	auto SAXParser = boost::python::class_<xercesc::SAXParser, boost::noncopyable, boost::python::bases<xercesc::Parser, xercesc::XMLDocumentHandler, xercesc::XMLErrorReporter, xercesc::XMLEntityHandler, xercesc::DocTypeHandler> >("SAXParser", boost::python::init<boost::python::optional<xercesc::XMLValidator* const, xercesc::MemoryManager* const, xercesc::XMLGrammarPool* const> >())

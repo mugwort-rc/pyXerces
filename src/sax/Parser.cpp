@@ -52,27 +52,27 @@ ParserWrapper()
 {}
 
 void setEntityResolver(xercesc::EntityResolver* const resolver) {
-	this->get_override("setEntityResolver")(resolver);
+	this->get_override("setEntityResolver")(boost::python::ptr(resolver));
 }
 
 void setDTDHandler(xercesc::DTDHandler* const handler) {
-	this->get_override("setDTDHandler")(handler);
+	this->get_override("setDTDHandler")(boost::python::ptr(handler));
 }
 
 void setDocumentHandler(xercesc::DocumentHandler* const handler) {
-	this->get_override("setDocumentHandler")(handler);
+	this->get_override("setDocumentHandler")(boost::python::ptr(handler));
 }
 
 void setErrorHandler(xercesc::ErrorHandler* const handler) {
-	this->get_override("setErrorHandler")(handler);
+	this->get_override("setErrorHandler")(boost::python::ptr(handler));
 }
 
 void parse(const xercesc::InputSource& source) {
-	this->get_override("parse")(source);
+	this->get_override("parse")(boost::ref(source));
 }
 
 void parse(const XMLCh* const systemId) {
-	this->get_override("parse")(systemId);
+	this->get_override("parse")(XMLString(systemId));
 }
 
 void parse(const char* const systemId) {
@@ -85,13 +85,13 @@ void Parser_init(void) {
 	//! xercesc::Parser
 	boost::python::class_<ParserWrapper, boost::noncopyable>("Parser")
 			.def(ParserDefVisitor())
-			.def("setEntityResolver", &xercesc::Parser::setEntityResolver)
-			.def("setDTDHandler", &xercesc::Parser::setDTDHandler)
-			.def("setDocumentHandler", &xercesc::Parser::setDocumentHandler)
-			.def("setErrorHandler", &xercesc::Parser::setErrorHandler)
-			.def("parse", static_cast<void(xercesc::Parser::*)(const xercesc::InputSource&)>(&xercesc::Parser::parse))
-			.def("parse", static_cast<void(xercesc::Parser::*)(const XMLCh* const)>(&xercesc::Parser::parse))
-			.def("parse", static_cast<void(xercesc::Parser::*)(const char* const)>(&xercesc::Parser::parse))
+			.def("setEntityResolver", boost::python::pure_virtual(&xercesc::Parser::setEntityResolver))
+			.def("setDTDHandler", boost::python::pure_virtual(&xercesc::Parser::setDTDHandler))
+			.def("setDocumentHandler", boost::python::pure_virtual(&xercesc::Parser::setDocumentHandler))
+			.def("setErrorHandler", boost::python::pure_virtual(&xercesc::Parser::setErrorHandler))
+			.def("parse", boost::python::pure_virtual(static_cast<void(xercesc::Parser::*)(const xercesc::InputSource&)>(&xercesc::Parser::parse)))
+			.def("parse", boost::python::pure_virtual(static_cast<void(xercesc::Parser::*)(const XMLCh* const)>(&xercesc::Parser::parse)))
+			.def("parse", boost::python::pure_virtual(static_cast<void(xercesc::Parser::*)(const char* const)>(&xercesc::Parser::parse)))
 			;
 }
 

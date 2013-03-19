@@ -34,15 +34,37 @@ static bool contains(xercesc::DOMStringList& self, const STR& value) {
 
 };
 
+class DOMStringListWrapper
+: public xercesc::DOMStringList, public boost::python::wrapper<xercesc::DOMStringList>
+{
+public:
+const XMLCh *item(XMLSize_t index) const {
+	return this->get_override("item")(index);
+}
+
+XMLSize_t getLength() const {
+	return this->get_override("getLength")();
+}
+
+bool contains(const XMLCh* val) const {
+	return this->get_override("getLength")(XMLString(val));
+}
+
+void release(){
+	this->get_override("release")();
+}
+
+};
+
 void DOMStringList_init(void) {
 	//! xercesc::DOMStringList
-	boost::python::class_<xercesc::DOMStringList, boost::noncopyable>("DOMStringList", boost::python::no_init)
+	boost::python::class_<DOMStringListWrapper, boost::noncopyable>("DOMStringList")
 			.def(DOMStringListDefVisitor<XMLString>())
 			.def(DOMStringListDefVisitor<std::string>())
-			.def("item", &xercesc::DOMStringList::item, boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("getLength", &xercesc::DOMStringList::getLength)
-			.def("contains", &xercesc::DOMStringList::contains)
-			.def("release", &xercesc::DOMStringList::release)
+			.def("item", boost::python::pure_virtual(&xercesc::DOMStringList::item), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("getLength", boost::python::pure_virtual(&xercesc::DOMStringList::getLength))
+			.def("contains", boost::python::pure_virtual(&xercesc::DOMStringList::contains))
+			.def("release", boost::python::pure_virtual(&xercesc::DOMStringList::release))
 			;
 }
 

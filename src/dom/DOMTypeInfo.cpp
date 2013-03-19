@@ -34,14 +34,32 @@ static bool isDerivedFrom(xercesc::DOMTypeInfo& self, const STR& typeNamespaceAr
 
 };
 
+class DOMTypeInfoWrapper
+: public xercesc::DOMTypeInfo, public boost::python::wrapper<xercesc::DOMTypeInfo>
+{
+public:
+const XMLCh* getTypeName() const {
+	return this->get_override("getTypeName")();
+}
+
+const XMLCh* getTypeNamespace() const {
+	return this->get_override("getTypeNamespace")();
+}
+
+bool isDerivedFrom(const XMLCh* typeNamespaceArg, const XMLCh* typeNameArg, DerivationMethods derivationMethod) const {
+	return this->get_override("isDerivedFrom")(XMLString(typeNamespaceArg), XMLString(typeNameArg), derivationMethod);
+}
+
+};
+
 void DOMTypeInfo_init(void) {
 	//! xercesc::DOMTypeInfo
-	auto DOMTypeInfo = boost::python::class_<xercesc::DOMTypeInfo, boost::noncopyable>("DOMTypeInfo", boost::python::no_init)
+	auto DOMTypeInfo = boost::python::class_<DOMTypeInfoWrapper, boost::noncopyable>("DOMTypeInfo")
 			.def(DOMTypeInfoDefVisitor<XMLString>())
 			.def(DOMTypeInfoDefVisitor<std::string>())
-			.def("getTypeName", &xercesc::DOMTypeInfo::getTypeName, boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("getTypeNamespace", &xercesc::DOMTypeInfo::getTypeNamespace, boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("isDerivedFrom", &xercesc::DOMTypeInfo::isDerivedFrom)
+			.def("getTypeName", boost::python::pure_virtual(&xercesc::DOMTypeInfo::getTypeName), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("getTypeNamespace", boost::python::pure_virtual(&xercesc::DOMTypeInfo::getTypeNamespace), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("isDerivedFrom", boost::python::pure_virtual(&xercesc::DOMTypeInfo::isDerivedFrom))
 			;
 	boost::python::scope DOMTypeInfoScope = DOMTypeInfo;
 	//! xercesc::DOMTypeInfo::DerivationMethods

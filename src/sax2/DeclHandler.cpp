@@ -79,10 +79,10 @@ void DeclHandler_init(void) {
 	boost::python::class_<DeclHandlerWrapper, boost::noncopyable>("DeclHandler")
 			.def(DeclHandlerDefVisitor<XMLString>())
 			.def(DeclHandlerDefVisitor<std::string>())
-			.def("elementDecl", &xercesc::DeclHandler::elementDecl)
-			.def("attributeDecl", &xercesc::DeclHandler::attributeDecl)
-			.def("internalEntityDecl", &xercesc::DeclHandler::internalEntityDecl)
-			.def("externalEntityDecl", &xercesc::DeclHandler::externalEntityDecl)
+			.def("elementDecl", boost::python::pure_virtual(&xercesc::DeclHandler::elementDecl))
+			.def("attributeDecl", boost::python::pure_virtual(&xercesc::DeclHandler::attributeDecl))
+			.def("internalEntityDecl", boost::python::pure_virtual(&xercesc::DeclHandler::internalEntityDecl))
+			.def("externalEntityDecl", boost::python::pure_virtual(&xercesc::DeclHandler::externalEntityDecl))
 			;
 }
 

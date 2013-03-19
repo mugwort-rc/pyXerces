@@ -53,7 +53,7 @@ void EntityResolver_init(void) {
 	boost::python::class_<EntityResolverWrapper, boost::noncopyable>("EntityResolver")
 			.def(XMLRecognizerDefVisitor<XMLString>())
 			.def(XMLRecognizerDefVisitor<std::string>())
-			.def("resolveEntity", &xercesc::EntityResolver::resolveEntity, boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("resolveEntity", boost::python::pure_virtual(&xercesc::EntityResolver::resolveEntity), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			;
 }
 

@@ -8,7 +8,10 @@
 #include "InvalidDatatypeFacetException.h"
 
 #include <boost/python.hpp>
-#include <xercesc/framework/MemoryManager.hpp>				//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/framework/MemoryManager.hpp>
+
 #include <xercesc/validators/datatype/InvalidDatatypeFacetException.hpp>
 
 #include "../../util/XMLException.h"

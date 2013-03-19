@@ -8,7 +8,10 @@
 #include "DOMNamedNodeMap.h"
 
 #include <boost/python.hpp>
-#include <xercesc/dom/DOMNode.hpp>			//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/dom/DOMNode.hpp>
+
 #include <xercesc/dom/DOMNamedNodeMap.hpp>
 
 #include "../util/XMLString.h"
@@ -53,19 +56,57 @@ static xercesc::DOMNode* removeNamedItemNS(xercesc::DOMNamedNodeMap& self, const
 
 };
 
+class DOMNamedNodeMapWrapper
+: public xercesc::DOMNamedNodeMap, public boost::python::wrapper<xercesc::DOMNamedNodeMap>
+{
+public:
+xercesc::DOMNode *setNamedItem(xercesc::DOMNode *arg) {
+	return this->get_override("setNamedItem")(boost::python::ptr(arg));
+}
+
+xercesc::DOMNode *item(XMLSize_t index) const {
+	return this->get_override("item")(index);
+}
+
+xercesc::DOMNode *getNamedItem(const XMLCh *name) const {
+	return this->get_override("getNamedItem")(XMLString(name));
+}
+
+XMLSize_t getLength() const {
+	return this->get_override("getLength")();
+}
+
+xercesc::DOMNode *removeNamedItem(const XMLCh *name) {
+	return this->get_override("removeNamedItem")(XMLString(name));
+}
+
+xercesc::DOMNode *getNamedItemNS(const XMLCh *namespaceURI, const XMLCh *localName) const {
+	return this->get_override("getNamedItemNS")(XMLString(namespaceURI), XMLString(localName));
+}
+
+xercesc::DOMNode *setNamedItemNS(xercesc::DOMNode *arg) {
+	return this->get_override("setNamedItemNS")(boost::python::ptr(arg));
+}
+
+xercesc::DOMNode *removeNamedItemNS(const XMLCh *namespaceURI, const XMLCh *localName) {
+	return this->get_override("removeNamedItemNS")(XMLString(namespaceURI), XMLString(localName));
+}
+
+};
+
 void DOMNamedNodeMap_init(void) {
 	//! xercesc::DOMNamedNodeMap
-	boost::python::class_<xercesc::DOMNamedNodeMap, boost::noncopyable>("DOMNamedNodeMap", boost::python::no_init)
+	boost::python::class_<DOMNamedNodeMapWrapper, boost::noncopyable>("DOMNamedNodeMap")
 			.def(DOMNamedNodeMapDefVisitor<XMLString>())
 			.def(DOMNamedNodeMapDefVisitor<std::string>())
-			.def("setNamedItem", &xercesc::DOMNamedNodeMap::setNamedItem, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("item", &xercesc::DOMNamedNodeMap::item, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("getNamedItem", &xercesc::DOMNamedNodeMap::getNamedItem, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("getLength", &xercesc::DOMNamedNodeMap::getLength)
-			.def("removeNamedItem", &xercesc::DOMNamedNodeMap::removeNamedItem, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("getNamedItemNS", &xercesc::DOMNamedNodeMap::getNamedItemNS, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("setNamedItemNS", &xercesc::DOMNamedNodeMap::setNamedItemNS, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("removeNamedItemNS", &xercesc::DOMNamedNodeMap::removeNamedItemNS, boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("setNamedItem", boost::python::pure_virtual(&xercesc::DOMNamedNodeMap::setNamedItem), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("item", boost::python::pure_virtual(&xercesc::DOMNamedNodeMap::item), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("getNamedItem", boost::python::pure_virtual(&xercesc::DOMNamedNodeMap::getNamedItem), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("getLength", boost::python::pure_virtual(&xercesc::DOMNamedNodeMap::getLength))
+			.def("removeNamedItem", boost::python::pure_virtual(&xercesc::DOMNamedNodeMap::removeNamedItem), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("getNamedItemNS", boost::python::pure_virtual(&xercesc::DOMNamedNodeMap::getNamedItemNS), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("setNamedItemNS", boost::python::pure_virtual(&xercesc::DOMNamedNodeMap::setNamedItemNS), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("removeNamedItemNS", boost::python::pure_virtual(&xercesc::DOMNamedNodeMap::removeNamedItemNS), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			;
 }
 

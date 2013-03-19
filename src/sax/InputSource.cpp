@@ -8,8 +8,11 @@
 #include "InputSource.h"
 
 #include <boost/python.hpp>
-#include <xercesc/util/BinInputStream.hpp>		//!< for forward declaration
-#include <xercesc/framework/MemoryManager.hpp>	//!< for forward declaration
+
+//!< for forward declaration
+#include <xercesc/util/BinInputStream.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
+
 #include <xercesc/sax/InputSource.hpp>
 
 #include "../util/XMLString.h"
@@ -53,7 +56,7 @@ void InputSource_init(void) {
 	boost::python::class_<xercesc::InputSource, boost::noncopyable>("InputSouce", boost::python::no_init)
 			.def(InputSourceDefVisitor<XMLString>())
 			.def(InputSourceDefVisitor<std::string>())
-			.def("makeStream", &xercesc::InputSource::makeStream, boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("makeStream", boost::python::pure_virtual(&xercesc::InputSource::makeStream), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getEncoding", &xercesc::InputSource::getEncoding, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getPublicId", &xercesc::InputSource::getPublicId, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getSystemId", &xercesc::InputSource::getSystemId, boost::python::return_value_policy<boost::python::return_by_value>())

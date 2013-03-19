@@ -8,20 +8,53 @@
 #include "DOMError.h"
 
 #include <boost/python.hpp>
-#include <xercesc/dom/DOMLocator.hpp>	//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/dom/DOMLocator.hpp>
+
 #include <xercesc/dom/DOMError.hpp>
 
 namespace pyxerces {
 
+class DOMErrorWrapper
+: public xercesc::DOMError, public boost::python::wrapper<xercesc::DOMError>
+{
+public:
+ErrorSeverity getSeverity() const {
+	return this->get_override("getSeverity")();
+}
+
+const XMLCh* getMessage() const {
+	return this->get_override("getMessage")();
+}
+
+xercesc::DOMLocator* getLocation() const {
+	return this->get_override("getLocation")();
+}
+
+void* getRelatedException() const {
+	return this->get_override("getRelatedException")();
+}
+
+const XMLCh* getType() const {
+	return this->get_override("getType")();
+}
+
+void* getRelatedData() const {
+	return this->get_override("getRelatedData")();
+}
+
+};
+
 void DOMError_init(void) {
 	//! xercesc::DOMError
-	auto DOMError = boost::python::class_<xercesc::DOMError, boost::noncopyable>("DOMError", boost::python::no_init)
-			.def("getSeverity", &xercesc::DOMError::getSeverity)
-			.def("getMessage", &xercesc::DOMError::getMessage, boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("getLocation", &xercesc::DOMError::getLocation, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("getRelatedException", &xercesc::DOMError::getRelatedException, boost::python::return_value_policy<boost::python::return_opaque_pointer>())
-			.def("getType", &xercesc::DOMError::getType, boost::python::return_value_policy<boost::python::return_by_value>())
-			.def("getRelatedData", &xercesc::DOMError::getRelatedData, boost::python::return_value_policy<boost::python::return_opaque_pointer>())
+	auto DOMError = boost::python::class_<DOMErrorWrapper, boost::noncopyable>("DOMError")
+			.def("getSeverity", boost::python::pure_virtual(&xercesc::DOMError::getSeverity))
+			.def("getMessage", boost::python::pure_virtual(&xercesc::DOMError::getMessage), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("getLocation", boost::python::pure_virtual(&xercesc::DOMError::getLocation), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("getRelatedException", boost::python::pure_virtual(&xercesc::DOMError::getRelatedException), boost::python::return_value_policy<boost::python::return_opaque_pointer>())
+			.def("getType", boost::python::pure_virtual(&xercesc::DOMError::getType), boost::python::return_value_policy<boost::python::return_by_value>())
+			.def("getRelatedData", boost::python::pure_virtual(&xercesc::DOMError::getRelatedData), boost::python::return_value_policy<boost::python::return_opaque_pointer>())
 			;
 	boost::python::scope DOMErrorScope = DOMError;
 	//! xercesc::DOMError::ErrorSeverity

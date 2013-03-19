@@ -29,7 +29,7 @@ xercesc::InputSource* resolveEntity(xercesc::XMLResourceIdentifier* resourceIden
 void XMLEntityResolver_init(void) {
 	//! xercesc::XMLEntityResolver
 	boost::python::class_<XMLEntityResolverWrapper, boost::noncopyable>("XMLEntityResolver")
-			.def("resolveEntity", &xercesc::XMLEntityResolver::resolveEntity, boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("resolveEntity", boost::python::pure_virtual(&xercesc::XMLEntityResolver::resolveEntity), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			;
 }
 

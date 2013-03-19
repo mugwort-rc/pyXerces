@@ -8,7 +8,10 @@
 #include "ArrayIndexOutOfBoundsException.h"
 
 #include <boost/python.hpp>
-#include <xercesc/framework/MemoryManager.hpp>				//!< for forward declaration
+
+//! for forward declaration
+#include <xercesc/framework/MemoryManager.hpp>
+
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
 
 #include "XMLException.h"

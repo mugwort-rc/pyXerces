@@ -132,7 +132,7 @@ XMLString& XMLString::operator +=(const XMLString& rhs) {
 	return *this;
 }
 
-XMLString::operator XMLCh*(void) const {
+XMLString::operator const XMLCh*(void) const {
 	return this->ptr();
 }
 
@@ -535,12 +535,16 @@ void XMLString_init(void) {
 
 	//! XMLCh pointer wrapper
 	boost::python::class_<XMLChPtr>("XMLCh", boost::python::no_init)
+			.def("__str__", &XMLChPtr::toString)
 			.def("__add__", static_cast<XMLString(XMLChPtr::*)(const XMLChPtr&)>(&XMLChPtr::operator +))
 			.def("__add__", static_cast<XMLString(XMLChPtr::*)(const XMLString&)>(&XMLChPtr::operator +))
 			.def("__len__", &XMLChPtr::size)
 			.def("ptr", &XMLChPtr::ptr, boost::python::return_value_policy<boost::python::return_opaque_pointer>())
 			.def("toString", &XMLChPtr::toString)
 			;
+
+	//! implicit cast
+	boost::python::implicitly_convertible<XMLString, const XMLCh*>();
 
 	//! char* -> unsigned char*
 	boost::python::def("unsigned_cast", &pyxerces::unsigned_cast, boost::python::return_value_policy<boost::python::return_opaque_pointer>());

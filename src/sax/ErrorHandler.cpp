@@ -8,7 +8,10 @@
 #include "ErrorHandler.h"
 
 #include <boost/python.hpp>
-#include <xercesc/sax/SAXParseException.hpp>	//!< for forward declaration
+
+//!< for forward declaration
+#include <xercesc/sax/SAXParseException.hpp>
+
 #include <xercesc/sax/ErrorHandler.hpp>
 
 namespace pyxerces {
@@ -41,10 +44,10 @@ public:
 void ErrorHandler_init(void) {
 	//! xercesc::ErrorHandler
 	boost::python::class_<ErrorHandlerWrapper, boost::noncopyable>("ErrorHandler")
-			.def("warning", &xercesc::ErrorHandler::warning)
-			.def("error", &xercesc::ErrorHandler::error)
-			.def("fatalError", &xercesc::ErrorHandler::fatalError)
-			.def("resetErrors", &xercesc::ErrorHandler::resetErrors)
+			.def("warning", boost::python::pure_virtual(&xercesc::ErrorHandler::warning))
+			.def("error", boost::python::pure_virtual(&xercesc::ErrorHandler::error))
+			.def("fatalError", boost::python::pure_virtual(&xercesc::ErrorHandler::fatalError))
+			.def("resetErrors", boost::python::pure_virtual(&xercesc::ErrorHandler::resetErrors))
 			;
 }
 
