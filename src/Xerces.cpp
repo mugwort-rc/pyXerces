@@ -60,6 +60,7 @@
 
 // framework
 #include "framework/LocalFileFormatTarget.h"
+#include "framework/LocalFileInputSource.h"
 #include "framework/MemBufFormatTarget.h"
 #include "framework/MemBufInputSource.h"
 #include "framework/MemoryManager.h"
@@ -327,6 +328,7 @@ BOOST_PYTHON_MODULE(__Xerces)
 	// framework
 	// --------------------------------------------------
 	pyxerces::LocalFileFormatTarget_init();
+	pyxerces::LocalFileInputSource_init();
 	pyxerces::MemBufFormatTarget_init();
 	pyxerces::MemBufInputSource_init();
 	pyxerces::MemoryManager_init();
