@@ -27,7 +27,7 @@ void translateSAXParseException(const xercesc::SAXParseException& e) {
 
 void SAXParseException_init(void) {
 	//! xercesc::SAXParseException
-	auto SAXParseException = boost::python::class_<xercesc::SAXParseException>("SAXParseException", boost::python::init<const XMLCh* const, const xercesc::Locator&, boost::python::optional<xercesc::MemoryManager* const> >())
+	auto SAXParseException = boost::python::class_<xercesc::SAXParseException, boost::python::bases<xercesc::SAXException> >("SAXParseException", boost::python::init<const XMLCh* const, const xercesc::Locator&, boost::python::optional<xercesc::MemoryManager* const> >())
 			.def(boost::python::init<const XMLCh* const, const XMLCh* const, const XMLCh* const, const XMLFileLoc, const XMLFileLoc, boost::python::optional<xercesc::MemoryManager* const> >())
 			.def("getColumnNumber", &xercesc::SAXParseException::getColumnNumber)
 			.def("getLineNumber", &xercesc::SAXParseException::getLineNumber)
