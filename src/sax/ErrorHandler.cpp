@@ -25,15 +25,15 @@ public:
 	{}
 
 	void warning(const xercesc::SAXParseException& exc) {
-		this->get_override("warning")(exc);
+		this->get_override("warning")(boost::ref(exc));
 	}
 
 	void error(const xercesc::SAXParseException& exc) {
-		this->get_override("error")(exc);
+		this->get_override("error")(boost::ref(exc));
 	}
 
 	void fatalError(const xercesc::SAXParseException& exc) {
-		this->get_override("fatalError")(exc);
+		this->get_override("fatalError")(boost::ref(exc));
 	}
 
 	void resetErrors() {

@@ -104,9 +104,9 @@ void endDocument () {
 
 void endElement(const XMLCh* const name) {
 	if (boost::python::override endElement = this->get_override("endElement")) {
-		endElement(name);
+		endElement(XMLString(name));
 	}else{
-		xercesc::HandlerBase::endElement(XMLString(name));
+		xercesc::HandlerBase::endElement(name);
 	}
 }
 
@@ -168,7 +168,7 @@ xercesc::InputSource* resolveEntity(const XMLCh* const publicId, const XMLCh* co
 
 void warning(const xercesc::SAXParseException& exc) {
 	if (boost::python::override warning = this->get_override("warning")) {
-		warning(exc);
+		warning(boost::ref(exc));
 	}else{
 		xercesc::HandlerBase::warning(exc);
 	}
@@ -176,7 +176,7 @@ void warning(const xercesc::SAXParseException& exc) {
 
 void error(const xercesc::SAXParseException& exc) {
 	if (boost::python::override error = this->get_override("error")) {
-		error(exc);
+		error(boost::ref(exc));
 	}else{
 		xercesc::HandlerBase::error(exc);
 	}
@@ -184,7 +184,7 @@ void error(const xercesc::SAXParseException& exc) {
 
 void fatalError(const xercesc::SAXParseException& exc) {
 	if (boost::python::override fatalError = this->get_override("fatalError")) {
-		fatalError(exc);
+		fatalError(boost::ref(exc));
 	}else{
 		xercesc::HandlerBase::fatalError(exc);
 	}

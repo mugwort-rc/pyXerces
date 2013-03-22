@@ -106,7 +106,7 @@ void processingInstruction(const XMLCh* const target, const XMLCh* const data) {
 }
 
 void setDocumentLocator(const xercesc::Locator* const locator) {
-	this->get_override("setDocumentLocator")(locator);
+	this->get_override("setDocumentLocator")(boost::python::ptr(locator));
 }
 
 void startDocument() {
@@ -114,7 +114,7 @@ void startDocument() {
 }
 
 void startElement(const XMLCh* const uri, const XMLCh* const localname, const XMLCh* const qname, const xercesc::Attributes& attrs) {
-	this->get_override("startElement")(XMLString(uri), XMLString(localname), XMLString(qname), attrs);
+	this->get_override("startElement")(XMLString(uri), XMLString(localname), XMLString(qname), boost::ref(attrs));
 }
 
 void startPrefixMapping(const XMLCh* const prefix, const XMLCh* const uri) {

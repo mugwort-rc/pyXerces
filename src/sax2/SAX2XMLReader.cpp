@@ -103,19 +103,19 @@ void* getProperty(const XMLCh* const name) const {
 }
 
 void setContentHandler(xercesc::ContentHandler* const handler) {
-	this->get_override("setContentHandler")(handler);
+	this->get_override("setContentHandler")(boost::python::ptr(handler));
 }
 
 void setDTDHandler(xercesc::DTDHandler* const handler) {
-	this->get_override("setDTDHandler")(handler);
+	this->get_override("setDTDHandler")(boost::python::ptr(handler));
 }
 
 void setEntityResolver(xercesc::EntityResolver* const resolver) {
-	this->get_override("setEntityResolver")(resolver);
+	this->get_override("setEntityResolver")(boost::python::ptr(resolver));
 }
 
 void setErrorHandler(xercesc::ErrorHandler* const handler) {
-	this->get_override("setErrorHandler")(handler);
+	this->get_override("setErrorHandler")(boost::python::ptr(handler));
 }
 
 void setFeature(const XMLCh* const name, const bool value) {
@@ -127,7 +127,7 @@ void setProperty(const XMLCh* const name, void* value) {
 }
 
 void parse(const xercesc::InputSource& source) {
-	this->get_override("parse")(source);
+	this->get_override("parse")(boost::ref(source));
 }
 
 void parse(const XMLCh* const systemId) {
@@ -147,11 +147,11 @@ xercesc::LexicalHandler* getLexicalHandler() const {
 }
 
 void setDeclarationHandler(xercesc::DeclHandler* const handler) {
-	this->get_override("setDeclarationHandler")(handler);
+	this->get_override("setDeclarationHandler")(boost::python::ptr(handler));
 }
 
 void setLexicalHandler(xercesc::LexicalHandler* const handler) {
-	this->get_override("setLexicalHandler")(handler);
+	this->get_override("setLexicalHandler")(boost::python::ptr(handler));
 }
 
 xercesc::XMLValidator* getValidator() const {
@@ -219,7 +219,7 @@ void parseReset(xercesc::XMLPScanToken& token) {
 }
 
 xercesc::Grammar* loadGrammar(const xercesc::InputSource& source, const xercesc::Grammar::GrammarType grammarType, const bool toCache = false) {
-	return this->get_override("loadGrammar")(source, grammarType, toCache);
+	return this->get_override("loadGrammar")(boost::ref(source), grammarType, toCache);
 }
 
 xercesc::Grammar* loadGrammar(const XMLCh* const systemId, const xercesc::Grammar::GrammarType grammarType, const bool toCache = false) {
@@ -243,11 +243,11 @@ void setInputBufferSize(const XMLSize_t bufferSize) {
 }
 
 void installAdvDocHandler(xercesc::XMLDocumentHandler* const toInstall) {
-	this->get_override("installAdvDocHandler")(toInstall);
+	this->get_override("installAdvDocHandler")(boost::python::ptr(toInstall));
 }
 
 bool removeAdvDocHandler(xercesc::XMLDocumentHandler* const toRemove) {
-	return this->get_override("removeAdvDocHandler")(toRemove);
+	return this->get_override("removeAdvDocHandler")(boost::python::ptr(toRemove));
 }
 
 };

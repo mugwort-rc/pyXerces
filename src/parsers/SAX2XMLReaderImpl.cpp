@@ -225,7 +225,7 @@ void* getProperty(const XMLCh* const name) const {
 
 void setContentHandler(xercesc::ContentHandler* const handler) {
 	if(boost::python::override setContentHandler = this->get_override("setContentHandler")){
-		setContentHandler(handler);
+		setContentHandler(boost::python::ptr(handler));
 	}else{
 		xercesc::SAX2XMLReaderImpl::setContentHandler(handler);
 	}
@@ -233,7 +233,7 @@ void setContentHandler(xercesc::ContentHandler* const handler) {
 
 void setDTDHandler(xercesc::DTDHandler* const handler) {
 	if(boost::python::override setDTDHandler = this->get_override("setDTDHandler")){
-		setDTDHandler(handler);
+		setDTDHandler(boost::python::ptr(handler));
 	}else{
 		xercesc::SAX2XMLReaderImpl::setDTDHandler(handler);
 	}
@@ -241,7 +241,7 @@ void setDTDHandler(xercesc::DTDHandler* const handler) {
 
 void setEntityResolver(xercesc::EntityResolver* const resolver) {
 	if(boost::python::override setEntityResolver = this->get_override("setEntityResolver")){
-		setEntityResolver(resolver);
+		setEntityResolver(boost::python::ptr(resolver));
 	}else{
 		xercesc::SAX2XMLReaderImpl::setEntityResolver(resolver);
 	}
@@ -249,7 +249,7 @@ void setEntityResolver(xercesc::EntityResolver* const resolver) {
 
 void setErrorHandler(xercesc::ErrorHandler* const handler) {
 	if(boost::python::override setErrorHandler = this->get_override("setErrorHandler")){
-		setErrorHandler(handler);
+		setErrorHandler(boost::python::ptr(handler));
 	}else{
 		xercesc::SAX2XMLReaderImpl::setErrorHandler(handler);
 	}
@@ -273,7 +273,7 @@ void setProperty(const XMLCh* const name, void* value) {
 
 void parse(const xercesc::InputSource& source) {
 	if(boost::python::override parse = this->get_override("parse")){
-		parse(source);
+		parse(boost::ref(source));
 	}else{
 		xercesc::SAX2XMLReaderImpl::parse(source);
 	}
@@ -313,7 +313,7 @@ xercesc::LexicalHandler* getLexicalHandler() const {
 
 void setDeclarationHandler(xercesc::DeclHandler* const handler) {
 	if(boost::python::override setDeclarationHandler = this->get_override("setDeclarationHandler")){
-		setDeclarationHandler(handler);
+		setDeclarationHandler(boost::python::ptr(handler));
 	}else{
 		xercesc::SAX2XMLReaderImpl::setDeclarationHandler(handler);
 	}
@@ -321,7 +321,7 @@ void setDeclarationHandler(xercesc::DeclHandler* const handler) {
 
 void setLexicalHandler(xercesc::LexicalHandler* const handler) {
 	if(boost::python::override setLexicalHandler = this->get_override("setLexicalHandler")){
-		setLexicalHandler(handler);
+		setLexicalHandler(boost::python::ptr(handler));
 	}else{
 		xercesc::SAX2XMLReaderImpl::setLexicalHandler(handler);
 	}
@@ -393,7 +393,7 @@ XMLFilePos getSrcOffset() const {
 
 void setValidator(xercesc::XMLValidator* valueToAdopt) {
 	if(boost::python::override setValidator = this->get_override("setValidator")){
-		setValidator(valueToAdopt);
+		setValidator(boost::python::ptr(valueToAdopt));
 	}else{
 		xercesc::SAX2XMLReaderImpl::setValidator(valueToAdopt);
 	}
@@ -433,7 +433,7 @@ bool parseFirst(const char* const systemId, xercesc::XMLPScanToken& toFill) {
 
 bool parseFirst(const xercesc::InputSource& source, xercesc::XMLPScanToken& toFill) {
 	if(boost::python::override parseFirst = this->get_override("parseFirst")){
-		return parseFirst(source, boost::ref(toFill));
+		return parseFirst(boost::ref(source), boost::ref(toFill));
 	}else{
 		return xercesc::SAX2XMLReaderImpl::parseFirst(source, toFill);
 	}
@@ -457,7 +457,7 @@ void parseReset(xercesc::XMLPScanToken& token) {
 
 xercesc::Grammar* loadGrammar(const xercesc::InputSource& source, const xercesc::Grammar::GrammarType grammarType, const bool toCache = false) {
 	if(boost::python::override loadGrammar = this->get_override("loadGrammar")){
-		return loadGrammar(source, grammarType, toCache);
+		return loadGrammar(boost::ref(source), grammarType, toCache);
 	}else{
 		return xercesc::SAX2XMLReaderImpl::loadGrammar(source, grammarType, toCache);
 	}
@@ -497,7 +497,7 @@ void setInputBufferSize(const XMLSize_t bufferSize) {
 
 void installAdvDocHandler(xercesc::XMLDocumentHandler* const toInstall) {
 	if(boost::python::override installAdvDocHandler = this->get_override("installAdvDocHandler")){
-		installAdvDocHandler(toInstall);
+		installAdvDocHandler(boost::python::ptr(toInstall));
 	}else{
 		xercesc::SAX2XMLReaderImpl::installAdvDocHandler(toInstall);
 	}
@@ -505,7 +505,7 @@ void installAdvDocHandler(xercesc::XMLDocumentHandler* const toInstall) {
 
 bool removeAdvDocHandler(xercesc::XMLDocumentHandler* const toRemove) {
 	if(boost::python::override removeAdvDocHandler = this->get_override("removeAdvDocHandler")){
-		return removeAdvDocHandler(toRemove);
+		return removeAdvDocHandler(boost::python::ptr(toRemove));
 	}else{
 		return xercesc::SAX2XMLReaderImpl::removeAdvDocHandler(toRemove);
 	}
@@ -545,11 +545,7 @@ void endDocument() {
 
 void endElement(const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const bool isRoot, const XMLCh* const prefixName = 0) {
 	if(boost::python::override endElement = this->get_override("endElement")){
-		if(prefixName){
-			endElement(elemDecl, uriId, isRoot, XMLString(prefixName));
-		}else{
-			endElement(elemDecl, uriId, isRoot, nullptr);
-		}
+		endElement(boost::ref(elemDecl), uriId, isRoot, XMLString(prefixName));
 	}else{
 		xercesc::SAX2XMLReaderImpl::endElement(elemDecl, uriId, isRoot, prefixName);
 	}
@@ -557,7 +553,7 @@ void endElement(const xercesc::XMLElementDecl& elemDecl, const unsigned int uriI
 
 void endEntityReference(const xercesc::XMLEntityDecl& entDecl) {
 	if(boost::python::override endEntityReference = this->get_override("endEntityReference")){
-		endEntityReference(entDecl);
+		endEntityReference(boost::ref(entDecl));
 	}else{
 		xercesc::SAX2XMLReaderImpl::endEntityReference(entDecl);
 	}
@@ -589,7 +585,7 @@ void startDocument() {
 
 void startElement(const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const XMLCh* const prefixName, const xercesc::RefVectorOf<xercesc::XMLAttr>& attrList, const XMLSize_t attrCount, const bool isEmpty, const bool isRoot) {
 	if(boost::python::override startElement = this->get_override("startElement")){
-		startElement(elemDecl, uriId, XMLString(prefixName), attrList, attrCount, isEmpty, isRoot);
+		startElement(boost::ref(elemDecl), uriId, XMLString(prefixName), boost::ref(attrList), attrCount, isEmpty, isRoot);
 	}else{
 		xercesc::SAX2XMLReaderImpl::startElement(elemDecl, uriId, prefixName, attrList, attrCount, isEmpty, isRoot);
 	}
@@ -597,7 +593,7 @@ void startElement(const xercesc::XMLElementDecl& elemDecl, const unsigned int ur
 
 void startEntityReference(const xercesc::XMLEntityDecl& entDecl) {
 	if(boost::python::override startEntityReference = this->get_override("startEntityReference")){
-		startEntityReference(entDecl);
+		startEntityReference(boost::ref(entDecl));
 	}else{
 		xercesc::SAX2XMLReaderImpl::startEntityReference(entDecl);
 	}
@@ -629,7 +625,7 @@ void resetErrors() {
 
 void endInputSource(const xercesc::InputSource& inputSource) {
 	if(boost::python::override endInputSource = this->get_override("endInputSource")){
-		endInputSource(inputSource);
+		endInputSource(boost::ref(inputSource));
 	}else{
 		xercesc::SAX2XMLReaderImpl::endInputSource(inputSource);
 	}
@@ -661,7 +657,7 @@ xercesc::InputSource* resolveEntity(xercesc::XMLResourceIdentifier* resourceIden
 
 void startInputSource(const xercesc::InputSource& inputSource) {
 	if(boost::python::override startInputSource = this->get_override("startInputSource")){
-		startInputSource(inputSource);
+		startInputSource(boost::ref(inputSource));
 	}else{
 		xercesc::SAX2XMLReaderImpl::startInputSource(inputSource);
 	}
@@ -669,7 +665,7 @@ void startInputSource(const xercesc::InputSource& inputSource) {
 
 void attDef(const xercesc::DTDElementDecl& elemDecl, const xercesc::DTDAttDef& attDef, const bool ignoring) {
 	if(boost::python::override _attDef = this->get_override("attDef")){
-		_attDef(elemDecl, attDef, ignoring);
+		_attDef(boost::ref(elemDecl), boost::ref(attDef), ignoring);
 	}else{
 		xercesc::SAX2XMLReaderImpl::attDef(elemDecl, attDef, ignoring);
 	}
@@ -685,7 +681,7 @@ void doctypeComment(const XMLCh* const comment) {
 
 void doctypeDecl(const xercesc::DTDElementDecl& elemDecl, const XMLCh* const publicId, const XMLCh* const systemId, const bool hasIntSubset, const bool hasExtSubset = false) {
 	if(boost::python::override doctypeDecl = this->get_override("doctypeDecl")){
-		doctypeDecl(elemDecl, XMLString(publicId), XMLString(systemId), hasIntSubset, hasExtSubset);
+		doctypeDecl(boost::ref(elemDecl), XMLString(publicId), XMLString(systemId), hasIntSubset, hasExtSubset);
 	}else{
 		xercesc::SAX2XMLReaderImpl::doctypeDecl(elemDecl, publicId, systemId, hasIntSubset, hasExtSubset);
 	}
@@ -709,7 +705,7 @@ void doctypeWhitespace(const XMLCh* const chars, const XMLSize_t length) {
 
 void elementDecl(const xercesc::DTDElementDecl& decl, const bool isIgnored) {
 	if(boost::python::override elementDecl = this->get_override("elementDecl")){
-		elementDecl(decl, isIgnored);
+		elementDecl(boost::ref(decl), isIgnored);
 	}else{
 		xercesc::SAX2XMLReaderImpl::elementDecl(decl, isIgnored);
 	}
@@ -717,7 +713,7 @@ void elementDecl(const xercesc::DTDElementDecl& decl, const bool isIgnored) {
 
 void endAttList(const xercesc::DTDElementDecl& elemDecl) {
 	if(boost::python::override endAttList = this->get_override("endAttList")){
-		endAttList(elemDecl);
+		endAttList(boost::ref(elemDecl));
 	}else{
 		xercesc::SAX2XMLReaderImpl::endAttList(elemDecl);
 	}
@@ -741,7 +737,7 @@ void endExtSubset() {
 
 void entityDecl(const xercesc::DTDEntityDecl&  entityDecl, const bool isPEDecl, const bool isIgnored) {
 	if(boost::python::override _entityDecl = this->get_override("entityDecl")){
-		_entityDecl(entityDecl, isPEDecl, isIgnored);
+		_entityDecl(boost::ref(entityDecl), isPEDecl, isIgnored);
 	}else{
 		xercesc::SAX2XMLReaderImpl::entityDecl(entityDecl, isPEDecl, isIgnored);
 	}
@@ -757,7 +753,7 @@ void resetDocType() {
 
 void notationDecl(const xercesc::XMLNotationDecl& notDecl, const bool isIgnored) {
 	if(boost::python::override notationDecl = this->get_override("notationDecl")){
-		notationDecl(notDecl, isIgnored);
+		notationDecl(boost::ref(notDecl), isIgnored);
 	}else{
 		xercesc::SAX2XMLReaderImpl::notationDecl(notDecl, isIgnored);
 	}
@@ -765,7 +761,7 @@ void notationDecl(const xercesc::XMLNotationDecl& notDecl, const bool isIgnored)
 
 void startAttList(const xercesc::DTDElementDecl& elemDecl) {
 	if(boost::python::override startAttList = this->get_override("startAttList")){
-		startAttList(elemDecl);
+		startAttList(boost::ref(elemDecl));
 	}else{
 		xercesc::SAX2XMLReaderImpl::startAttList(elemDecl);
 	}

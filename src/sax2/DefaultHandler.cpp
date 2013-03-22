@@ -202,7 +202,7 @@ void resetDocument() {
 
 void setDocumentLocator(const xercesc::Locator* const locator) {
 	if(boost::python::override setDocumentLocator = this->get_override("setDocumentLocator")){
-		setDocumentLocator(locator);
+		setDocumentLocator(boost::python::ptr(locator));
 	}else{
 		xercesc::DefaultHandler::setDocumentLocator(locator);
 	}
@@ -258,7 +258,7 @@ xercesc::InputSource* resolveEntity(const XMLCh* const publicId, const XMLCh* co
 
 void error(const xercesc::SAXParseException& exc) {
 	if(boost::python::override error = this->get_override("error")){
-		error(exc);
+		error(boost::ref(exc));
 	}else{
 		xercesc::DefaultHandler::error(exc);
 	}
@@ -266,7 +266,7 @@ void error(const xercesc::SAXParseException& exc) {
 
 void fatalError(const xercesc::SAXParseException& exc) {
 	if(boost::python::override fatalError = this->get_override("fatalError")){
-		fatalError(exc);
+		fatalError(boost::ref(exc));
 	}else{
 		xercesc::DefaultHandler::fatalError(exc);
 	}
@@ -274,7 +274,7 @@ void fatalError(const xercesc::SAXParseException& exc) {
 
 void warning(const xercesc::SAXParseException& exc) {
 	if(boost::python::override warning = this->get_override("warning")){
-		warning(exc);
+		warning(boost::ref(exc));
 	}else{
 		xercesc::DefaultHandler::warning(exc);
 	}

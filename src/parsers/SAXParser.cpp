@@ -393,7 +393,7 @@ xercesc::InputSource* resolveEntity(xercesc::XMLResourceIdentifier* resourceIden
 
 void startInputSource(const xercesc::InputSource& inputSource) {
 	if(boost::python::override startInputSource = this->get_override("startInputSource")){
-		startInputSource(inputSource);
+		startInputSource(boost::ref(inputSource));
 	}else{
 		xercesc::SAXParser::startInputSource(inputSource);
 	}

@@ -416,7 +416,7 @@ void resetErrors() {
 
 // ---------- XMLEntityHandler ----------
 void endInputSource(const xercesc::InputSource& inputSource) {
-	this->get_override("endInputSource")(inputSource);
+	this->get_override("endInputSource")(boost::ref(inputSource));
 }
 
 bool expandSystemId(const XMLCh* const systemId, xercesc::XMLBuffer& toFill) {
