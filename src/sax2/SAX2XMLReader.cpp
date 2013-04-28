@@ -252,9 +252,6 @@ bool removeAdvDocHandler(xercesc::XMLDocumentHandler* const toRemove) {
 
 };
 
-//! SAX2XMLReader
-//BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(SAX2XMLReaderLoadGrammarOverloads, loadGrammar, 2, 3)
-
 void SAX2XMLReader_init(void) {
 	//! xercesc::SAX2XMLReader
 	auto SAX2XMLReader = boost::python::class_<SAX2XMLReaderWrapper, boost::noncopyable>("SAX2XMLReader")
@@ -295,10 +292,9 @@ void SAX2XMLReader_init(void) {
 			.def("parseFirst", boost::python::pure_virtual(static_cast<bool(xercesc::SAX2XMLReader::*)(const xercesc::InputSource&, xercesc::XMLPScanToken&)>(&xercesc::SAX2XMLReader::parseFirst)))
 			.def("parseNext", boost::python::pure_virtual(&xercesc::SAX2XMLReader::parseNext))
 			.def("parseReset", boost::python::pure_virtual(&xercesc::SAX2XMLReader::parseReset))
-			// TODO: overloads
-			.def("loadGrammar", boost::python::pure_virtual(static_cast<xercesc::Grammar*(xercesc::SAX2XMLReader::*)(const xercesc::InputSource&, const xercesc::Grammar::GrammarType, const bool)>(&xercesc::SAX2XMLReader::loadGrammar)), boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("loadGrammar", boost::python::pure_virtual(static_cast<xercesc::Grammar*(xercesc::SAX2XMLReader::*)(const XMLCh* const, const xercesc::Grammar::GrammarType, const bool)>(&xercesc::SAX2XMLReader::loadGrammar)), boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("loadGrammar", boost::python::pure_virtual(static_cast<xercesc::Grammar*(xercesc::SAX2XMLReader::*)(const char* const, const xercesc::Grammar::GrammarType, const bool)>(&xercesc::SAX2XMLReader::loadGrammar)), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("loadGrammar", boost::python::pure_virtual(static_cast<xercesc::Grammar*(xercesc::SAX2XMLReader::*)(const xercesc::InputSource&, const xercesc::Grammar::GrammarType, const bool)>(&xercesc::SAX2XMLReader::loadGrammar)), (boost::python::arg("source"), boost::python::arg("grammarType"), boost::python::arg("toCache") = false), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("loadGrammar", boost::python::pure_virtual(static_cast<xercesc::Grammar*(xercesc::SAX2XMLReader::*)(const XMLCh* const, const xercesc::Grammar::GrammarType, const bool)>(&xercesc::SAX2XMLReader::loadGrammar)), (boost::python::arg("systemId"), boost::python::arg("grammarType"), boost::python::arg("toCache") = false), boost::python::return_value_policy<boost::python::reference_existing_object>())
+			.def("loadGrammar", boost::python::pure_virtual(static_cast<xercesc::Grammar*(xercesc::SAX2XMLReader::*)(const char* const, const xercesc::Grammar::GrammarType, const bool)>(&xercesc::SAX2XMLReader::loadGrammar)), (boost::python::arg("systemId"), boost::python::arg("grammarType"), boost::python::arg("toCache") = false), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("resetCachedGrammarPool", boost::python::pure_virtual(&xercesc::SAX2XMLReader::resetCachedGrammarPool))
 			.def("setInputBufferSize", &xercesc::SAX2XMLReader::setInputBufferSize)
 			.def("installAdvDocHandler", boost::python::pure_virtual(&xercesc::SAX2XMLReader::installAdvDocHandler))

@@ -50,6 +50,34 @@ TYPE* _ptr;
 
 };
 
+class XMLContentModelDefaultDefVisitor
+: public boost::python::def_visitor<XMLContentModelDefaultDefVisitor>
+{
+friend class def_visitor_access;
+public:
+template <class T>
+void visit(T& class_) const {
+	class_
+	.def("validateContent", &XMLContentModelDefaultDefVisitor::validateContent)
+	.def("validateContentSpecial", &XMLContentModelDefaultDefVisitor::validateContentSpecial)
+	.def("checkUniqueParticleAttribution", &XMLContentModelDefaultDefVisitor::checkUniqueParticleAttribution)
+	;
+}
+
+static bool validateContent(xercesc::XMLContentModel& self, xercesc::QName** const children, XMLSize_t childCount, unsigned int emptyNamespaceId, XMLSize_t* indexFailingChild) {
+	return self.validateContent(children, childCount, emptyNamespaceId, indexFailingChild);
+}
+
+static bool validateContentSpecial(xercesc::XMLContentModel& self, xercesc::QName** const children, XMLSize_t childCount, unsigned int emptyNamespaceId, xercesc::GrammarResolver* const pGrammarResolver, xercesc::XMLStringPool* const pStringPool, XMLSize_t* indexFailingChild) {
+	return self.validateContentSpecial(children, childCount, emptyNamespaceId, pGrammarResolver, pStringPool, indexFailingChild);
+}
+
+static void checkUniqueParticleAttribution(xercesc::XMLContentModel& self, xercesc::SchemaGrammar* const pGrammar, xercesc::GrammarResolver* const pGrammarResolver, xercesc::XMLStringPool* const pStringPool, xercesc::XMLValidator* const pValidator, unsigned int* const pContentSpecOrgURI) {
+	self.checkUniqueParticleAttribution(pGrammar, pGrammarResolver, pStringPool, pValidator, pContentSpecOrgURI);
+}
+
+};
+
 class XMLContentModelWrapper
 : public xercesc::XMLContentModel, public boost::python::wrapper<xercesc::XMLContentModel>
 {
@@ -95,18 +123,13 @@ bool handleRepetitions(const xercesc::QName* const curElem, unsigned int curStat
 
 };
 
-//! XMLContentModel
-//BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(XMLContentModelValidateContentOverloads, validateContent, 4, 5)
-//BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(XMLContentModelValidateContentSpecialOverloads, validateContentSpecial, 6, 7)
-//BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(XMLContentModelCheckUniqueParticleAttributionOverloads, checkUniqueParticleAttribution, 5, 6)
-
 void XMLContentModel_init(void) {
 	boost::python::class_<IntegerPointerArray<unsigned int> >("IntegerArray", boost::python::no_init)
 		.def("__getitem__", &IntegerPointerArray<unsigned int>::operator [])
 		;
 	//! xercesc::XMLContentModel
 	boost::python::class_<XMLContentModelWrapper, boost::noncopyable>("XMLContentModel")
-			// TODO: overloads
+			.def(XMLContentModelDefaultDefVisitor())
 			.def("validateContent", boost::python::pure_virtual(&xercesc::XMLContentModel::validateContent))
 			.def("validateContentSpecial", boost::python::pure_virtual(&xercesc::XMLContentModel::validateContentSpecial))
 			.def("checkUniqueParticleAttribution", boost::python::pure_virtual(&xercesc::XMLContentModel::checkUniqueParticleAttribution))

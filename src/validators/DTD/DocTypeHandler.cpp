@@ -128,8 +128,6 @@ void TextDecl(const XMLCh* const versionStr, const XMLCh* const encodingStr) {
 
 };
 
-//BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(DocTypeHandlerDoctypeDeclOverloads, doctypeDecl, 4, 5)
-
 void DocTypeHandler_init(void) {
 	//! xercesc::DocTypeHandler
 	boost::python::class_<DocTypeHandlerWrapper, boost::noncopyable>("DocTypeHandler")
@@ -137,8 +135,7 @@ void DocTypeHandler_init(void) {
 			.def(DocTypeHandlerDefVisitor<std::string>())
 			.def("attDef", boost::python::pure_virtual(&xercesc::DocTypeHandler::attDef))
 			.def("doctypeComment", boost::python::pure_virtual(&xercesc::DocTypeHandler::doctypeComment))
-			// TODO: overloads
-			.def("doctypeDecl", boost::python::pure_virtual(&xercesc::DocTypeHandler::doctypeDecl))
+			.def("doctypeDecl", boost::python::pure_virtual(&xercesc::DocTypeHandler::doctypeDecl), (boost::python::arg("elemDecl"), boost::python::arg("publicId"), boost::python::arg("systemId"), boost::python::arg("hasIntSubset"), boost::python::arg("hasExtSubset") = false))
 			.def("doctypePI", boost::python::pure_virtual(&xercesc::DocTypeHandler::doctypePI))
 			.def("doctypeWhitespace", boost::python::pure_virtual(&xercesc::DocTypeHandler::doctypeWhitespace))
 			.def("elementDecl", boost::python::pure_virtual(&xercesc::DocTypeHandler::elementDecl))
