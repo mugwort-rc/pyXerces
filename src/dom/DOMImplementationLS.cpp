@@ -30,7 +30,7 @@ public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("createLSParser", &DOMImplementationDefaultDefVisitor::createLSSerializer, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("createLSSerializer", &DOMImplementationDefaultDefVisitor::createLSSerializer, boost::python::return_value_policy<boost::python::reference_existing_object>())
 	.def("createLSInput", &DOMImplementationDefaultDefVisitor::createLSInput, boost::python::return_value_policy<boost::python::reference_existing_object>())
 	.def("createLSOutput", &DOMImplementationDefaultDefVisitor::createLSOutput, boost::python::return_value_policy<boost::python::reference_existing_object>())
 	;
