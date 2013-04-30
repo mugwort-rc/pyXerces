@@ -22,6 +22,10 @@ class XMLChManager;	//!< forward declaration
 class XMLString {
 public:
 /*!
+ * Default Constructor
+ */
+XMLString(void);
+/*!
  * Constructor
  * @param [in]		str		convert string
  * @type str: std::string

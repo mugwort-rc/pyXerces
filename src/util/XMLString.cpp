@@ -89,6 +89,10 @@ boost::shared_ptr<XMLChManager> fromlist(const boost::python::list& li) {
 
 // ==================================================
 
+XMLString::XMLString(void)
+	: _ch()
+{}
+
 XMLString::XMLString(const std::string& str)
 	: _ch(XMLChManager::transcode(str))
 {}
