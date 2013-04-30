@@ -34,7 +34,7 @@ setup(name = 'PyXerces',
       author_email = 'mugwort rc at gmail com',
       url = 'https://github.com/mugwort_rc/pyxerces',
       license = 'Apache Software License, Version 2.0',
-      packages = ['Xerces'],
+      packages = ['Xerces', 'Xerces.util'],
 
       ext_modules = [xerces])
 
