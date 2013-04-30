@@ -105,6 +105,7 @@ void XMLFormatter_init(void) {
 			.def(boost::python::init<const char* const, const char* const, xercesc::XMLFormatTarget* const, boost::python::optional<const xercesc::XMLFormatter::EscapeFlags, const xercesc::XMLFormatter::UnRepFlags, xercesc::MemoryManager* const> >())
 			.def(boost::python::init<const XMLCh* const, xercesc::XMLFormatTarget* const, boost::python::optional<const xercesc::XMLFormatter::EscapeFlags, const xercesc::XMLFormatter::UnRepFlags, xercesc::MemoryManager* const> >())
 			.def(boost::python::init<const char* const, xercesc::XMLFormatTarget* const, boost::python::optional<const xercesc::XMLFormatter::EscapeFlags, const xercesc::XMLFormatter::UnRepFlags, xercesc::MemoryManager* const> >())
+			.def("__lshift__", static_cast<xercesc::XMLFormatter&(xercesc::XMLFormatter::*)(const XMLCh)>(&xercesc::XMLFormatter::operator <<), boost::python::return_internal_reference<>())
 			.def("__lshift__", static_cast<xercesc::XMLFormatter&(xercesc::XMLFormatter::*)(const XMLCh*)>(&xercesc::XMLFormatter::operator <<), boost::python::return_internal_reference<>())
 			.def("__lshift__", static_cast<xercesc::XMLFormatter&(xercesc::XMLFormatter::*)(const xercesc::XMLFormatter::EscapeFlags)>(&xercesc::XMLFormatter::operator <<), boost::python::return_internal_reference<>())
 			.def("__lshift__", static_cast<xercesc::XMLFormatter&(xercesc::XMLFormatter::*)(const xercesc::XMLFormatter::UnRepFlags)>(&xercesc::XMLFormatter::operator <<), boost::python::return_internal_reference<>())
