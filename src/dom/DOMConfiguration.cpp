@@ -18,7 +18,7 @@
 
 namespace pyxerces {
 
-template <class STR>
+template <typename STR>
 class DOMConfigurationDefVisitor
 : public boost::python::def_visitor<DOMConfigurationDefVisitor<STR> >
 {
@@ -37,24 +37,24 @@ void visit(T& class_) const {
 }
 
 template <typename T>
-static void setParameter(xercesc::DOMConfiguration& self, const STR& name, T value) {
+static void setParameter(xercesc::DOMConfiguration& self, const STR name, T value) {
 	XMLString buff(name);
 	self.setParameter(buff.ptr(), value);
 }
 
-static const void* getParameter(xercesc::DOMConfiguration& self, const STR& name) {
+static const void* getParameter(xercesc::DOMConfiguration& self, const STR name) {
 	XMLString buff(name);
 	return self.getParameter(buff.ptr());
 }
 
 template <typename T>
-static bool canSetParameter(xercesc::DOMConfiguration& self, const STR& name, T value) {
+static bool canSetParameter(xercesc::DOMConfiguration& self, const STR name, T value) {
 	XMLString buff(name);
 	return self.canSetParameter(buff.ptr(), value);
 }
 
 template <typename T>
-static void setParameterCastValue(xercesc::DOMConfiguration& self, const STR& name, const T& value) {
+static void setParameterCastValue(xercesc::DOMConfiguration& self, const STR name, const T& value) {
 	DOMConfigurationDefVisitor::setParameter<const void*>(self, name, reinterpret_cast<const void*>(&value));
 }
 
@@ -95,8 +95,8 @@ const xercesc::DOMStringList* getParameterNames() const {
 void DOMConfiguration_init(void) {
 	//! xercesc::DOMConfiguration
 	boost::python::class_<DOMConfigurationWrapper, boost::noncopyable>("DOMConfiguration")
-			.def(DOMConfigurationDefVisitor<XMLString>())
-			.def(DOMConfigurationDefVisitor<std::string>())
+			.def(DOMConfigurationDefVisitor<XMLString&>())
+			.def(DOMConfigurationDefVisitor<char*>())
 			.def("setParameter", boost::python::pure_virtual(static_cast<void(xercesc::DOMConfiguration::*)(const XMLCh*, const void*)>(&xercesc::DOMConfiguration::setParameter)))
 			.def("setParameter", boost::python::pure_virtual(static_cast<void(xercesc::DOMConfiguration::*)(const XMLCh*, bool)>(&xercesc::DOMConfiguration::setParameter)))
 			.def("getParameter", boost::python::pure_virtual(&xercesc::DOMConfiguration::getParameter), boost::python::return_value_policy<boost::python::return_opaque_pointer>())  //!< void*

@@ -20,7 +20,7 @@
 
 namespace pyxerces {
 
-template <class STR>
+template <typename STR>
 class SchemaElementDeclDefVisitor
 : public boost::python::def_visitor<SchemaElementDeclDefVisitor<STR> >
 {
@@ -29,59 +29,51 @@ public:
 template <class T>
 void visit(T& class_) const {
 	class_
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::SchemaElementDecl*(*)(const STR, const STR, const int, const xercesc::SchemaElementDecl::ModelTypes, const unsigned int, xercesc::MemoryManager* const)>(&SchemaElementDecl_fromstring)))
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::SchemaElementDecl*(*)(const STR, const STR, const int, const xercesc::SchemaElementDecl::ModelTypes, const unsigned int)>(&SchemaElementDecl_fromstring)))
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::SchemaElementDecl*(*)(const STR, const STR, const int, const xercesc::SchemaElementDecl::ModelTypes)>(&SchemaElementDecl_fromstring)))
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::SchemaElementDecl*(*)(const STR, const STR, const int)>(&SchemaElementDecl_fromstring)))
 	.def("getAttDef", &SchemaElementDeclDefVisitor::getAttDef, boost::python::return_value_policy<boost::python::reference_existing_object>())
 	.def("setDefaultValue", &SchemaElementDeclDefVisitor::setDefaultValue)
 	;
 }
 
-static xercesc::SchemaAttDef* getAttDef(xercesc::SchemaElementDecl& self, const STR& baseName, const int uriId) {
+static xercesc::SchemaElementDecl* SchemaElementDecl_fromstring(const STR prefix, const STR localPart, const int uriId, const xercesc::SchemaElementDecl::ModelTypes modelType, const unsigned int enclosingScope, xercesc::MemoryManager* const manager) {
+	XMLString buff1(prefix), buff2(localPart);
+	return new xercesc::SchemaElementDecl(buff1.ptr(), buff2.ptr(), uriId, modelType, enclosingScope, manager);
+}
+
+static xercesc::SchemaElementDecl* SchemaElementDecl_fromstring(const STR prefix, const STR localPart, const int uriId, const xercesc::SchemaElementDecl::ModelTypes modelType, const unsigned int enclosingScope) {
+	return SchemaElementDecl_fromstring(prefix, localPart, uriId, modelType, enclosingScope, xercesc::XMLPlatformUtils::fgMemoryManager);
+}
+
+static xercesc::SchemaElementDecl* SchemaElementDecl_fromstring(const STR prefix, const STR localPart, const int uriId, const xercesc::SchemaElementDecl::ModelTypes modelType) {
+	return SchemaElementDecl_fromstring(prefix, localPart, uriId, modelType, xercesc::Grammar::TOP_LEVEL_SCOPE);
+}
+
+static xercesc::SchemaElementDecl* SchemaElementDecl_fromstring(const STR prefix, const STR localPart, const int uriId) {
+	return SchemaElementDecl_fromstring(prefix, localPart, uriId, xercesc::SchemaElementDecl::Any);
+}
+
+static xercesc::SchemaAttDef* getAttDef(xercesc::SchemaElementDecl& self, const STR baseName, const int uriId) {
 	XMLString buff(baseName);
 	return self.getAttDef(buff.ptr(), uriId);
 }
 
-static void setDefaultValue(xercesc::SchemaElementDecl& self, const STR& value) {
+static void setDefaultValue(xercesc::SchemaElementDecl& self, const STR value) {
 	XMLString buff(value);
 	self.setDefaultValue(buff.ptr());
 }
 
 };
 
-template <class STR>
-xercesc::SchemaElementDecl* SchemaElementDecl_fromstring(const STR& prefix, const STR& localPart, const int uriId, const xercesc::SchemaElementDecl::ModelTypes modelType, const unsigned int enclosingScope, xercesc::MemoryManager* const manager) {
-	XMLString buff1(prefix), buff2(localPart);
-	return new xercesc::SchemaElementDecl(buff1.ptr(), buff2.ptr(), uriId, modelType, enclosingScope, manager);
-}
-
-template <class STR>
-xercesc::SchemaElementDecl* SchemaElementDecl_fromstring(const STR& prefix, const STR& localPart, const int uriId, const xercesc::SchemaElementDecl::ModelTypes modelType, const unsigned int enclosingScope) {
-	return SchemaElementDecl_fromstring<STR>(prefix, localPart, uriId, modelType, enclosingScope, xercesc::XMLPlatformUtils::fgMemoryManager);
-}
-
-template <class STR>
-xercesc::SchemaElementDecl* SchemaElementDecl_fromstring(const STR& prefix, const STR& localPart, const int uriId, const xercesc::SchemaElementDecl::ModelTypes modelType) {
-	return SchemaElementDecl_fromstring<STR>(prefix, localPart, uriId, modelType, xercesc::Grammar::TOP_LEVEL_SCOPE);
-}
-
-template <class STR>
-xercesc::SchemaElementDecl* SchemaElementDecl_fromstring(const STR& prefix, const STR& localPart, const int uriId) {
-	return SchemaElementDecl_fromstring(prefix, localPart, uriId, xercesc::SchemaElementDecl::Any);
-}
-
 void SchemaElementDecl_init(void) {
 	//! xercesc::SchemaElementDecl
 	auto SchemaElementDecl = boost::python::class_<xercesc::SchemaElementDecl, boost::noncopyable, boost::python::bases<xercesc::XMLElementDecl> >("SchemaElementDecl", boost::python::init<boost::python::optional<xercesc::MemoryManager* const> >())
 			.def(boost::python::init<const XMLCh* const, const XMLCh* const, const int, boost::python::optional<const xercesc::SchemaElementDecl::ModelTypes, const unsigned int, xercesc::MemoryManager* const> >())
 			.def(boost::python::init<const xercesc::QName* const, boost::python::optional<const xercesc::SchemaElementDecl::ModelTypes, const unsigned int, xercesc::MemoryManager* const> >())
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::SchemaElementDecl*(*)(const XMLString&, const XMLString&, const int, const xercesc::SchemaElementDecl::ModelTypes, const unsigned int, xercesc::MemoryManager* const)>(&SchemaElementDecl_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::SchemaElementDecl*(*)(const XMLString&, const XMLString&, const int, const xercesc::SchemaElementDecl::ModelTypes, const unsigned int)>(&SchemaElementDecl_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::SchemaElementDecl*(*)(const XMLString&, const XMLString&, const int, const xercesc::SchemaElementDecl::ModelTypes)>(&SchemaElementDecl_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::SchemaElementDecl*(*)(const XMLString&, const XMLString&, const int)>(&SchemaElementDecl_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::SchemaElementDecl*(*)(const std::string&, const std::string&, const int, const xercesc::SchemaElementDecl::ModelTypes, const unsigned int, xercesc::MemoryManager* const)>(&SchemaElementDecl_fromstring<std::string>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::SchemaElementDecl*(*)(const std::string&, const std::string&, const int, const xercesc::SchemaElementDecl::ModelTypes, const unsigned int)>(&SchemaElementDecl_fromstring<std::string>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::SchemaElementDecl*(*)(const std::string&, const std::string&, const int, const xercesc::SchemaElementDecl::ModelTypes)>(&SchemaElementDecl_fromstring<std::string>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::SchemaElementDecl*(*)(const std::string&, const std::string&, const int)>(&SchemaElementDecl_fromstring<std::string>)))
-			.def(SchemaElementDeclDefVisitor<XMLString>())
-			.def(SchemaElementDeclDefVisitor<std::string>())
+			.def(SchemaElementDeclDefVisitor<XMLString&>())
+			.def(SchemaElementDeclDefVisitor<char*>())
 			.def("getAttDefList", &xercesc::SchemaElementDecl::getAttDefList, boost::python::return_internal_reference<>())
 			.def("getCharDataOpts", &xercesc::SchemaElementDecl::getCharDataOpts)
 			.def("hasAttDefs", &xercesc::SchemaElementDecl::hasAttDefs)

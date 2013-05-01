@@ -35,7 +35,7 @@
 
 namespace pyxerces {
 
-template <class STR>
+template <typename STR>
 class DOMElementDefVisitor
 : public boost::python::def_visitor<DOMElementDefVisitor<STR> >
 {
@@ -61,72 +61,72 @@ void visit(T& class_) const {
 	;
 }
 
-static const XMLCh* getAttribute(xercesc::DOMElement& self, const STR& name) {
+static const XMLCh* getAttribute(xercesc::DOMElement& self, const STR name) {
 	XMLString buff(name);
 	return self.getAttribute(buff.ptr());
 }
 
-static xercesc::DOMAttr* getAttributeNode(xercesc::DOMElement& self, const STR& name) {
+static xercesc::DOMAttr* getAttributeNode(xercesc::DOMElement& self, const STR name) {
 	XMLString buff(name);
 	return self.getAttributeNode(buff.ptr());
 }
 
-static xercesc::DOMNodeList* getElementsByTagName(xercesc::DOMElement& self, const STR& name) {
+static xercesc::DOMNodeList* getElementsByTagName(xercesc::DOMElement& self, const STR name) {
 	XMLString buff(name);
 	return self.getElementsByTagName(buff.ptr());
 }
 
-static void setAttribute(xercesc::DOMElement& self, const STR& name, const STR& value) {
+static void setAttribute(xercesc::DOMElement& self, const STR name, const STR value) {
 	XMLString buff1(name), buff2(value);
 	self.setAttribute(buff1.ptr(), buff2.ptr());
 }
 
-static void removeAttribute(xercesc::DOMElement& self, const STR& name) {
+static void removeAttribute(xercesc::DOMElement& self, const STR name) {
 	XMLString buff(name);
 	self.removeAttribute(buff.ptr());
 }
 
-static const XMLCh* getAttributeNS(xercesc::DOMElement& self, const STR& namespaceURI, const STR& localName) {
+static const XMLCh* getAttributeNS(xercesc::DOMElement& self, const STR namespaceURI, const STR localName) {
 	XMLString buff1(namespaceURI), buff2(localName);
 	return self.getAttributeNS(buff1.ptr(), buff2.ptr());
 }
 
-static void setAttributeNS(xercesc::DOMElement& self, const STR& namespaceURI, const STR& qualifiedName, const STR& value) {
+static void setAttributeNS(xercesc::DOMElement& self, const STR namespaceURI, const STR qualifiedName, const STR value) {
 	XMLString buff1(namespaceURI), buff2(qualifiedName), buff3(value);
 	self.setAttributeNS(buff1.ptr(), buff2.ptr(), buff3.ptr());
 }
 
-static void removeAttributeNS(xercesc::DOMElement& self, const STR& namespaceURI, const STR& localName) {
+static void removeAttributeNS(xercesc::DOMElement& self, const STR namespaceURI, const STR localName) {
 	XMLString buff1(namespaceURI), buff2(localName);
 	self.removeAttributeNS(buff1.ptr(), buff2.ptr());
 }
 
-static xercesc::DOMAttr* getAttributeNodeNS(xercesc::DOMElement& self, const STR& namespaceURI, const STR& localName) {
+static xercesc::DOMAttr* getAttributeNodeNS(xercesc::DOMElement& self, const STR namespaceURI, const STR localName) {
 	XMLString buff1(namespaceURI), buff2(localName);
 	return self.getAttributeNodeNS(buff1.ptr(), buff2.ptr());
 }
 
-static xercesc::DOMNodeList* getElementsByTagNameNS(xercesc::DOMElement& self, const STR& namespaceURI, const STR& localName) {
+static xercesc::DOMNodeList* getElementsByTagNameNS(xercesc::DOMElement& self, const STR namespaceURI, const STR localName) {
 	XMLString buff1(namespaceURI), buff2(localName);
 	return self.getElementsByTagNameNS(buff1.ptr(), buff2.ptr());
 }
 
-static bool hasAttribute(xercesc::DOMElement& self, const STR& name) {
+static bool hasAttribute(xercesc::DOMElement& self, const STR name) {
 	XMLString buff(name);
 	return self.hasAttribute(buff.ptr());
 }
 
-static bool hasAttributeNS(xercesc::DOMElement& self, const STR& namespaceURI, const STR& localName) {
+static bool hasAttributeNS(xercesc::DOMElement& self, const STR namespaceURI, const STR localName) {
 	XMLString buff1(namespaceURI), buff2(localName);
 	return self.hasAttributeNS(buff1.ptr(), buff2.ptr());
 }
 
-static void setIdAttribute(xercesc::DOMElement& self, const STR& name, bool isId) {
+static void setIdAttribute(xercesc::DOMElement& self, const STR name, bool isId) {
 	XMLString buff(name);
 	self.setIdAttribute(buff.ptr(), isId);
 }
 
-static void setIdAttributeNS(xercesc::DOMElement& self, const STR& namespaceURI, const STR& localName, bool isId) {
+static void setIdAttributeNS(xercesc::DOMElement& self, const STR namespaceURI, const STR localName, bool isId) {
 	XMLString buff1(namespaceURI), buff2(localName);
 	self.setIdAttributeNS(buff1.ptr(), buff2.ptr(), isId);
 }
@@ -396,8 +396,8 @@ void release() {
 void DOMElement_init(void) {
 	//! xercesc::DOMElement
 	boost::python::class_<DOMElementWrapper, boost::noncopyable, boost::python::bases<xercesc::DOMNode> >("DOMElement")
-			.def(DOMElementDefVisitor<XMLString>())
-			.def(DOMElementDefVisitor<std::string>())
+			.def(DOMElementDefVisitor<XMLString&>())
+			.def(DOMElementDefVisitor<char*>())
 			.def("getTagName", boost::python::pure_virtual(&xercesc::DOMElement::getTagName), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getAttribute", boost::python::pure_virtual(&xercesc::DOMElement::getAttribute), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getAttributeNode", boost::python::pure_virtual(&xercesc::DOMElement::getAttributeNode), boost::python::return_value_policy<boost::python::return_by_value>())

@@ -19,24 +19,37 @@
 
 namespace pyxerces {
 
-template <class STR>
-xercesc::XercesXPath* XercesXPath_fromstring(const STR& xpathExpr, xercesc::XMLStringPool* const stringPool, xercesc::XercesNamespaceResolver* const scopeContext, const unsigned int emptyNamespaceId, const bool isSelector, xercesc::MemoryManager* const manager) {
+template <typename STR>
+class XercesXPathDefVisitor
+: public boost::python::def_visitor<XercesXPathDefVisitor<STR> >
+{
+friend class def_visitor_access;
+public:
+template <class T>
+void visit(T& class_) const {
+	class_
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::XercesXPath*(*)(const STR, xercesc::XMLStringPool* const, xercesc::XercesNamespaceResolver* const, const unsigned int, const bool, xercesc::MemoryManager* const)>(&XercesXPath_fromstring)))
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::XercesXPath*(*)(const STR, xercesc::XMLStringPool* const, xercesc::XercesNamespaceResolver* const, const unsigned int, const bool)>(&XercesXPath_fromstring)))
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::XercesXPath*(*)(const STR, xercesc::XMLStringPool* const, xercesc::XercesNamespaceResolver* const, const unsigned int)>(&XercesXPath_fromstring)))
+	;
+}
+
+static xercesc::XercesXPath* XercesXPath_fromstring(const STR xpathExpr, xercesc::XMLStringPool* const stringPool, xercesc::XercesNamespaceResolver* const scopeContext, const unsigned int emptyNamespaceId, const bool isSelector, xercesc::MemoryManager* const manager) {
 	XMLString buff(xpathExpr);
 	return new xercesc::XercesXPath(buff.ptr(), stringPool, scopeContext, emptyNamespaceId, isSelector, manager);
 }
 
-template <class STR>
-xercesc::XercesXPath* XercesXPath_fromstring(const STR& xpathExpr, xercesc::XMLStringPool* const stringPool, xercesc::XercesNamespaceResolver* const scopeContext, const unsigned int emptyNamespaceId, const bool isSelector) {
-	return XercesXPath_fromstring<STR>(xpathExpr, stringPool, scopeContext, emptyNamespaceId, isSelector, xercesc::XMLPlatformUtils::fgMemoryManager);
+static xercesc::XercesXPath* XercesXPath_fromstring(const STR xpathExpr, xercesc::XMLStringPool* const stringPool, xercesc::XercesNamespaceResolver* const scopeContext, const unsigned int emptyNamespaceId, const bool isSelector) {
+	return XercesXPath_fromstring(xpathExpr, stringPool, scopeContext, emptyNamespaceId, isSelector, xercesc::XMLPlatformUtils::fgMemoryManager);
 }
 
-template <class STR>
-xercesc::XercesXPath* XercesXPath_fromstring(const STR& xpathExpr, xercesc::XMLStringPool* const stringPool, xercesc::XercesNamespaceResolver* const scopeContext, const unsigned int emptyNamespaceId) {
-	return XercesXPath_fromstring<STR>(xpathExpr, stringPool, scopeContext, emptyNamespaceId, false);
-
+static xercesc::XercesXPath* XercesXPath_fromstring(const STR xpathExpr, xercesc::XMLStringPool* const stringPool, xercesc::XercesNamespaceResolver* const scopeContext, const unsigned int emptyNamespaceId) {
+	return XercesXPath_fromstring(xpathExpr, stringPool, scopeContext, emptyNamespaceId, false);
 }
 
-template <class STR>
+};
+
+template <typename STR>
 class XPathScannerDefVisitor
 : public boost::python::def_visitor<XPathScannerDefVisitor<STR> >
 {
@@ -49,7 +62,7 @@ void visit(T& class_) const {
 	;
 }
 
-static bool scanExpression(xercesc::XPathScanner& self, const STR& data, XMLSize_t currentOffset, const XMLSize_t endOffset, xercesc::ValueVectorOf<int>* const tokens) {
+static bool scanExpression(xercesc::XPathScanner& self, const STR data, XMLSize_t currentOffset, const XMLSize_t endOffset, xercesc::ValueVectorOf<int>* const tokens) {
 	XMLString buff(data);
 	return self.scanExpression(buff.ptr(), currentOffset, endOffset, tokens);
 }
@@ -87,14 +100,10 @@ void XercesXPath_init(void) {
 			PyDECL_XSERIALIZABLE(XercesLocationPath)
 			;
 	//! xercesc::XercesXPath
-	auto XercesXPath = boost::python::class_<xercesc::XercesXPath, boost::noncopyable, boost::python::bases<xercesc::XSerializable> >("XercesXPath", boost::python::init<const XMLCh* const, xercesc::XMLStringPool* const, xercesc::XercesNamespaceResolver* const, const unsigned int, boost::python::optional<const bool, xercesc::MemoryManager* const> >())
+	boost::python::class_<xercesc::XercesXPath, boost::noncopyable, boost::python::bases<xercesc::XSerializable> >("XercesXPath", boost::python::init<const XMLCh* const, xercesc::XMLStringPool* const, xercesc::XercesNamespaceResolver* const, const unsigned int, boost::python::optional<const bool, xercesc::MemoryManager* const> >())
 			.def(boost::python::init<boost::python::optional<xercesc::MemoryManager* const> >())
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XercesXPath*(*)(const XMLString&, xercesc::XMLStringPool* const, xercesc::XercesNamespaceResolver* const, const unsigned int, const bool, xercesc::MemoryManager* const)>(&XercesXPath_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XercesXPath*(*)(const XMLString&, xercesc::XMLStringPool* const, xercesc::XercesNamespaceResolver* const, const unsigned int, const bool)>(&XercesXPath_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XercesXPath*(*)(const XMLString&, xercesc::XMLStringPool* const, xercesc::XercesNamespaceResolver* const, const unsigned int)>(&XercesXPath_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XercesXPath*(*)(const std::string&, xercesc::XMLStringPool* const, xercesc::XercesNamespaceResolver* const, const unsigned int, const bool, xercesc::MemoryManager* const)>(&XercesXPath_fromstring<std::string>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XercesXPath*(*)(const std::string&, xercesc::XMLStringPool* const, xercesc::XercesNamespaceResolver* const, const unsigned int, const bool)>(&XercesXPath_fromstring<std::string>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XercesXPath*(*)(const std::string&, xercesc::XMLStringPool* const, xercesc::XercesNamespaceResolver* const, const unsigned int)>(&XercesXPath_fromstring<std::string>)))
+			.def(XercesXPathDefVisitor<XMLString&>())
+			.def(XercesXPathDefVisitor<char*>())
 			.def("__eq__", &xercesc::XercesXPath::operator ==)
 			.def("__ne__", &xercesc::XercesXPath::operator !=)
 			.def("getLocationPaths", &xercesc::XercesXPath::getLocationPaths, boost::python::return_value_policy<boost::python::reference_existing_object>())
@@ -152,8 +161,8 @@ void XercesXPath_init(void) {
 			;
 	//! xercesc::XPathScanner
 	boost::python::class_<xercesc::XPathScanner, boost::noncopyable>("XPathScanner", boost::python::init<xercesc::XMLStringPool* const>())
-			.def(XPathScannerDefVisitor<XMLString>())
-			.def(XPathScannerDefVisitor<std::string>())
+			.def(XPathScannerDefVisitor<XMLString&>())
+			.def(XPathScannerDefVisitor<char*>())
 			.def("scanExpression", &xercesc::XPathScanner::scanExpression)
 			.setattr("CHARTYPE_INVALID", static_cast<int>(xercesc::XPathScanner::CHARTYPE_INVALID))
 			.setattr("CHARTYPE_OTHER", static_cast<int>(xercesc::XPathScanner::CHARTYPE_OTHER))

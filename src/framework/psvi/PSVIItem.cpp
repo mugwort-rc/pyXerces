@@ -20,7 +20,7 @@
 
 namespace pyxerces {
 
-template <class STR>
+template <typename STR>
 class PSVIItemDefVisitor
 : public boost::python::def_visitor<PSVIItemDefVisitor<STR> >
 {
@@ -33,7 +33,7 @@ void visit(T& class_) const {
 	;
 }
 
-static void reset(xercesc::PSVIItem& self, const STR& validationContext, const STR& normalizedValue, const xercesc::PSVIItem::VALIDITY_STATE validityState, const xercesc::PSVIItem::ASSESSMENT_TYPE assessmentType) {
+static void reset(xercesc::PSVIItem& self, const STR validationContext, const STR normalizedValue, const xercesc::PSVIItem::VALIDITY_STATE validityState, const xercesc::PSVIItem::ASSESSMENT_TYPE assessmentType) {
 	XMLString buff1(validationContext), buff2(normalizedValue);
 	self.reset(buff1.ptr(), buff2.ptr(), validityState, assessmentType);
 }
@@ -72,8 +72,8 @@ xercesc::XSValue *getActualValue() const {
 void PSVIItem_init(void) {
 	//! xercesc::PSVIItem
 	auto PSVIItem = boost::python::class_<PSVIItemWrapper, boost::noncopyable>("PSVIItem", boost::python::init<boost::python::optional<xercesc::MemoryManager* const> >())
-			.def(PSVIItemDefVisitor<XMLString>())
-			.def(PSVIItemDefVisitor<std::string>())
+			.def(PSVIItemDefVisitor<XMLString&>())
+			.def(PSVIItemDefVisitor<char*>())
 			.def("getValidationContext", &xercesc::PSVIItem::getValidationContext, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getValidity", &xercesc::PSVIItem::getValidity)
 			.def("getValidationAttempted", &xercesc::PSVIItem::getValidationAttempted)

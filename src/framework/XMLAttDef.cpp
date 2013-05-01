@@ -19,7 +19,7 @@
 
 namespace pyxerces {
 
-template <class STR>
+template <typename STR>
 class XMLAttDefDefVisitor
 : public boost::python::def_visitor<XMLAttDefDefVisitor<STR> >
 {
@@ -33,12 +33,12 @@ void visit(T& class_) const {
 	;
 }
 
-static void setValue(xercesc::XMLAttDef& self, const STR& value) {
+static void setValue(xercesc::XMLAttDef& self, const STR value) {
 	XMLString buff(value);
 	self.setValue(buff.ptr());
 }
 
-static void setEnumeration(xercesc::XMLAttDef& self, const STR& newValue) {
+static void setEnumeration(xercesc::XMLAttDef& self, const STR newValue) {
 	XMLString buff(newValue);
 	self.setValue(buff.ptr());
 }
@@ -73,8 +73,8 @@ void XMLAttDef_init(void) {
 			.def("getDefAttTypeString", &xercesc::XMLAttDef::getDefAttTypeString, XMLAttDefGetDefAttTypeString()[boost::python::return_value_policy<boost::python::return_by_value>()])
 			.staticmethod("getAttTypeString")
 			.staticmethod("getDefAttTypeString")
-			.def(XMLAttDefDefVisitor<XMLString>())
-			.def(XMLAttDefDefVisitor<std::string>())
+			.def(XMLAttDefDefVisitor<XMLString&>())
+			.def(XMLAttDefDefVisitor<char*>())
 			.def("getFullName", boost::python::pure_virtual(&xercesc::XMLAttDef::getFullName), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("reset", boost::python::pure_virtual(&xercesc::XMLAttDef::reset))
 			.def("getDefaultType", &xercesc::XMLAttDef::getDefaultType)

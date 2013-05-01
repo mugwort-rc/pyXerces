@@ -82,7 +82,7 @@ static const XMLCh* orphanElementAt(xercesc::BaseRefVectorOf<XMLCh>& self, const
 
 };
 
-template <class STR>
+template <typename STR>
 class BaseRefVectorOfXMLChStringDefVisitor
 : public boost::python::def_visitor<BaseRefVectorOfXMLChStringDefVisitor<STR> >
 {
@@ -98,22 +98,22 @@ void visit(T& class_) const {
 	;
 }
 
-static void addElement(xercesc::BaseRefVectorOf<XMLCh>& self, const STR& toAdd) {
+static void addElement(xercesc::BaseRefVectorOf<XMLCh>& self, const STR toAdd) {
 	XMLString buff(toAdd);
 	self.addElement(buff.ptr());
 }
 
-static void setElementAt(xercesc::BaseRefVectorOf<XMLCh>& self, const STR& toSet, const XMLSize_t setAt) {
+static void setElementAt(xercesc::BaseRefVectorOf<XMLCh>& self, const STR toSet, const XMLSize_t setAt) {
 	XMLString buff(toSet);
 	self.setElementAt(buff.ptr(), setAt);
 }
 
-static void insertElementAt(xercesc::BaseRefVectorOf<XMLCh>& self, const STR& toInsert, const XMLSize_t insertAt) {
+static void insertElementAt(xercesc::BaseRefVectorOf<XMLCh>& self, const STR toInsert, const XMLSize_t insertAt) {
 	XMLString buff(toInsert);
 	self.insertElementAt(buff.ptr(), insertAt);
 }
 
-static bool containsElement(xercesc::BaseRefVectorOf<XMLCh>& self, const STR& toCheck) {
+static bool containsElement(xercesc::BaseRefVectorOf<XMLCh>& self, const STR toCheck) {
 	XMLString buff(toCheck);
 	return self.containsElement(buff.ptr());
 }
@@ -125,8 +125,8 @@ void BaseRefVectorOfXMLCh(void) {
 	//! xercesc::BaseRefVectorOf
 	boost::python::class_<xercesc::BaseRefVectorOf<XMLCh>, boost::noncopyable>("BaseRefVectorOfXMLCh", boost::python::init<const XMLSize_t, boost::python::optional<const bool, xercesc::MemoryManager* const> >())
 			.def(BaseRefVectorOfXMLChDefVisitor())
-			.def(BaseRefVectorOfXMLChStringDefVisitor<XMLString>())
-			.def(BaseRefVectorOfXMLChStringDefVisitor<std::string>())
+			.def(BaseRefVectorOfXMLChStringDefVisitor<XMLString&>())
+			.def(BaseRefVectorOfXMLChStringDefVisitor<char*>())
 			.def("addElement", &xercesc::BaseRefVectorOf<XMLCh>::addElement)
 			.def("setElementAt", &xercesc::BaseRefVectorOf<XMLCh>::setElementAt)
 			.def("insertElementAt", &xercesc::BaseRefVectorOf<XMLCh>::insertElementAt)

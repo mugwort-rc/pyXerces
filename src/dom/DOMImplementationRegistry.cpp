@@ -20,7 +20,7 @@
 
 namespace pyxerces {
 
-template <class STR>
+template <typename STR>
 class DOMImplementationRegistryDefVisitor
 : public boost::python::def_visitor<DOMImplementationRegistryDefVisitor<STR> >
 {
@@ -34,12 +34,12 @@ void visit(T& class_) const {
 	;
 }
 
-static xercesc::DOMImplementation* getDOMImplementation(const STR& features) {
+static xercesc::DOMImplementation* getDOMImplementation(const STR features) {
 	XMLString buff(features);
 	return xercesc::DOMImplementationRegistry::getDOMImplementation(buff.ptr());
 }
 
-static xercesc::DOMImplementationList* getDOMImplementationList(const STR& features) {
+static xercesc::DOMImplementationList* getDOMImplementationList(const STR features) {
 	XMLString buff(features);
 	return xercesc::DOMImplementationRegistry::getDOMImplementationList(buff.ptr());
 }
@@ -49,8 +49,8 @@ static xercesc::DOMImplementationList* getDOMImplementationList(const STR& featu
 void DOMImplementationRegistry_init(void) {
 	//! xercesc::DOMImplementationRegistry
 	boost::python::class_<xercesc::DOMImplementationRegistry, boost::noncopyable>("DOMImplementationRegistry", boost::python::no_init)
-			.def(DOMImplementationRegistryDefVisitor<XMLString>())
-			.def(DOMImplementationRegistryDefVisitor<std::string>())
+			.def(DOMImplementationRegistryDefVisitor<XMLString&>())
+			.def(DOMImplementationRegistryDefVisitor<char*>())
 			.def("getDOMImplementation", &xercesc::DOMImplementationRegistry::getDOMImplementation, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getDOMImplementationList", &xercesc::DOMImplementationRegistry::getDOMImplementationList, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("addSource", &xercesc::DOMImplementationRegistry::addSource)

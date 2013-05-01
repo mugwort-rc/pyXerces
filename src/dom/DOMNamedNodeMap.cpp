@@ -18,7 +18,7 @@
 
 namespace pyxerces {
 
-template <class STR>
+template <typename STR>
 class DOMNamedNodeMapDefVisitor
 : public boost::python::def_visitor<DOMNamedNodeMapDefVisitor<STR> >
 {
@@ -34,22 +34,22 @@ void visit(T& class_) const {
 	;
 }
 
-static xercesc::DOMNode* getNamedItem(xercesc::DOMNamedNodeMap& self, const STR& name) {
+static xercesc::DOMNode* getNamedItem(xercesc::DOMNamedNodeMap& self, const STR name) {
 	XMLString buff(name);
 	return self.getNamedItem(buff.ptr());
 }
 
-static xercesc::DOMNode* removeNamedItem(xercesc::DOMNamedNodeMap& self, const STR& name) {
+static xercesc::DOMNode* removeNamedItem(xercesc::DOMNamedNodeMap& self, const STR name) {
 	XMLString buff(name);
 	return self.removeNamedItem(buff.ptr());
 }
 
-static xercesc::DOMNode* getNamedItemNS(xercesc::DOMNamedNodeMap& self, const STR& namespaceURI, const STR& localName) {
+static xercesc::DOMNode* getNamedItemNS(xercesc::DOMNamedNodeMap& self, const STR namespaceURI, const STR localName) {
 	XMLString buff1(namespaceURI), buff2(localName);
 	return self.getNamedItemNS(buff1.ptr(), buff2.ptr());
 }
 
-static xercesc::DOMNode* removeNamedItemNS(xercesc::DOMNamedNodeMap& self, const STR& namespaceURI, const STR& localName) {
+static xercesc::DOMNode* removeNamedItemNS(xercesc::DOMNamedNodeMap& self, const STR namespaceURI, const STR localName) {
 	XMLString buff1(namespaceURI), buff2(localName);
 	return self.removeNamedItemNS(buff1.ptr(), buff2.ptr());
 }
@@ -97,8 +97,8 @@ xercesc::DOMNode *removeNamedItemNS(const XMLCh *namespaceURI, const XMLCh *loca
 void DOMNamedNodeMap_init(void) {
 	//! xercesc::DOMNamedNodeMap
 	boost::python::class_<DOMNamedNodeMapWrapper, boost::noncopyable>("DOMNamedNodeMap")
-			.def(DOMNamedNodeMapDefVisitor<XMLString>())
-			.def(DOMNamedNodeMapDefVisitor<std::string>())
+			.def(DOMNamedNodeMapDefVisitor<XMLString&>())
+			.def(DOMNamedNodeMapDefVisitor<char*>())
 			.def("setNamedItem", boost::python::pure_virtual(&xercesc::DOMNamedNodeMap::setNamedItem), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("item", boost::python::pure_virtual(&xercesc::DOMNamedNodeMap::item), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getNamedItem", boost::python::pure_virtual(&xercesc::DOMNamedNodeMap::getNamedItem), boost::python::return_value_policy<boost::python::reference_existing_object>())

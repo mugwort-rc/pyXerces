@@ -47,7 +47,7 @@ public:
 	}
 };
 
-template <class STR>
+template <typename STR>
 class AttributeListDefVisitor
 : public boost::python::def_visitor<AttributeListDefVisitor<STR> >
 {
@@ -61,12 +61,12 @@ void visit(T& class_) const {
 	;
 }
 
-static const XMLCh* getType(xercesc::AttributeList& self, const STR& name) {
+static const XMLCh* getType(xercesc::AttributeList& self, const STR name) {
 	XMLString buff(name);
 	return self.getType(buff.ptr());
 }
 
-static const XMLCh* getValue(xercesc::AttributeList& self, const STR& name) {
+static const XMLCh* getValue(xercesc::AttributeList& self, const STR name) {
 	XMLString buff(name);
 	return self.getValue(buff.ptr());
 }
@@ -76,8 +76,8 @@ static const XMLCh* getValue(xercesc::AttributeList& self, const STR& name) {
 void AttributeList_init(void) {
 	//! xercesc::AttributeList
 	boost::python::class_<AttributeListWrapper, boost::noncopyable>("AttributeList")
-			.def(AttributeListDefVisitor<XMLString>())
-			.def(AttributeListDefVisitor<std::string>())
+			.def(AttributeListDefVisitor<XMLString&>())
+			.def(AttributeListDefVisitor<char*>())
 			.def("getLength", &xercesc::AttributeList::getLength)
 			.def("getName", &xercesc::AttributeList::getName, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getType", boost::python::pure_virtual(static_cast<const XMLCh*(xercesc::AttributeList::*)(const XMLSize_t) const>(&xercesc::AttributeList::getType)), boost::python::return_value_policy<boost::python::return_by_value>())

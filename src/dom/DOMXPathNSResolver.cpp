@@ -14,7 +14,7 @@
 
 namespace pyxerces {
 
-template <class STR>
+template <typename STR>
 class DOMXPathNSResolverDefVisitor
 : public boost::python::def_visitor<DOMXPathNSResolverDefVisitor<STR> >
 {
@@ -29,17 +29,17 @@ void visit(T& class_) const {
 	;
 }
 
-static const XMLCh* lookupNamespaceURI(xercesc::DOMXPathNSResolver& self, const STR& prefix) {
+static const XMLCh* lookupNamespaceURI(xercesc::DOMXPathNSResolver& self, const STR prefix) {
 	XMLString buff(prefix);
 	return self.lookupNamespaceURI(buff.ptr());
 }
 
-static const XMLCh* lookupPrefix(xercesc::DOMXPathNSResolver& self, const STR& namespaceURI) {
+static const XMLCh* lookupPrefix(xercesc::DOMXPathNSResolver& self, const STR namespaceURI) {
 	XMLString buff(namespaceURI);
 	return self.lookupPrefix(buff.ptr());
 }
 
-static void addNamespaceBinding(xercesc::DOMXPathNSResolver& self, const STR& prefix, const STR& uri) {
+static void addNamespaceBinding(xercesc::DOMXPathNSResolver& self, const STR prefix, const STR uri) {
 	XMLString buff1(prefix), buff2(uri);
 	self.addNamespaceBinding(buff1.ptr(), buff2.ptr());
 }
@@ -71,8 +71,8 @@ void release() {
 void DOMXPathNSResolver_init(void) {
 	//! xercesc::DOMXPathNSResolver
 	boost::python::class_<DOMXPathNSResolverWrapper, boost::noncopyable>("DOMXPathNSResolver")
-			.def(DOMXPathNSResolverDefVisitor<XMLString>())
-			.def(DOMXPathNSResolverDefVisitor<std::string>())
+			.def(DOMXPathNSResolverDefVisitor<XMLString&>())
+			.def(DOMXPathNSResolverDefVisitor<char*>())
 			.def("lookupNamespaceURI", boost::python::pure_virtual(&xercesc::DOMXPathNSResolver::lookupNamespaceURI), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("lookupPrefix", boost::python::pure_virtual(&xercesc::DOMXPathNSResolver::lookupPrefix), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("addNamespaceBinding", boost::python::pure_virtual(&xercesc::DOMXPathNSResolver::addNamespaceBinding))

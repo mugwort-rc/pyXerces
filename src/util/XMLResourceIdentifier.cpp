@@ -18,49 +18,49 @@
 
 namespace pyxerces {
 
-template <class STR>
-xercesc::XMLResourceIdentifier* XMLResourceIdentifier_fromstring(const xercesc::XMLResourceIdentifier::ResourceIdentifierType resourceIdentitiferType, const STR& systemId, const STR& nameSpace, const STR& publicId, const STR& baseURI, const xercesc::Locator* locator) {
+template <typename STR>
+class XMLResourceIdentifierDefVisitor
+: public boost::python::def_visitor<XMLResourceIdentifierDefVisitor<STR> >
+{
+friend class def_visitor_access;
+public:
+template <class T>
+void visit(T& class_) const {
+	class_
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLResourceIdentifier*(*)(const xercesc::XMLResourceIdentifier::ResourceIdentifierType, const STR, const STR, const STR, const STR, const xercesc::Locator*)>(&XMLResourceIdentifier_fromstring)))
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLResourceIdentifier*(*)(const xercesc::XMLResourceIdentifier::ResourceIdentifierType, const STR, const STR, const STR, const STR)>(&XMLResourceIdentifier_fromstring)))
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLResourceIdentifier*(*)(const xercesc::XMLResourceIdentifier::ResourceIdentifierType, const STR, const STR, const STR)>(&XMLResourceIdentifier_fromstring)))
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLResourceIdentifier*(*)(const xercesc::XMLResourceIdentifier::ResourceIdentifierType, const STR, const STR)>(&XMLResourceIdentifier_fromstring)))
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLResourceIdentifier*(*)(const xercesc::XMLResourceIdentifier::ResourceIdentifierType, const STR)>(&XMLResourceIdentifier_fromstring)))
+	;
+}
+
+static xercesc::XMLResourceIdentifier* XMLResourceIdentifier_fromstring(const xercesc::XMLResourceIdentifier::ResourceIdentifierType resourceIdentitiferType, const STR systemId, const STR nameSpace, const STR publicId, const STR baseURI, const xercesc::Locator* locator) {
 	XMLString buff1(systemId), buff2(nameSpace), buff3(publicId), buff4(baseURI);
 	return new xercesc::XMLResourceIdentifier(resourceIdentitiferType, buff1.ptr(), buff2.ptr(), buff3.ptr(), buff4.ptr(), locator);
 }
 
-template <class STR>
-xercesc::XMLResourceIdentifier* XMLResourceIdentifier_fromstring(const xercesc::XMLResourceIdentifier::ResourceIdentifierType resourceIdentitiferType, const STR& systemId, const STR& nameSpace, const STR& publicId, const STR& baseURI) {
-	XMLString buff1(systemId), buff2(nameSpace), buff3(publicId), buff4(baseURI);
-	return new xercesc::XMLResourceIdentifier(resourceIdentitiferType, buff1.ptr(), buff2.ptr(), buff3.ptr(), buff4.ptr(), nullptr);
+static xercesc::XMLResourceIdentifier* XMLResourceIdentifier_fromstring(const xercesc::XMLResourceIdentifier::ResourceIdentifierType resourceIdentitiferType, const STR systemId, const STR nameSpace, const STR publicId, const STR baseURI) {
+	return XMLResourceIdentifier_fromstring(resourceIdentitiferType, systemId, nameSpace, publicId, baseURI, nullptr);
 }
 
-template <class STR>
-xercesc::XMLResourceIdentifier* XMLResourceIdentifier_fromstring(const xercesc::XMLResourceIdentifier::ResourceIdentifierType resourceIdentitiferType, const STR& systemId, const STR& nameSpace, const STR& publicId) {
-	XMLString buff1(systemId), buff2(nameSpace), buff3(publicId);
-	return new xercesc::XMLResourceIdentifier(resourceIdentitiferType, buff1.ptr(), buff2.ptr(), buff3.ptr(), nullptr, nullptr);
+static xercesc::XMLResourceIdentifier* XMLResourceIdentifier_fromstring(const xercesc::XMLResourceIdentifier::ResourceIdentifierType resourceIdentitiferType, const STR systemId, const STR nameSpace, const STR publicId) {
+	return XMLResourceIdentifier_fromstring(resourceIdentitiferType, systemId, nameSpace, publicId, nullptr);
 }
 
-template <class STR>
-xercesc::XMLResourceIdentifier* XMLResourceIdentifier_fromstring(const xercesc::XMLResourceIdentifier::ResourceIdentifierType resourceIdentitiferType, const STR& systemId, const STR& nameSpace) {
-	XMLString buff1(systemId), buff2(nameSpace);
-	return new xercesc::XMLResourceIdentifier(resourceIdentitiferType, buff1.ptr(), buff2.ptr(), nullptr, nullptr, nullptr);
+static xercesc::XMLResourceIdentifier* XMLResourceIdentifier_fromstring(const xercesc::XMLResourceIdentifier::ResourceIdentifierType resourceIdentitiferType, const STR systemId, const STR nameSpace) {
+	return XMLResourceIdentifier_fromstring(resourceIdentitiferType, systemId, nameSpace, nullptr);
 }
 
-template <class STR>
-xercesc::XMLResourceIdentifier* XMLResourceIdentifier_fromstring(const xercesc::XMLResourceIdentifier::ResourceIdentifierType resourceIdentitiferType, const STR& systemId) {
-	XMLString buff(systemId);
-	return new xercesc::XMLResourceIdentifier(resourceIdentitiferType, buff.ptr(), nullptr, nullptr, nullptr, nullptr);
+static xercesc::XMLResourceIdentifier* XMLResourceIdentifier_fromstring(const xercesc::XMLResourceIdentifier::ResourceIdentifierType resourceIdentitiferType, const STR systemId) {
+	return XMLResourceIdentifier_fromstring(resourceIdentitiferType, systemId, nullptr);
 }
+
+};
 
 void XMLResourceIdentifier_init(void) {
 	//! xercesc::XMLResourceIdentifier
 	auto XMLResourceIdentifier = boost::python::class_<xercesc::XMLResourceIdentifier, boost::noncopyable>("XMLResourceIdentifier", boost::python::init<const xercesc::XMLResourceIdentifier::ResourceIdentifierType, const XMLCh* const, boost::python::optional<const XMLCh* const, const XMLCh* const, const XMLCh* const, const xercesc::Locator*> >())
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLResourceIdentifier*(*)(const xercesc::XMLResourceIdentifier::ResourceIdentifierType, const XMLString&, const XMLString&, const XMLString&, const XMLString&, const xercesc::Locator*)>(&XMLResourceIdentifier_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLResourceIdentifier*(*)(const xercesc::XMLResourceIdentifier::ResourceIdentifierType, const XMLString&, const XMLString&, const XMLString&, const XMLString&)>(&XMLResourceIdentifier_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLResourceIdentifier*(*)(const xercesc::XMLResourceIdentifier::ResourceIdentifierType, const XMLString&, const XMLString&, const XMLString&)>(&XMLResourceIdentifier_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLResourceIdentifier*(*)(const xercesc::XMLResourceIdentifier::ResourceIdentifierType, const XMLString&, const XMLString&)>(&XMLResourceIdentifier_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLResourceIdentifier*(*)(const xercesc::XMLResourceIdentifier::ResourceIdentifierType, const XMLString&)>(&XMLResourceIdentifier_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLResourceIdentifier*(*)(const xercesc::XMLResourceIdentifier::ResourceIdentifierType, const std::string&, const std::string&, const std::string&, const std::string&, const xercesc::Locator*)>(&XMLResourceIdentifier_fromstring<std::string>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLResourceIdentifier*(*)(const xercesc::XMLResourceIdentifier::ResourceIdentifierType, const std::string&, const std::string&, const std::string&, const std::string&)>(&XMLResourceIdentifier_fromstring<std::string>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLResourceIdentifier*(*)(const xercesc::XMLResourceIdentifier::ResourceIdentifierType, const std::string&, const std::string&, const std::string&)>(&XMLResourceIdentifier_fromstring<std::string>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLResourceIdentifier*(*)(const xercesc::XMLResourceIdentifier::ResourceIdentifierType, const std::string&, const std::string&)>(&XMLResourceIdentifier_fromstring<std::string>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLResourceIdentifier*(*)(const xercesc::XMLResourceIdentifier::ResourceIdentifierType, const std::string&)>(&XMLResourceIdentifier_fromstring<std::string>)))
 			.def("getResourceIdentifierType", &xercesc::XMLResourceIdentifier::getResourceIdentifierType)
 			.def("getPublicId", &xercesc::XMLResourceIdentifier::getPublicId, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getSystemId", &xercesc::XMLResourceIdentifier::getSystemId, boost::python::return_value_policy<boost::python::return_by_value>())

@@ -14,37 +14,28 @@
 
 namespace pyxerces {
 
+template <typename STR>
 class XMLBufferDefVisitor
-: public boost::python::def_visitor<XMLBufferDefVisitor> {
+: public boost::python::def_visitor<XMLBufferDefVisitor<STR> > {
 friend class def_visitor_access;
 
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("append", static_cast<void(*)(xercesc::XMLBuffer&, const XMLString&)>(&XMLBufferDefVisitor::append))
-	.def("append", static_cast<void(*)(xercesc::XMLBuffer&, const std::string&)>(&XMLBufferDefVisitor::append))
-	.def("set", static_cast<void(*)(xercesc::XMLBuffer&, const XMLString&)>(&XMLBufferDefVisitor::set))
-	.def("set", static_cast<void(*)(xercesc::XMLBuffer&, const std::string&)>(&XMLBufferDefVisitor::set))
+	.def("append", static_cast<void(*)(xercesc::XMLBuffer&, const STR)>(&XMLBufferDefVisitor::append))
+	.def("set", static_cast<void(*)(xercesc::XMLBuffer&, const STR)>(&XMLBufferDefVisitor::set))
 	;
 }
 
-static void append(xercesc::XMLBuffer& self, const XMLString& chars) {
-	self.append(chars.ptr());
-}
-
-static void append(xercesc::XMLBuffer& self, const std::string& chars) {
+static void append(xercesc::XMLBuffer& self, const STR chars) {
 	XMLString buff(chars);
-	XMLBufferDefVisitor::append(self, buff);
+	self.append(buff.ptr());
 }
 
-static void set(xercesc::XMLBuffer& self, const XMLString& chars) {
-	self.set(chars.ptr());
-}
-
-static void set(xercesc::XMLBuffer& self, const std::string& chars) {
+static void set(xercesc::XMLBuffer& self, const STR chars) {
 	XMLString buff(chars);
-	XMLBufferDefVisitor::set(self, buff);
+	self.set(buff.ptr());
 }
 
 };
@@ -62,7 +53,8 @@ bool bufferFull(xercesc::XMLBuffer& buffer) {
 void XMLBuffer_init(void) {
 	//! xercesc::XMLBuffer
 	boost::python::class_<xercesc::XMLBuffer, boost::noncopyable>("XMLBuffer", boost::python::init<boost::python::optional<const XMLSize_t, xercesc::MemoryManager* const> >())
-			.def(XMLBufferDefVisitor())
+			.def(XMLBufferDefVisitor<XMLString&>())
+			.def(XMLBufferDefVisitor<char*>())
 			.def("setFullHandler", &xercesc::XMLBuffer::setFullHandler)
 			.def("append", static_cast<void(xercesc::XMLBuffer::*)(const XMLCh)>(&xercesc::XMLBuffer::append))
 			.def("append", static_cast<void(xercesc::XMLBuffer::*)(const XMLCh* const, const XMLSize_t)>(&xercesc::XMLBuffer::append))

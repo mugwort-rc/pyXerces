@@ -14,7 +14,7 @@
 
 namespace pyxerces {
 
-template <class STR>
+template <typename STR>
 class AttributesDefVisitor
 : public boost::python::def_visitor<AttributesDefVisitor<STR> >
 {
@@ -23,45 +23,45 @@ public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("getIndex", static_cast<boost::python::tuple(*)(xercesc::Attributes&, const STR&, const STR&)>(&AttributesDefVisitor<STR>::getIndex))
-	.def("getIndex", static_cast<boost::python::tuple(*)(xercesc::Attributes&, const STR&)>(&AttributesDefVisitor<STR>::getIndex))
-	.def("getType", static_cast<const XMLCh*(*)(xercesc::Attributes&, const STR&, const STR&)>(&AttributesDefVisitor<STR>::getType), boost::python::return_value_policy<boost::python::return_by_value>())
-	.def("getType", static_cast<const XMLCh*(*)(xercesc::Attributes&, const STR&)>(&AttributesDefVisitor<STR>::getType), boost::python::return_value_policy<boost::python::return_by_value>())
-	.def("getValue", static_cast<const XMLCh*(*)(xercesc::Attributes&, const STR&, const STR&)>(&AttributesDefVisitor<STR>::getValue), boost::python::return_value_policy<boost::python::return_by_value>())
-	.def("getValue", static_cast<const XMLCh*(*)(xercesc::Attributes&, const STR&)>(&AttributesDefVisitor<STR>::getValue), boost::python::return_value_policy<boost::python::return_by_value>())
+	.def("getIndex", static_cast<boost::python::tuple(*)(xercesc::Attributes&, const STR, const STR)>(&AttributesDefVisitor<STR>::getIndex))
+	.def("getIndex", static_cast<boost::python::tuple(*)(xercesc::Attributes&, const STR)>(&AttributesDefVisitor<STR>::getIndex))
+	.def("getType", static_cast<const XMLCh*(*)(xercesc::Attributes&, const STR, const STR)>(&AttributesDefVisitor<STR>::getType), boost::python::return_value_policy<boost::python::return_by_value>())
+	.def("getType", static_cast<const XMLCh*(*)(xercesc::Attributes&, const STR)>(&AttributesDefVisitor<STR>::getType), boost::python::return_value_policy<boost::python::return_by_value>())
+	.def("getValue", static_cast<const XMLCh*(*)(xercesc::Attributes&, const STR, const STR)>(&AttributesDefVisitor<STR>::getValue), boost::python::return_value_policy<boost::python::return_by_value>())
+	.def("getValue", static_cast<const XMLCh*(*)(xercesc::Attributes&, const STR)>(&AttributesDefVisitor<STR>::getValue), boost::python::return_value_policy<boost::python::return_by_value>())
 	;
 }
 
-static boost::python::tuple getIndex(xercesc::Attributes& self, const STR& uri, const STR& localPart ) {
+static boost::python::tuple getIndex(xercesc::Attributes& self, const STR uri, const STR localPart ) {
 	XMLString buff1(uri), buff2(localPart);
 	XMLSize_t ind;
 	bool ret =  self.getIndex(buff1.ptr(), buff2.ptr(), ind);
 	return boost::python::make_tuple(ret, ind);
 }
 
-static boost::python::tuple getIndex(xercesc::Attributes& self, const STR& qName ) {
+static boost::python::tuple getIndex(xercesc::Attributes& self, const STR qName ) {
 	XMLString buff(qName);
 	XMLSize_t ind;
 	bool ret = self.getIndex(buff.ptr(), ind);
 	return boost::python::make_tuple(ret, ind);
 }
 
-static const XMLCh* getType(xercesc::Attributes& self, const STR& uri, const STR& localPart ) {
+static const XMLCh* getType(xercesc::Attributes& self, const STR uri, const STR localPart ) {
 	XMLString buff1(uri), buff2(localPart);
 	return self.getType(buff1.ptr(), buff2.ptr());
 }
 
-static const XMLCh* getType(xercesc::Attributes& self, const STR& qName) {
+static const XMLCh* getType(xercesc::Attributes& self, const STR qName) {
 	XMLString buff(qName);
 	return self.getType(buff.ptr());
 }
 
-static const XMLCh* getValue(xercesc::Attributes& self, const STR& uri, const STR& localPart ) {
+static const XMLCh* getValue(xercesc::Attributes& self, const STR uri, const STR localPart ) {
 	XMLString buff1(uri), buff2(localPart);
 	return self.getValue(buff1.ptr(), buff2.ptr());
 }
 
-static const XMLCh* getValue(xercesc::Attributes& self, const STR& qName) {
+static const XMLCh* getValue(xercesc::Attributes& self, const STR qName) {
 	XMLString buff(qName);
 	return self.getValue(buff.ptr());
 }
@@ -139,8 +139,8 @@ const XMLCh* getValue(const XMLCh* const qName) const {
 void Attributes_init(void) {
 	//! xercesc::Attributes
 	boost::python::class_<AttributesWrapper, boost::noncopyable>("Attributes")
-			.def(AttributesDefVisitor<XMLString>())
-			.def(AttributesDefVisitor<std::string>())
+			.def(AttributesDefVisitor<XMLString&>())
+			.def(AttributesDefVisitor<char*>())
 			.def("getLength", boost::python::pure_virtual(&xercesc::Attributes::getLength))
 			.def("getURI", boost::python::pure_virtual(&xercesc::Attributes::getURI), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getLocalName", boost::python::pure_virtual(&xercesc::Attributes::getLocalName), boost::python::return_value_policy<boost::python::return_by_value>())

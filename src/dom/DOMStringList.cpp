@@ -14,7 +14,7 @@
 
 namespace pyxerces {
 
-template <class STR>
+template <typename STR>
 class DOMStringListDefVisitor
 : public boost::python::def_visitor<DOMStringListDefVisitor<STR> >
 {
@@ -27,7 +27,7 @@ void visit(T& class_) const {
 	;
 }
 
-static bool contains(xercesc::DOMStringList& self, const STR& value) {
+static bool contains(xercesc::DOMStringList& self, const STR value) {
 	XMLString buff(value);
 	return self.contains(buff.ptr());
 }
@@ -59,8 +59,8 @@ void release(){
 void DOMStringList_init(void) {
 	//! xercesc::DOMStringList
 	boost::python::class_<DOMStringListWrapper, boost::noncopyable>("DOMStringList")
-			.def(DOMStringListDefVisitor<XMLString>())
-			.def(DOMStringListDefVisitor<std::string>())
+			.def(DOMStringListDefVisitor<XMLString&>())
+			.def(DOMStringListDefVisitor<char*>())
 			.def("item", boost::python::pure_virtual(&xercesc::DOMStringList::item), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getLength", boost::python::pure_virtual(&xercesc::DOMStringList::getLength))
 			.def("contains", boost::python::pure_virtual(&xercesc::DOMStringList::contains))

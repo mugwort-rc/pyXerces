@@ -20,18 +20,7 @@
 
 namespace pyxerces {
 
-template <class STR>
-xercesc::DTDElementDecl* DTDElementDecl_init(const STR& elemRawName, const unsigned int uriId, const xercesc::DTDElementDecl::ModelTypes modelType, xercesc::MemoryManager* const manager) {
-	XMLString buff(elemRawName);
-	return new xercesc::DTDElementDecl(buff.ptr(), uriId, modelType, manager);
-}
-
-template <class STR>
-xercesc::DTDElementDecl* DTDElementDecl_init(const STR& elemRawName, const unsigned int uriId, const xercesc::DTDElementDecl::ModelTypes modelType) {
-	return DTDElementDecl_init<STR>(elemRawName, uriId, modelType, xercesc::XMLPlatformUtils::fgMemoryManager);
-}
-
-template <class STR>
+template <typename STR>
 class DTDElementDeclDefVisitor
 : public boost::python::def_visitor<DTDElementDeclDefVisitor<STR> > {
 friend class def_visitor_access;
@@ -40,11 +29,22 @@ public:
 template <class T>
 void visit(T& class_) const {
 	class_
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDElementDecl*(*)(const STR, const unsigned int, const xercesc::DTDElementDecl::ModelTypes, xercesc::MemoryManager* const)>(&DTDElementDecl_init)))
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDElementDecl*(*)(const STR, const unsigned int, const xercesc::DTDElementDecl::ModelTypes)>(&DTDElementDecl_init)))
 	.def("getAttDef", &DTDElementDeclDefVisitor<STR>::getAttDef, boost::python::return_value_policy<boost::python::reference_existing_object>())
 	;
 }
 
-static xercesc::DTDAttDef* getAttDef(xercesc::DTDElementDecl& self, const STR& attName) {
+static xercesc::DTDElementDecl* DTDElementDecl_init(const STR elemRawName, const unsigned int uriId, const xercesc::DTDElementDecl::ModelTypes modelType, xercesc::MemoryManager* const manager) {
+	XMLString buff(elemRawName);
+	return new xercesc::DTDElementDecl(buff.ptr(), uriId, modelType, manager);
+}
+
+static xercesc::DTDElementDecl* DTDElementDecl_init(const STR elemRawName, const unsigned int uriId, const xercesc::DTDElementDecl::ModelTypes modelType) {
+	return DTDElementDecl_init(elemRawName, uriId, modelType, xercesc::XMLPlatformUtils::fgMemoryManager);
+}
+
+static xercesc::DTDAttDef* getAttDef(xercesc::DTDElementDecl& self, const STR attName) {
 	XMLString buff(attName);
 	return self.getAttDef(buff.ptr());
 }
@@ -56,12 +56,8 @@ void DTDElementDecl_init(void) {
 	boost::python::class_<xercesc::DTDElementDecl, boost::noncopyable, boost::python::bases<xercesc::XMLElementDecl> >("DTDElementDecl", boost::python::init<boost::python::optional<xercesc::MemoryManager* const> >())
 			.def(boost::python::init<const XMLCh* const, const unsigned int, const xercesc::DTDElementDecl::ModelTypes, boost::python::optional<xercesc::MemoryManager* const> >())
 			.def(boost::python::init<xercesc::QName* const, const xercesc::DTDElementDecl::ModelTypes, boost::python::optional<xercesc::MemoryManager* const> >())
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDElementDecl*(*)(const XMLString&, const unsigned int, const xercesc::DTDElementDecl::ModelTypes, xercesc::MemoryManager* const)>(&DTDElementDecl_init<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDElementDecl*(*)(const XMLString&, const unsigned int, const xercesc::DTDElementDecl::ModelTypes)>(&DTDElementDecl_init<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDElementDecl*(*)(const std::string&, const unsigned int, const xercesc::DTDElementDecl::ModelTypes, xercesc::MemoryManager* const)>(&DTDElementDecl_init<std::string>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDElementDecl*(*)(const std::string&, const unsigned int, const xercesc::DTDElementDecl::ModelTypes)>(&DTDElementDecl_init<std::string>)))
-			.def(DTDElementDeclDefVisitor<XMLString>())
-			.def(DTDElementDeclDefVisitor<std::string>())
+			.def(DTDElementDeclDefVisitor<XMLString&>())
+			.def(DTDElementDeclDefVisitor<char*>())
 			.def("getAttDefList", &xercesc::DTDElementDecl::getAttDefList, boost::python::return_internal_reference<>())
 			.def("getCharDataOpts", &xercesc::DTDElementDecl::getCharDataOpts)
 			.def("hasAttDefs", &xercesc::DTDElementDecl::hasAttDefs)

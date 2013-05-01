@@ -19,7 +19,7 @@
 
 namespace pyxerces {
 
-template <class STR>
+template <typename STR>
 class PSVIHandlerDefVisitor
 : public boost::python::def_visitor<PSVIHandlerDefVisitor<STR> >
 {
@@ -34,17 +34,17 @@ void visit(T& class_) const {
 	;
 }
 
-static void handleElementPSVI(xercesc::PSVIHandler& self, const STR& localName, const STR& uri, xercesc::PSVIElement* elementInfo) {
+static void handleElementPSVI(xercesc::PSVIHandler& self, const STR localName, const STR uri, xercesc::PSVIElement* elementInfo) {
 	XMLString buff1(localName), buff2(uri);
 	self.handleElementPSVI(buff1.ptr(), buff2.ptr(), elementInfo);
 }
 
-static void handlePartialElementPSVI(xercesc::PSVIHandler& self, const STR& localName, const STR& uri, xercesc::PSVIElement* elementInfo) {
+static void handlePartialElementPSVI(xercesc::PSVIHandler& self, const STR localName, const STR uri, xercesc::PSVIElement* elementInfo) {
 	XMLString buff1(localName), buff2(uri);
 	self.handlePartialElementPSVI(buff1.ptr(), buff2.ptr(), elementInfo);
 }
 
-static void handleAttributesPSVI(xercesc::PSVIHandler& self, const STR& localName, const STR& uri, xercesc::PSVIAttributeList* psviAttributes) {
+static void handleAttributesPSVI(xercesc::PSVIHandler& self, const STR localName, const STR uri, xercesc::PSVIAttributeList* psviAttributes) {
 	XMLString buff1(localName), buff2(uri);
 	self.handleAttributesPSVI(buff1.ptr(), buff2.ptr(), psviAttributes);
 }
@@ -76,8 +76,8 @@ void handleAttributesPSVI(const XMLCh* const localName, const XMLCh* const uri, 
 void PSVIHandler_init(void) {
 	//! xercesc::PSVIHandler
 	boost::python::class_<PSVIHandlerWrapper, boost::noncopyable>("PSVIHandler")
-			.def(PSVIHandlerDefVisitor<XMLString>())
-			.def(PSVIHandlerDefVisitor<std::string>())
+			.def(PSVIHandlerDefVisitor<XMLString&>())
+			.def(PSVIHandlerDefVisitor<char*>())
 			.def("handleElementPSVI", boost::python::pure_virtual(&xercesc::PSVIHandler::handleElementPSVI))
 			.def("handlePartialElementPSVI", &xercesc::PSVIHandler::handlePartialElementPSVI)
 			.def("handleAttributesPSVI", boost::python::pure_virtual(&xercesc::PSVIHandler::handleAttributesPSVI))

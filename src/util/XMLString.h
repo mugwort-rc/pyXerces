@@ -28,9 +28,9 @@ XMLString(void);
 /*!
  * Constructor
  * @param [in]		str		convert string
- * @type str: std::string
+ * @type str: const char*
  */
-XMLString(const std::string& str);
+XMLString(const char* str);
 /*!
  * Constructor
  * @param [in]		ptr		raw XMLCh*

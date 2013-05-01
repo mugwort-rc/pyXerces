@@ -19,7 +19,7 @@
 
 namespace pyxerces {
 
-template <class STR>
+template <typename STR>
 class XMLAttDefListDefVisitor
 : public boost::python::def_visitor<XMLAttDefListDefVisitor<STR> >
 {
@@ -28,17 +28,17 @@ public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("findAttDef", static_cast<xercesc::XMLAttDef*(*)(xercesc::XMLAttDefList&, const unsigned int, const STR&)>(&XMLAttDefListDefVisitor<STR>::findAttDef), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("findAttDef", static_cast<xercesc::XMLAttDef*(*)(xercesc::XMLAttDefList&, const STR&, const STR&)>(&XMLAttDefListDefVisitor<STR>::findAttDef), boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("findAttDef", static_cast<xercesc::XMLAttDef*(*)(xercesc::XMLAttDefList&, const unsigned int, const STR)>(&XMLAttDefListDefVisitor<STR>::findAttDef), boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("findAttDef", static_cast<xercesc::XMLAttDef*(*)(xercesc::XMLAttDefList&, const STR, const STR)>(&XMLAttDefListDefVisitor<STR>::findAttDef), boost::python::return_value_policy<boost::python::reference_existing_object>())
 	;
 }
 
-static xercesc::XMLAttDef* findAttDef(xercesc::XMLAttDefList& self, const unsigned int uriID, const STR& attName) {
+static xercesc::XMLAttDef* findAttDef(xercesc::XMLAttDefList& self, const unsigned int uriID, const STR attName) {
 	XMLString buff(attName);
 	return self.findAttDef(uriID, buff.ptr());
 }
 
-static xercesc::XMLAttDef* findAttDef(xercesc::XMLAttDefList& self, const STR& attURI, const STR& attName) {
+static xercesc::XMLAttDef* findAttDef(xercesc::XMLAttDefList& self, const STR attURI, const STR attName) {
 	XMLString buff1(attURI), buff2(attName);
 	return self.findAttDef(buff1.ptr(), buff2.ptr());
 }
@@ -88,8 +88,8 @@ PyDECL_XSERIALIZABLEWrapper
 void XMLAttDefList_init(void) {
 	//! xercesc::XMLAttDefList
 	boost::python::class_<XMLAttDefListWrapper, boost::noncopyable, boost::python::bases<xercesc::XSerializable> >("XMLAttDefList")
-			.def(XMLAttDefListDefVisitor<XMLString>())
-			.def(XMLAttDefListDefVisitor<std::string>())
+			.def(XMLAttDefListDefVisitor<XMLString&>())
+			.def(XMLAttDefListDefVisitor<char*>())
 			.def("isEmpty", boost::python::pure_virtual(&xercesc::XMLAttDefList::isEmpty))
 			.def("findAttDef", boost::python::pure_virtual(static_cast<xercesc::XMLAttDef*(xercesc::XMLAttDefList::*)(const unsigned int, const XMLCh* const)>(&xercesc::XMLAttDefList::findAttDef)), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("findAttDef", boost::python::pure_virtual(static_cast<xercesc::XMLAttDef*(xercesc::XMLAttDefList::*)(const XMLCh*, const XMLCh* const)>(&xercesc::XMLAttDefList::findAttDef)), boost::python::return_value_policy<boost::python::reference_existing_object>())

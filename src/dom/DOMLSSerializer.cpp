@@ -18,7 +18,7 @@
 
 namespace pyxerces {
 
-template <class STR>
+template <typename STR>
 class DOMLSSerializerDefVisitor
 : public boost::python::def_visitor<DOMLSSerializerDefVisitor<STR> >
 {
@@ -32,12 +32,12 @@ void visit(T& class_) const {
 	;
 }
 
-static void setNewLine(xercesc::DOMLSSerializer& self, const STR& newLine) {
+static void setNewLine(xercesc::DOMLSSerializer& self, const STR newLine) {
 	XMLString buff(newLine);
 	self.setNewLine(buff.ptr());
 }
 
-static bool writeToURI(xercesc::DOMLSSerializer& self, xercesc::DOMNode* nodeToWrite, const STR& uri) {
+static bool writeToURI(xercesc::DOMLSSerializer& self, xercesc::DOMNode* nodeToWrite, const STR uri) {
 	XMLString buff(uri);
 	return self.writeToURI(nodeToWrite, buff.ptr());
 }
@@ -92,8 +92,8 @@ void release() {
 void DOMLSSerializer_init(void) {
 	//! xercesc::DOMLSSerializer
 	boost::python::class_<DOMLSSerializerWrapper, boost::noncopyable>("DOMLSSerializer")
-			.def(DOMLSSerializerDefVisitor<XMLString>())
-			.def(DOMLSSerializerDefVisitor<std::string>())
+			.def(DOMLSSerializerDefVisitor<XMLString&>())
+			.def(DOMLSSerializerDefVisitor<char*>())
 			.def("getDomConfig", boost::python::pure_virtual(&xercesc::DOMLSSerializer::getDomConfig), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("setNewLine", boost::python::pure_virtual(&xercesc::DOMLSSerializer::setNewLine))
 			.def("setFilter", boost::python::pure_virtual(&xercesc::DOMLSSerializer::setFilter))

@@ -30,7 +30,7 @@
 
 namespace pyxerces {
 
-template <class STR>
+template <typename STR>
 class SAXParserDefVisitor
 : public boost::python::def_visitor<SAXParserDefVisitor<STR> >
 {
@@ -58,82 +58,82 @@ void visit(T& class_) const {
 	;
 }
 
-static xercesc::Grammar* getGrammar(xercesc::SAXParser& self, const STR& nameSpaceKey) {
+static xercesc::Grammar* getGrammar(xercesc::SAXParser& self, const STR nameSpaceKey) {
 	XMLString buff(nameSpaceKey);
 	return self.getGrammar(buff.ptr());
 }
 
-static void useScanner(xercesc::SAXParser& self, const STR& scannerName) {
+static void useScanner(xercesc::SAXParser& self, const STR scannerName) {
 	XMLString buff(scannerName);
 	return self.useScanner(buff.ptr());
 }
 
-static void docCharacters(xercesc::SAXParser& self, const STR& chars, const bool cdataSection) {
+static void docCharacters(xercesc::SAXParser& self, const STR chars, const bool cdataSection) {
 	XMLString buff(chars);
 	self.docCharacters(buff.ptr(), buff.size(), cdataSection);
 }
 
-static void docComment(xercesc::SAXParser& self, const STR& comment) {
+static void docComment(xercesc::SAXParser& self, const STR comment) {
 	XMLString buff(comment);
 	self.docComment(buff.ptr());
 }
 
-static void docPI(xercesc::SAXParser& self, const STR& target, const STR& data) {
+static void docPI(xercesc::SAXParser& self, const STR target, const STR data) {
 	XMLString buff1(target), buff2(data);
 	self.docPI(buff1.ptr(), buff2.ptr());
 }
 
-static void endElement(xercesc::SAXParser& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const bool isRoot, const STR& prefixName) {
+static void endElement(xercesc::SAXParser& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const bool isRoot, const STR prefixName) {
 	XMLString buff(prefixName);
 	self.endElement(elemDecl, uriId, isRoot, buff.ptr());
 }
 
-static void ignorableWhitespace(xercesc::SAXParser& self, const XMLString& chars, const bool cdataSection) {
+static void ignorableWhitespace(xercesc::SAXParser& self, const STR chars, const bool cdataSection) {
 	XMLString buff(chars);
 	self.ignorableWhitespace(buff.ptr(), buff.size(), cdataSection);
 }
 
-static void startElement(xercesc::SAXParser& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const STR& prefixName, const xercesc::RefVectorOf<xercesc::XMLAttr>& attrList, const XMLSize_t attrCount, const bool isEmpty, const bool isRoot) {
+static void startElement(xercesc::SAXParser& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const STR prefixName, const xercesc::RefVectorOf<xercesc::XMLAttr>& attrList, const XMLSize_t attrCount, const bool isEmpty, const bool isRoot) {
 	XMLString buff(prefixName);
 	self.startElement(elemDecl, uriId, buff.ptr(), attrList, attrCount, isEmpty, isRoot);
 }
 
-static void XMLDecl(xercesc::SAXParser& self, const STR& versionStr, const STR& encodingStr, const STR& standaloneStr, const STR& autoEncodingStr) {
+static void XMLDecl(xercesc::SAXParser& self, const STR versionStr, const STR encodingStr, const STR standaloneStr, const STR autoEncodingStr) {
 	XMLString buff1(versionStr), buff2(encodingStr), buff3(standaloneStr), buff4(autoEncodingStr);
 	self.XMLDecl(buff1.ptr(), buff2.ptr(), buff3.ptr(), buff4.ptr());
 }
 
-static void error(xercesc::SAXParser& self, const unsigned int errCode, const STR& errDomain, const xercesc::XMLErrorReporter::ErrTypes type, const STR& errorText, const STR& systemId, const STR& publicId, const XMLFileLoc lineNum, const XMLFileLoc colNum) {
+static void error(xercesc::SAXParser& self, const unsigned int errCode, const STR errDomain, const xercesc::XMLErrorReporter::ErrTypes type, const STR errorText, const STR systemId, const STR publicId, const XMLFileLoc lineNum, const XMLFileLoc colNum) {
 	XMLString buff1(errDomain), buff2(errorText), buff3(systemId), buff4(publicId);
 	self.error(errCode, buff1.ptr(), type, buff2.ptr(), buff3.ptr(), buff4.ptr(), lineNum, colNum);
 }
 
-static bool expandSystemId(xercesc::SAXParser& self, const STR& systemId, xercesc::XMLBuffer& toFill) {
+static bool expandSystemId(xercesc::SAXParser& self, const STR systemId, xercesc::XMLBuffer& toFill) {
 	XMLString buff(systemId);
 	return self.expandSystemId(buff.ptr(), toFill);
 }
 
-static void doctypeComment(xercesc::SAXParser& self, const STR& comment) {
+static void doctypeComment(xercesc::SAXParser& self, const STR comment) {
 	XMLString buff(comment);
 	self.doctypeComment(buff.ptr());
 }
 
-static void doctypeDecl(xercesc::SAXParser& self, const xercesc::DTDElementDecl& elemDecl, const STR& publicId, const STR& systemId, const bool hasIntSubset, const bool hasExtSubset) {
+static void doctypeDecl(xercesc::SAXParser& self, const xercesc::DTDElementDecl& elemDecl, const STR publicId, const STR systemId, const bool hasIntSubset, const bool hasExtSubset) {
 	XMLString buff1(publicId), buff2(systemId);
 	self.doctypeDecl(elemDecl, buff1.ptr(), buff2.ptr(), hasIntSubset, hasExtSubset);
 }
 
-static void doctypePI(xercesc::SAXParser& self, const STR& target, const STR& data) {
+static void doctypePI(xercesc::SAXParser& self, const STR target, const STR data) {
 	XMLString buff1(target), buff2(data);
 	self.doctypePI(buff1.ptr(), buff2.ptr());
 }
 
-static void doctypeWhitespace(xercesc::SAXParser& self, const STR& chars) {
+static void doctypeWhitespace(xercesc::SAXParser& self, const STR chars) {
 	XMLString buff(chars);
 	self.doctypeWhitespace(buff.ptr(), buff.size());
 }
 
-static void TextDecl(xercesc::SAXParser& self, const XMLString& versionStr, const XMLString& encodingStr) {
+static void TextDecl(xercesc::SAXParser& self, const STR versionStr, const STR encodingStr) {
 	XMLString buff1(versionStr), buff2(encodingStr);
 	self.TextDecl(buff1.ptr(), buff2.ptr());
 }
@@ -533,8 +533,8 @@ void TextDecl(const XMLCh* const versionStr, const XMLCh* const encodingStr) {
 void SAXParser_init(void) {
 	//! xercesc::SAXParser
 	auto SAXParser = boost::python::class_<xercesc::SAXParser, boost::noncopyable, boost::python::bases<xercesc::Parser, xercesc::XMLDocumentHandler, xercesc::XMLErrorReporter, xercesc::XMLEntityHandler, xercesc::DocTypeHandler> >("SAXParser", boost::python::init<boost::python::optional<xercesc::XMLValidator* const, xercesc::MemoryManager* const, xercesc::XMLGrammarPool* const> >())
-			.def(SAXParserDefVisitor<XMLString>())
-			.def(SAXParserDefVisitor<std::string>())
+			.def(SAXParserDefVisitor<XMLString&>())
+			.def(SAXParserDefVisitor<char*>())
 			.def(SAXParserXMLStringDefVisitor())
 			.def("getDocumentHandler", static_cast<xercesc::DocumentHandler*(xercesc::SAXParser::*)(void)>(&xercesc::SAXParser::getDocumentHandler), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getEntityResolver", static_cast<xercesc::EntityResolver*(xercesc::SAXParser::*)(void)>(&xercesc::SAXParser::getEntityResolver), boost::python::return_value_policy<boost::python::reference_existing_object>())

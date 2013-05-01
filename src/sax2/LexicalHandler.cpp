@@ -14,7 +14,7 @@
 
 namespace pyxerces {
 
-template <class STR>
+template <typename STR>
 class LexicalHandlerDefVisitor
 : public boost::python::def_visitor<LexicalHandlerDefVisitor<STR> >
 {
@@ -30,22 +30,22 @@ void visit(T& class_) const {
 	;
 }
 
-static void comment(xercesc::LexicalHandler& self, const STR& chars, const XMLSize_t length) {
+static void comment(xercesc::LexicalHandler& self, const STR chars, const XMLSize_t length) {
 	XMLString buff(chars);
 	self.comment(buff.ptr(), length);
 }
 
-static void endEntity(xercesc::LexicalHandler& self, const STR& name) {
+static void endEntity(xercesc::LexicalHandler& self, const STR name) {
 	XMLString buff(name);
 	self.endEntity(buff.ptr());
 }
 
-static void startDTD(xercesc::LexicalHandler& self, const STR& name, const STR& publicId, const STR& systemId) {
+static void startDTD(xercesc::LexicalHandler& self, const STR name, const STR publicId, const STR systemId) {
 	XMLString buff1(name), buff2(publicId), buff3(systemId);
 	self.startDTD(buff1.ptr(), buff2.ptr(), buff3.ptr());
 }
 
-static void startEntity(xercesc::LexicalHandler& self, const STR& name) {
+static void startEntity(xercesc::LexicalHandler& self, const STR name) {
 	XMLString buff(name);
 	self.startEntity(buff.ptr());
 }
@@ -89,8 +89,8 @@ void startEntity (const XMLCh* const name) {
 void LexicalHandler_init(void) {
 	//! xercesc::LexicalHandler
 	boost::python::class_<LexicalHandlerWrapper, boost::noncopyable>("LexicalHandler")
-			.def(LexicalHandlerDefVisitor<XMLString>())
-			.def(LexicalHandlerDefVisitor<std::string>())
+			.def(LexicalHandlerDefVisitor<XMLString&>())
+			.def(LexicalHandlerDefVisitor<char*>())
 			.def("comment", boost::python::pure_virtual(&xercesc::LexicalHandler::comment))
 			.def("endCDATA", boost::python::pure_virtual(&xercesc::LexicalHandler::endCDATA))
 			.def("endDTD", boost::python::pure_virtual(&xercesc::LexicalHandler::endDTD))

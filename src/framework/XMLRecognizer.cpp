@@ -36,7 +36,7 @@ static xercesc::XMLRecognizer::Encodings basicEncodingProbe(const std::string& r
 
 };
 
-template <class STR>
+template <typename STR>
 class XMLRecognizerStringDefVisitor
 : public boost::python::def_visitor<XMLRecognizerStringDefVisitor<STR> > {
 friend class def_visitor_access;
@@ -49,7 +49,7 @@ void visit(T& class_) const {
 	;
 }
 
-static xercesc::XMLRecognizer::Encodings encodingForName(const STR& theEncName) {
+static xercesc::XMLRecognizer::Encodings encodingForName(const STR theEncName) {
 	XMLString buff(theEncName);
 	return xercesc::XMLRecognizer::encodingForName(buff.ptr());
 }
@@ -62,8 +62,8 @@ void XMLRecognizer_init(void) {
 	//! xercesc::XMLRecognizer
 	auto XMLRecognizer = boost::python::class_<xercesc::XMLRecognizer, boost::noncopyable>("XMLRecognizer", boost::python::no_init)
 			.def(XMLRecognizerDefVisitor())
-			.def(XMLRecognizerStringDefVisitor<XMLString>())
-			.def(XMLRecognizerStringDefVisitor<std::string>())
+			.def(XMLRecognizerStringDefVisitor<XMLString&>())
+			.def(XMLRecognizerStringDefVisitor<char*>())
 			.def("basicEncodingProbe", &xercesc::XMLRecognizer::basicEncodingProbe)
 			.def("encodingForName", &xercesc::XMLRecognizer::encodingForName)
 			.def("nameForEncoding", &xercesc::XMLRecognizer::nameForEncoding, XMLRecognizerNameForEncodingOverloads()[boost::python::return_value_policy<boost::python::return_by_value>()])

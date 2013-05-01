@@ -19,7 +19,7 @@
 
 namespace pyxerces {
 
-template <class STR>
+template <typename STR>
 class InputSourceDefVisitor
 : public boost::python::def_visitor<InputSourceDefVisitor<STR> >
 {
@@ -34,17 +34,17 @@ void visit(T& class_) const {
 	;
 }
 
-static void setEncoding(xercesc::InputSource& self, const STR& encodingStr) {
+static void setEncoding(xercesc::InputSource& self, const STR encodingStr) {
 	XMLString buff(encodingStr);
 	self.setEncoding(buff.ptr());
 }
 
-static void setPublicId(xercesc::InputSource& self, const STR& publicId) {
+static void setPublicId(xercesc::InputSource& self, const STR publicId) {
 	XMLString buff(publicId);
 	self.setPublicId(buff.ptr());
 }
 
-static void setSystemId(xercesc::InputSource& self, const STR& systemId) {
+static void setSystemId(xercesc::InputSource& self, const STR systemId) {
 	XMLString buff(systemId);
 	self.setSystemId(buff.ptr());
 }
@@ -54,8 +54,8 @@ static void setSystemId(xercesc::InputSource& self, const STR& systemId) {
 void InputSource_init(void) {
 	//! xercesc::InputSource
 	boost::python::class_<xercesc::InputSource, boost::noncopyable>("InputSouce", boost::python::no_init)
-			.def(InputSourceDefVisitor<XMLString>())
-			.def(InputSourceDefVisitor<std::string>())
+			.def(InputSourceDefVisitor<XMLString&>())
+			.def(InputSourceDefVisitor<char*>())
 			.def("makeStream", boost::python::pure_virtual(&xercesc::InputSource::makeStream), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getEncoding", &xercesc::InputSource::getEncoding, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getPublicId", &xercesc::InputSource::getPublicId, boost::python::return_value_policy<boost::python::return_by_value>())

@@ -15,7 +15,7 @@
 
 namespace pyxerces {
 
-template <class STR>
+template <typename STR>
 class XercesAttGroupInfoDefVisitor
 : public boost::python::def_visitor<XercesAttGroupInfoDefVisitor<STR> >
 {
@@ -29,12 +29,12 @@ void visit(T& class_) const {
 	;
 }
 
-static xercesc::SchemaAttDef* getAttDef(xercesc::XercesAttGroupInfo& self, const STR& baseName, const int urlId) {
+static xercesc::SchemaAttDef* getAttDef(xercesc::XercesAttGroupInfo& self, const STR baseName, const int urlId) {
 	XMLString buff(baseName);
 	return const_cast<xercesc::SchemaAttDef*>(self.getAttDef(buff.ptr(), urlId));
 }
 
-static bool containsAttribute(xercesc::XercesAttGroupInfo& self, const STR& name, const int urlId) {
+static bool containsAttribute(xercesc::XercesAttGroupInfo& self, const STR name, const int urlId) {
 	XMLString buff(name);
 	return self.containsAttribute(buff.ptr(), urlId);
 }
@@ -45,8 +45,8 @@ void XercesAttGroupInfo_init(void) {
 	//! xercesc::XercesAttGroupInfo
 	boost::python::class_<xercesc::XercesAttGroupInfo, boost::noncopyable, boost::python::bases<xercesc::XSerializable> >("XercesAttGroupInfo", boost::python::init<unsigned int, unsigned int, boost::python::optional<xercesc::MemoryManager* const> >())
 			.def(boost::python::init<boost::python::optional<xercesc::MemoryManager* const> >())
-			.def(XercesAttGroupInfoDefVisitor<XMLString>())
-			.def(XercesAttGroupInfoDefVisitor<std::string>())
+			.def(XercesAttGroupInfoDefVisitor<XMLString&>())
+			.def(XercesAttGroupInfoDefVisitor<char*>())
 			.def("containsTypeWithId", &xercesc::XercesAttGroupInfo::containsTypeWithId)
 			.def("attributeCount", &xercesc::XercesAttGroupInfo::attributeCount)
 			.def("anyAttributeCount", &xercesc::XercesAttGroupInfo::anyAttributeCount)

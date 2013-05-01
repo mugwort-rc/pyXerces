@@ -18,7 +18,7 @@
 
 namespace pyxerces {
 
-template <class STR>
+template <typename STR>
 class DOMLSInputDefVisitor
 : public boost::python::def_visitor<DOMLSInputDefVisitor<STR> >
 {
@@ -35,27 +35,27 @@ void visit(T& class_) const {
 	;
 }
 
-static void setStringData(xercesc::DOMLSInput& self, const STR& data) {
+static void setStringData(xercesc::DOMLSInput& self, const STR data) {
 	XMLString buff(data);
 	self.setStringData(buff.ptr());
 }
 
-static void setEncoding(xercesc::DOMLSInput& self, const STR& encodingStr) {
+static void setEncoding(xercesc::DOMLSInput& self, const STR encodingStr) {
 	XMLString buff(encodingStr);
 	self.setEncoding(buff.ptr());
 }
 
-static void setPublicId(xercesc::DOMLSInput& self, const STR& publicId) {
+static void setPublicId(xercesc::DOMLSInput& self, const STR publicId) {
 	XMLString buff(publicId);
 	self.setPublicId(buff.ptr());
 }
 
-static void setSystemId(xercesc::DOMLSInput& self, const STR& systemId) {
+static void setSystemId(xercesc::DOMLSInput& self, const STR systemId) {
 	XMLString buff(systemId);
 	self.setSystemId(buff.ptr());
 }
 
-static void setBaseURI(xercesc::DOMLSInput& self, const STR& baseURI) {
+static void setBaseURI(xercesc::DOMLSInput& self, const STR baseURI) {
 	XMLString buff(baseURI);
 	self.setBaseURI(buff.ptr());
 }
@@ -131,8 +131,8 @@ void release() {
 void DOMLSInput_init(void) {
 	//! xercesc::DOMLSInput
 	boost::python::class_<DOMLSInputWrapper, boost::noncopyable>("DOMLSInput")
-			.def(DOMLSInputDefVisitor<XMLString>())
-			.def(DOMLSInputDefVisitor<std::string>())
+			.def(DOMLSInputDefVisitor<XMLString&>())
+			.def(DOMLSInputDefVisitor<char*>())
 			.def("getStringData", boost::python::pure_virtual(&xercesc::DOMLSInput::getStringData), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getByteStream", boost::python::pure_virtual(&xercesc::DOMLSInput::getByteStream), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getEncoding", boost::python::pure_virtual(&xercesc::DOMLSInput::getEncoding), boost::python::return_value_policy<boost::python::return_by_value>())

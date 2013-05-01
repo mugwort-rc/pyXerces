@@ -36,7 +36,7 @@ static void writeBOM(xercesc::XMLFormatter& self, const std::string& toFormat, c
 
 };
 
-template <class STR>
+template <typename STR>
 class XMLFormatterStringDefVisitor
 : public boost::python::def_visitor<XMLFormatterStringDefVisitor<STR> > {
 friend class def_visitor_access;
@@ -45,29 +45,29 @@ public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("formatBuf", static_cast<void(*)(xercesc::XMLFormatter&, const STR&, const XMLSize_t, const xercesc::XMLFormatter::EscapeFlags, const xercesc::XMLFormatter::UnRepFlags)>(&XMLFormatterStringDefVisitor::formatBuf))
-	.def("formatBuf", static_cast<void(*)(xercesc::XMLFormatter&, const STR&, const XMLSize_t, const xercesc::XMLFormatter::EscapeFlags)>(&XMLFormatterStringDefVisitor::formatBuf))
-	.def("formatBuf", static_cast<void(*)(xercesc::XMLFormatter&, const STR&, const XMLSize_t)>(&XMLFormatterStringDefVisitor::formatBuf))
+	.def("formatBuf", static_cast<void(*)(xercesc::XMLFormatter&, const STR, const XMLSize_t, const xercesc::XMLFormatter::EscapeFlags, const xercesc::XMLFormatter::UnRepFlags)>(&XMLFormatterStringDefVisitor::formatBuf))
+	.def("formatBuf", static_cast<void(*)(xercesc::XMLFormatter&, const STR, const XMLSize_t, const xercesc::XMLFormatter::EscapeFlags)>(&XMLFormatterStringDefVisitor::formatBuf))
+	.def("formatBuf", static_cast<void(*)(xercesc::XMLFormatter&, const STR, const XMLSize_t)>(&XMLFormatterStringDefVisitor::formatBuf))
 	.def("__lshift__", &XMLFormatterStringDefVisitor::__lshift__, boost::python::return_internal_reference<>())
 	;
 }
 
-static void formatBuf(xercesc::XMLFormatter& self, const STR& toFormat, const XMLSize_t count, const xercesc::XMLFormatter::EscapeFlags escapeFlags, const xercesc::XMLFormatter::UnRepFlags unrepFlags) {
+static void formatBuf(xercesc::XMLFormatter& self, const STR toFormat, const XMLSize_t count, const xercesc::XMLFormatter::EscapeFlags escapeFlags, const xercesc::XMLFormatter::UnRepFlags unrepFlags) {
 	XMLString buff(toFormat);
 	self.formatBuf(buff.ptr(), count, escapeFlags, unrepFlags);
 }
 
-static void formatBuf(xercesc::XMLFormatter& self, const STR& toFormat, const XMLSize_t count, const xercesc::XMLFormatter::EscapeFlags escapeFlags) {
+static void formatBuf(xercesc::XMLFormatter& self, const STR toFormat, const XMLSize_t count, const xercesc::XMLFormatter::EscapeFlags escapeFlags) {
 	XMLString buff(toFormat);
 	self.formatBuf(buff.ptr(), count, escapeFlags, xercesc::XMLFormatter::DefaultUnRep);
 }
 
-static void formatBuf(xercesc::XMLFormatter& self, const STR& toFormat, const XMLSize_t count) {
+static void formatBuf(xercesc::XMLFormatter& self, const STR toFormat, const XMLSize_t count) {
 	XMLString buff(toFormat);
 	self.formatBuf(buff.ptr(), count, xercesc::XMLFormatter::DefaultEscape, xercesc::XMLFormatter::DefaultUnRep);
 }
 
-static xercesc::XMLFormatter& __lshift__(xercesc::XMLFormatter& self, const STR& toFormat) {
+static xercesc::XMLFormatter& __lshift__(xercesc::XMLFormatter& self, const STR toFormat) {
 	XMLString buff(toFormat);
 	self << buff.ptr();
 	return self;
@@ -100,8 +100,8 @@ void XMLFormatter_init(void) {
 	//! xercesc::XMLFormatter
 	auto XMLFormatter = boost::python::class_<xercesc::XMLFormatter, boost::noncopyable>("XMLFormatter", boost::python::init<const XMLCh* const, const XMLCh* const, xercesc::XMLFormatTarget* const, boost::python::optional<const xercesc::XMLFormatter::EscapeFlags, const xercesc::XMLFormatter::UnRepFlags, xercesc::MemoryManager* const> >())
 			.def(XMLFormatterDefVisitor())
-			.def(XMLFormatterStringDefVisitor<XMLString>())
-			.def(XMLFormatterStringDefVisitor<std::string>())
+			.def(XMLFormatterStringDefVisitor<XMLString&>())
+			.def(XMLFormatterStringDefVisitor<char*>())
 			.def(boost::python::init<const char* const, const char* const, xercesc::XMLFormatTarget* const, boost::python::optional<const xercesc::XMLFormatter::EscapeFlags, const xercesc::XMLFormatter::UnRepFlags, xercesc::MemoryManager* const> >())
 			.def(boost::python::init<const XMLCh* const, xercesc::XMLFormatTarget* const, boost::python::optional<const xercesc::XMLFormatter::EscapeFlags, const xercesc::XMLFormatter::UnRepFlags, xercesc::MemoryManager* const> >())
 			.def(boost::python::init<const char* const, xercesc::XMLFormatTarget* const, boost::python::optional<const xercesc::XMLFormatter::EscapeFlags, const xercesc::XMLFormatter::UnRepFlags, xercesc::MemoryManager* const> >())

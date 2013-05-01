@@ -51,8 +51,8 @@ public:
 	/*!
 	 * Transcode string
 	 */
-	static boost::shared_ptr<XMLChManager> transcode(const std::string& str) {
-		return boost::shared_ptr<XMLChManager>(new XMLChManager(xercesc::XMLString::transcode(str.c_str())));
+	static boost::shared_ptr<XMLChManager> transcode(const char* str) {
+		return boost::shared_ptr<XMLChManager>(new XMLChManager(str == nullptr ? nullptr : xercesc::XMLString::transcode(str)));
 	}
 
 	/*!
@@ -93,7 +93,7 @@ XMLString::XMLString(void)
 	: _ch()
 {}
 
-XMLString::XMLString(const std::string& str)
+XMLString::XMLString(const char* str)
 	: _ch(XMLChManager::transcode(str))
 {}
 
@@ -427,7 +427,7 @@ std::string XMLString::transcode(const XMLCh* ptr) {
 
 XMLString XMLString::replicate(void) const {
 	if( ! this->ptr()){
-		return XMLString(std::string());
+		return XMLString();
 	}
 	return XMLString(this->ptr());
 }
@@ -483,7 +483,8 @@ BOOST_PYTHON_FUNCTION_OVERLOADS(XMLStringBinToTextOverloads, XMLString::binToTex
 
 void XMLString_init(void) {
 	//! string <=> XMLCh*
-	boost::python::class_<XMLString>("XMLString", boost::python::init<const std::string&>())
+	boost::python::class_<XMLString>("XMLString")
+			.def(boost::python::init<const char*>())
 			.def(boost::python::init<const XMLCh*>())
 			.def(boost::python::init<const boost::python::list&>())
 			.def("__str__", &XMLString::toString)

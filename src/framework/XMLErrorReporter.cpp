@@ -14,7 +14,7 @@
 
 namespace pyxerces {
 
-template <class STR>
+template <typename STR>
 class XMLErrorReporterDefVisitor
 : public boost::python::def_visitor<XMLErrorReporterDefVisitor<STR> > {
 friend class def_visitor_access;
@@ -27,7 +27,7 @@ void visit(T& class_) const {
 	;
 }
 
-static void error(xercesc::XMLErrorReporter& self, const unsigned int errCode, const STR& errDomain, const xercesc::XMLErrorReporter::ErrTypes type, const STR& errorText, const STR& systemId, const STR& publicId, const XMLFileLoc lineNum, const XMLFileLoc colNum) {
+static void error(xercesc::XMLErrorReporter& self, const unsigned int errCode, const STR errDomain, const xercesc::XMLErrorReporter::ErrTypes type, const STR errorText, const STR systemId, const STR publicId, const XMLFileLoc lineNum, const XMLFileLoc colNum) {
 	XMLString buff1(errDomain), buff2(errorText), buff3(systemId), buff4(publicId);
 	self.error(errCode, buff1.ptr(), type, buff2.ptr(), buff3.ptr(), buff4.ptr(), lineNum, colNum);
 }
@@ -51,8 +51,8 @@ void resetErrors() {
 void XMLErrorReporter_init(void) {
 	//! xercesc::XMLErrorReporter
 	auto XMLErrorReporter = boost::python::class_<XMLErrorReporterWrapper, boost::noncopyable>("XMLErrorReporter")
-			.def(XMLErrorReporterDefVisitor<XMLString>())
-			.def(XMLErrorReporterDefVisitor<std::string>())
+			.def(XMLErrorReporterDefVisitor<XMLString&>())
+			.def(XMLErrorReporterDefVisitor<char*>())
 			.def("error", boost::python::pure_virtual(&xercesc::XMLErrorReporter::error))
 			.def("resetErrors", boost::python::pure_virtual(&xercesc::XMLErrorReporter::resetErrors))
 			;

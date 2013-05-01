@@ -15,48 +15,62 @@
 
 namespace pyxerces {
 
-template <class STR>
-xercesc::DTDEntityDecl* DTDEntityDecl_fromstring(const STR& entName, xercesc::MemoryManager* const manager) {
+template <typename STR>
+class DTDEntityDeclDefVisitor
+: public boost::python::def_visitor<DTDEntityDeclDefVisitor<STR> >
+{
+friend class def_visitor_access;
+public:
+template <class T>
+void visit(T& class_) const {
+	class_
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const STR, xercesc::MemoryManager* const)>(&DTDEntityDecl_fromstring)))
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const STR)>(&DTDEntityDecl_fromstring)))
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const STR, const STR, const bool, xercesc::MemoryManager* const)>(&DTDEntityDecl_fromstring)))
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const STR, const STR, const bool)>(&DTDEntityDecl_fromstring)))
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const STR, const STR)>(&DTDEntityDecl_fromstring)))
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const STR, const XMLCh, const bool, const bool)>(&DTDEntityDecl_fromstring)))
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const STR, const XMLCh, const bool)>(&DTDEntityDecl_fromstring)))
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const STR, const XMLCh)>(&DTDEntityDecl_fromstring)))
+	;
+}
+
+static xercesc::DTDEntityDecl* DTDEntityDecl_fromstring(const STR entName, xercesc::MemoryManager* const manager) {
 	XMLString buff(entName);
 	return new xercesc::DTDEntityDecl(buff.ptr(), manager);
 }
 
-template <class STR>
-xercesc::DTDEntityDecl* DTDEntityDecl_fromstring(const STR& entName) {
-	return DTDEntityDecl_fromstring<STR>(entName, xercesc::XMLPlatformUtils::fgMemoryManager);
+static xercesc::DTDEntityDecl* DTDEntityDecl_fromstring(const STR entName) {
+	return DTDEntityDecl_fromstring(entName, xercesc::XMLPlatformUtils::fgMemoryManager);
 }
 
-template <class STR>
-xercesc::DTDEntityDecl* DTDEntityDecl_fromstring(const STR& entName, const STR& value, const bool fromIntSubset, xercesc::MemoryManager* const manager) {
+static xercesc::DTDEntityDecl* DTDEntityDecl_fromstring(const STR entName, const STR value, const bool fromIntSubset, xercesc::MemoryManager* const manager) {
 	XMLString buff1(entName), buff2(value);
 	return new xercesc::DTDEntityDecl(buff1.ptr(), buff2.ptr(), fromIntSubset, manager);
 }
 
-template <class STR>
-xercesc::DTDEntityDecl* DTDEntityDecl_fromstring(const STR& entName, const STR& value, const bool fromIntSubset) {
-	return DTDEntityDecl_fromstring<STR>(entName, value, fromIntSubset, xercesc::XMLPlatformUtils::fgMemoryManager);
+static xercesc::DTDEntityDecl* DTDEntityDecl_fromstring(const STR entName, const STR value, const bool fromIntSubset) {
+	return DTDEntityDecl_fromstring(entName, value, fromIntSubset, xercesc::XMLPlatformUtils::fgMemoryManager);
 }
 
-template <class STR>
-xercesc::DTDEntityDecl* DTDEntityDecl_fromstring(const STR& entName, const STR& value) {
-	return DTDEntityDecl_fromstring<STR>(entName, value, false);
+static xercesc::DTDEntityDecl* DTDEntityDecl_fromstring(const STR entName, const STR value) {
+	return DTDEntityDecl_fromstring(entName, value, false);
 }
 
-template <class STR>
-xercesc::DTDEntityDecl* DTDEntityDecl_fromstring(const STR& entName, const XMLCh value, const bool fromIntSubset, const bool specialChar) {
+static xercesc::DTDEntityDecl* DTDEntityDecl_fromstring(const STR entName, const XMLCh value, const bool fromIntSubset, const bool specialChar) {
 	XMLString buff(entName);
 	return new xercesc::DTDEntityDecl(buff.ptr(), value, fromIntSubset, specialChar);
 }
 
-template <class STR>
-xercesc::DTDEntityDecl* DTDEntityDecl_fromstring(const STR& entName, const XMLCh value, const bool fromIntSubset) {
-	return DTDEntityDecl_fromstring<STR>(entName, value, fromIntSubset, false);
+static xercesc::DTDEntityDecl* DTDEntityDecl_fromstring(const STR entName, const XMLCh value, const bool fromIntSubset) {
+	return DTDEntityDecl_fromstring(entName, value, fromIntSubset, false);
 }
 
-template <class STR>
-xercesc::DTDEntityDecl* DTDEntityDecl_fromstring(const STR& entName, const XMLCh value) {
-	return DTDEntityDecl_fromstring<STR>(entName, value, false);
+static xercesc::DTDEntityDecl* DTDEntityDecl_fromstring(const STR entName, const XMLCh value) {
+	return DTDEntityDecl_fromstring(entName, value, false);
 }
+
+};
 
 void DTDEntityDecl_init(void) {
 	//! xercesc::DTDEntityDecl
@@ -64,22 +78,8 @@ void DTDEntityDecl_init(void) {
 			.def(boost::python::init<const XMLCh* const, boost::python::optional<const bool, xercesc::MemoryManager* const> >())
 			.def(boost::python::init<const XMLCh* const, const XMLCh* const, boost::python::optional<const bool, xercesc::MemoryManager* const> >())
 			.def(boost::python::init<const XMLCh* const, const XMLCh, boost::python::optional<const bool, const bool> >())
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const XMLString&, xercesc::MemoryManager* const)>(&DTDEntityDecl_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const XMLString&)>(&DTDEntityDecl_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const XMLString&, const XMLString&, const bool, xercesc::MemoryManager* const)>(&DTDEntityDecl_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const XMLString&, const XMLString&, const bool)>(&DTDEntityDecl_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const XMLString&, const XMLString&)>(&DTDEntityDecl_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const XMLString&, const XMLCh, const bool, const bool)>(&DTDEntityDecl_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const XMLString&, const XMLCh, const bool)>(&DTDEntityDecl_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const XMLString&, const XMLCh)>(&DTDEntityDecl_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const std::string&, xercesc::MemoryManager* const)>(&DTDEntityDecl_fromstring<std::string>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const std::string&)>(&DTDEntityDecl_fromstring<std::string>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const std::string&, const std::string&, const bool, xercesc::MemoryManager* const)>(&DTDEntityDecl_fromstring<std::string>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const std::string&, const std::string&, const bool)>(&DTDEntityDecl_fromstring<std::string>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const std::string&, const std::string&)>(&DTDEntityDecl_fromstring<std::string>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const std::string&, const XMLCh, const bool, const bool)>(&DTDEntityDecl_fromstring<std::string>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const std::string&, const XMLCh, const bool)>(&DTDEntityDecl_fromstring<std::string>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::DTDEntityDecl*(*)(const std::string&, const XMLCh)>(&DTDEntityDecl_fromstring<std::string>)))
+			.def(DTDEntityDeclDefVisitor<XMLString&>())
+			.def(DTDEntityDeclDefVisitor<char*>())
 			.def("getDeclaredInIntSubset", &xercesc::DTDEntityDecl::getDeclaredInIntSubset)
 			.def("getIsParameter", &xercesc::DTDEntityDecl::getIsParameter)
 			.def("getIsSpecialChar", &xercesc::DTDEntityDecl::getIsSpecialChar)

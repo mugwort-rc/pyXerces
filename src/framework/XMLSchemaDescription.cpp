@@ -15,7 +15,7 @@
 
 namespace pyxerces {
 
-template <class STR>
+template <typename STR>
 class XMLSchemaDescriptionDefVisitor
 : public boost::python::def_visitor<XMLSchemaDescriptionDefVisitor<STR> >
 {
@@ -29,12 +29,12 @@ void visit(T& class_) const {
 	;
 }
 
-static void setTargetNamespace(xercesc::XMLSchemaDescription& self, const STR& ns) {
+static void setTargetNamespace(xercesc::XMLSchemaDescription& self, const STR ns) {
 	XMLString buff(ns);
 	self.setTargetNamespace(buff.ptr());
 }
 
-static void setLocationHints(xercesc::XMLSchemaDescription& self, const STR& hints) {
+static void setLocationHints(xercesc::XMLSchemaDescription& self, const STR hints) {
 	XMLString buff(hints);
 	self.setLocationHints(buff.ptr());
 }
@@ -113,8 +113,8 @@ PyDECL_XSERIALIZABLEWrapper;
 void XMLSchemaDescription_init(void) {
 	//! xercesc::XMLSchemaDescription
 	auto XMLSchemaDescription = boost::python::class_<XMLSchemaDescriptionWrapper, boost::noncopyable, boost::python::bases<xercesc::XMLGrammarDescription> >("XMLSchemaDescription")
-			.def(XMLSchemaDescriptionDefVisitor<XMLString>())
-			.def(XMLSchemaDescriptionDefVisitor<std::string>())
+			.def(XMLSchemaDescriptionDefVisitor<XMLString&>())
+			.def(XMLSchemaDescriptionDefVisitor<char*>())
 			.def("getGrammarType", &xercesc::XMLSchemaDescription::getGrammarType)
 			.def("getContextType", boost::python::pure_virtual(&xercesc::XMLSchemaDescription::getContextType))
 			.def("getTargetNamespace", boost::python::pure_virtual(&xercesc::XMLSchemaDescription::getTargetNamespace), boost::python::return_value_policy<boost::python::return_by_value>())

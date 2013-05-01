@@ -20,25 +20,37 @@
 
 namespace pyxerces {
 
-template <class STR>
-xercesc::XSAnnotation* XSAnnotation_fromstring(const STR& contents, xercesc::MemoryManager* const manager) {
+template <typename STR>
+class XSAnnotationDefVisitor
+: public boost::python::def_visitor<XSAnnotationDefVisitor<STR> >
+{
+friend class def_visitor_access;
+public:
+template <class T>
+void visit(T& class_) const {
+	class_
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::XSAnnotation*(*)(const STR, xercesc::MemoryManager* const)>(&XSAnnotation_fromstring)))
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::XSAnnotation*(*)(const STR)>(&XSAnnotation_fromstring)))
+	;
+}
+
+static xercesc::XSAnnotation* XSAnnotation_fromstring(const STR contents, xercesc::MemoryManager* const manager) {
 	XMLString buff(contents);
 	return new xercesc::XSAnnotation(buff.ptr(), manager);
 }
 
-template <class STR>
-xercesc::XSAnnotation* XSAnnotation_fromstring(const STR& contents) {
-	return XSAnnotation_fromstring<STR>(contents, xercesc::XMLPlatformUtils::fgMemoryManager);
+static xercesc::XSAnnotation* XSAnnotation_fromstring(const STR contents) {
+	return XSAnnotation_fromstring(contents, xercesc::XMLPlatformUtils::fgMemoryManager);
 }
+
+};
 
 void XSAnnotation_init(void) {
 	//! xercesc::XSAnnotation
 	auto XSAnnotation = boost::python::class_<xercesc::XSAnnotation, boost::noncopyable, boost::python::bases<xercesc::XSerializable, xercesc::XSObject> >("XSAnnotation", boost::python::init<const XMLCh* const, boost::python::optional<xercesc::MemoryManager* const> >())
 			.def(boost::python::init<xercesc::MemoryManager* const>())
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XSAnnotation*(*)(const XMLString&, xercesc::MemoryManager* const)>(&XSAnnotation_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XSAnnotation*(*)(const XMLString&)>(&XSAnnotation_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XSAnnotation*(*)(const std::string&, xercesc::MemoryManager* const)>(&XSAnnotation_fromstring<std::string>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XSAnnotation*(*)(const std::string&)>(&XSAnnotation_fromstring<std::string>)))
+			.def(XSAnnotationDefVisitor<XMLString&>())
+			.def(XSAnnotationDefVisitor<char*>())
 			.def("writeAnnotation", static_cast<void(xercesc::XSAnnotation::*)(xercesc::DOMNode*, xercesc::XSAnnotation::ANNOTATION_TARGET)>(&xercesc::XSAnnotation::writeAnnotation))
 			.def("writeAnnotation", static_cast<void(xercesc::XSAnnotation::*)(xercesc::ContentHandler*)>(&xercesc::XSAnnotation::writeAnnotation))
 			.def("getAnnotationString", static_cast<const XMLCh*(xercesc::XSAnnotation::*)(void) const>(&xercesc::XSAnnotation::getAnnotationString), boost::python::return_value_policy<boost::python::return_by_value>())

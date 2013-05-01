@@ -28,7 +28,7 @@ void RefArrayVectorOf(void) {
 			;
 }
 
-template <class STR>
+template <typename STR>
 class RefArrayVectorOfXMLChDefVisitor
 : public boost::python::def_visitor<RefArrayVectorOfXMLChDefVisitor<STR> >
 {
@@ -41,7 +41,7 @@ void visit(T& class_) const {
 	;
 }
 
-static void setElementAt(xercesc::RefArrayVectorOf<XMLCh>& self, const STR& toSet, const XMLSize_t setAt) {
+static void setElementAt(xercesc::RefArrayVectorOf<XMLCh>& self, const STR toSet, const XMLSize_t setAt) {
 	XMLString buff(toSet);
 	self.setElementAt(buff.ptr(), setAt);
 }
@@ -51,8 +51,8 @@ static void setElementAt(xercesc::RefArrayVectorOf<XMLCh>& self, const STR& toSe
 void RefArrayVectorOfXMLCh(void) {
 	//! xercesc::RefArrayVectorOf
 	boost::python::class_<xercesc::RefArrayVectorOf<XMLCh>, boost::noncopyable, boost::python::bases<xercesc::BaseRefVectorOf<XMLCh> > >("RefArrayVectorOfXMLCh", boost::python::init<const XMLSize_t, boost::python::optional<const bool, xercesc::MemoryManager* const> >())
-			.def(RefArrayVectorOfXMLChDefVisitor<XMLString>())
-			.def(RefArrayVectorOfXMLChDefVisitor<std::string>())
+			.def(RefArrayVectorOfXMLChDefVisitor<XMLString&>())
+			.def(RefArrayVectorOfXMLChDefVisitor<char*>())
 			.def("setElementAt", &xercesc::RefArrayVectorOf<XMLCh>::setElementAt)
 			.def("removeAllElements", &xercesc::RefArrayVectorOf<XMLCh>::removeAllElements)
 			.def("removeElementAt", &xercesc::RefArrayVectorOf<XMLCh>::removeElementAt)

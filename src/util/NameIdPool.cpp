@@ -21,7 +21,7 @@
 
 namespace pyxerces {
 
-template <typename TElem, class STR>
+template <typename TElem, typename STR>
 class NameIdPoolDefVisitor
 : public boost::python::def_visitor<NameIdPoolDefVisitor<TElem, STR> >
 {
@@ -35,12 +35,12 @@ void visit(T& class_) const {
 	;
 }
 
-static bool containsKey(xercesc::NameIdPool<TElem>& self, const STR& key) {
+static bool containsKey(xercesc::NameIdPool<TElem>& self, const STR key) {
 	XMLString buff(key);
 	return self.containsKey(buff.ptr());
 }
 
-static TElem* getByKey(xercesc::NameIdPool<TElem>& self, const STR& key) {
+static TElem* getByKey(xercesc::NameIdPool<TElem>& self, const STR key) {
 	XMLString buff(key);
 	return self.getByKey(buff.ptr());
 }
@@ -52,8 +52,8 @@ void NameIdPool(void) {
 	char pyName[10 + BOOST_MPL_LIMIT_STRING_SIZE + 1] = "NameIdPool";
 	//! xercesc::NameIdPool
 	boost::python::class_<xercesc::NameIdPool<TElem>, boost::noncopyable>(strcat(pyName, boost::mpl::c_str<NAME>::value), boost::python::init<const XMLSize_t, boost::python::optional<const XMLSize_t, xercesc::MemoryManager* const> >())
-			.def(NameIdPoolDefVisitor<TElem, XMLString>())
-			.def(NameIdPoolDefVisitor<TElem, std::string>())
+			.def(NameIdPoolDefVisitor<TElem, XMLString&>())
+			.def(NameIdPoolDefVisitor<TElem, char*>())
 			.def("containsKey", &xercesc::NameIdPool<TElem>::containsKey)
 			.def("removeAll", &xercesc::NameIdPool<TElem>::removeAll)
 			.def("getByKey", static_cast<TElem*(xercesc::NameIdPool<TElem>::*)(const XMLCh* const)>(&xercesc::NameIdPool<TElem>::getByKey), boost::python::return_value_policy<boost::python::reference_existing_object>())

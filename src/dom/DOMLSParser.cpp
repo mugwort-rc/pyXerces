@@ -21,7 +21,7 @@
 
 namespace pyxerces {
 
-template <class STR>
+template <typename STR>
 class DOMLSParserDefVisitor
 : public boost::python::def_visitor<DOMLSParserDefVisitor<STR> >
 {
@@ -34,7 +34,7 @@ void visit(T& class_) const {
 	;
 }
 
-static xercesc::Grammar* getGrammar(xercesc::DOMLSParser& self, const STR& nameSpaceKey) {
+static xercesc::Grammar* getGrammar(xercesc::DOMLSParser& self, const STR nameSpaceKey) {
 	XMLString buff(nameSpaceKey);
 	return self.getGrammar(buff.ptr());
 }
@@ -133,8 +133,8 @@ XMLFilePos getSrcOffset() const {
 void DOMLSParser_init(void) {
 	//! xercesc::DOMLSParser
 	auto DOMLSParser = boost::python::class_<DOMLSParserWrapper, boost::noncopyable>("DOMLSParser")
-			.def(DOMLSParserDefVisitor<XMLString>())
-			.def(DOMLSParserDefVisitor<std::string>())
+			.def(DOMLSParserDefVisitor<XMLString&>())
+			.def(DOMLSParserDefVisitor<char*>())
 			.def("getDomConfig", boost::python::pure_virtual(&xercesc::DOMLSParser::getDomConfig), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getFilter", boost::python::pure_virtual(&xercesc::DOMLSParser::getFilter), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getAsync", boost::python::pure_virtual(&xercesc::DOMLSParser::getAsync))

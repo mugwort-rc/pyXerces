@@ -32,7 +32,7 @@
 
 namespace pyxerces {
 
-template <class STR>
+template <typename STR>
 class DOMTextDefVisitor
 : public boost::python::def_visitor<DOMTextDefVisitor<STR> >
 {
@@ -45,7 +45,7 @@ void visit(T& class_) const {
 	;
 }
 
-static xercesc::DOMText* replaceWholeText(xercesc::DOMText& self, const STR& content) {
+static xercesc::DOMText* replaceWholeText(xercesc::DOMText& self, const STR content) {
 	XMLString buff(content);
 	return self.replaceWholeText(buff.ptr());
 }
@@ -268,8 +268,8 @@ void release() {
 void DOMText_init(void) {
 	//! xercesc::DOMText
 	boost::python::class_<DOMTextWrapper, boost::noncopyable, boost::python::bases<xercesc::DOMCharacterData> >("DOMText")
-			.def(DOMTextDefVisitor<XMLString>())
-			.def(DOMTextDefVisitor<std::string>())
+			.def(DOMTextDefVisitor<XMLString&>())
+			.def(DOMTextDefVisitor<char*>())
 			.def("splitText", boost::python::pure_virtual(&xercesc::DOMText::splitText), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getIsElementContentWhitespace", boost::python::pure_virtual(&xercesc::DOMText::getIsElementContentWhitespace))
 			.def("getWholeText", boost::python::pure_virtual(&xercesc::DOMText::getWholeText), boost::python::return_value_policy<boost::python::return_by_value>())

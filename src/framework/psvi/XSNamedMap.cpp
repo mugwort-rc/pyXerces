@@ -22,7 +22,7 @@
 
 namespace pyxerces {
 
-template <typename TVal, class STR>
+template <typename TVal, typename STR>
 class XSNamedMapDefVisitor
 : public boost::python::def_visitor<XSNamedMapDefVisitor<TVal, STR> >
 {
@@ -36,12 +36,12 @@ void visit(T& class_) const {
 	;
 }
 
-TVal* itemByName(xercesc::XSNamedMap<TVal>& self, const STR& compNamespace, const STR& localName) {
+TVal* itemByName(xercesc::XSNamedMap<TVal>& self, const STR compNamespace, const STR localName) {
 	XMLString buff1(compNamespace), buff2(localName);
 	return self.itemByName(buff1.ptr(), buff2.ptr());
 }
 
-void addElement(xercesc::XSNamedMap<TVal>& self, TVal* toAdd, const STR& key1, const STR& key2) {
+void addElement(xercesc::XSNamedMap<TVal>& self, TVal* toAdd, const STR key1, const STR key2) {
 	XMLString buff1(key1), buff2(key2);
 	self.addElement(toAdd, buff1.ptr(), buff2.ptr());
 }
@@ -53,8 +53,8 @@ void XSNamedMap(void) {
 	char pyName[10 + BOOST_MPL_LIMIT_STRING_SIZE + 1] = "XSNamedMap";
 	//! xercesc::XSNamedMap
 	boost::python::class_<xercesc::XSNamedMap<TVal>, boost::noncopyable>(strcat(pyName, boost::mpl::c_str<NAME>::value), boost::python::init<const XMLSize_t, const XMLSize_t, xercesc::XMLStringPool*, const bool, boost::python::optional<xercesc::MemoryManager* const> >())
-			.def(XSNamedMapDefVisitor<TVal, XMLString>())
-			.def(XSNamedMapDefVisitor<TVal, std::string>())
+			.def(XSNamedMapDefVisitor<TVal, XMLString&>())
+			.def(XSNamedMapDefVisitor<TVal, char*>())
 			.def("getLength", &xercesc::XSNamedMap<TVal>::getLength)
 			.def("item", static_cast<TVal*(xercesc::XSNamedMap<TVal>::*)(XMLSize_t)>(&xercesc::XSNamedMap<TVal>::item), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("itemByName", &xercesc::XSNamedMap<TVal>::itemByName, boost::python::return_value_policy<boost::python::reference_existing_object>())

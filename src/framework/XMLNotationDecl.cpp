@@ -15,29 +15,7 @@
 
 namespace pyxerces {
 
-template <class STR>
-xercesc::XMLNotationDecl* XMLNotationDecl_fromstring(const STR& notName, const STR& pubId, const STR& sysId, const STR& baseURI, xercesc::MemoryManager* const manager) {
-	XMLString buff1(notName), buff2(pubId), buff3(sysId), buff4(baseURI);
-	return new xercesc::XMLNotationDecl(buff1.ptr(), buff2.ptr(), buff3.ptr(), buff4.ptr(), manager);
-}
-
-template <class STR>
-xercesc::XMLNotationDecl* XMLNotationDecl_fromstring(const STR& notName, const STR& pubId, const STR& sysId, const STR& baseURI) {
-	return XMLNotationDecl_fromstring<STR>(notName, pubId, sysId, baseURI, xercesc::XMLPlatformUtils::fgMemoryManager);
-}
-
-template <class STR>
-xercesc::XMLNotationDecl* XMLNotationDecl_fromstring(const STR& notName, const STR& pubId, const STR& sysId, xercesc::MemoryManager* const manager) {
-	XMLString buff1(notName), buff2(pubId), buff3(sysId);
-	return new xercesc::XMLNotationDecl(buff1.ptr(), buff2.ptr(), buff3.ptr(), nullptr, manager);
-}
-
-template <class STR>
-xercesc::XMLNotationDecl* XMLNotationDecl_fromstring(const STR& notName, const STR& pubId, const STR& sysId) {
-	return XMLNotationDecl_fromstring<STR>(notName, pubId, sysId, xercesc::XMLPlatformUtils::fgMemoryManager);
-}
-
-template <class STR>
+template <typename STR>
 class XMLNotationDeclDefVisitor
 : public boost::python::def_visitor<XMLNotationDeclDefVisitor<STR> >
 {
@@ -46,6 +24,10 @@ public:
 template <class T>
 void visit(T& class_) const {
 	class_
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLNotationDecl*(*)(const STR, const STR, const STR, const STR, xercesc::MemoryManager* const)>(&XMLNotationDecl_fromstring)))
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLNotationDecl*(*)(const STR, const STR, const STR, const STR)>(&XMLNotationDecl_fromstring)))
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLNotationDecl*(*)(const STR, const STR, const STR, xercesc::MemoryManager* const)>(&XMLNotationDecl_fromstring)))
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLNotationDecl*(*)(const STR, const STR, const STR)>(&XMLNotationDecl_fromstring)))
 	.def("setName", &XMLNotationDeclDefVisitor<STR>::setName)
 	.def("setPublicId", &XMLNotationDeclDefVisitor<STR>::setPublicId)
 	.def("setSystemId", &XMLNotationDeclDefVisitor<STR>::setSystemId)
@@ -53,22 +35,40 @@ void visit(T& class_) const {
 	;
 }
 
-static void setName(xercesc::XMLNotationDecl& self, const STR& notName) {
+static xercesc::XMLNotationDecl* XMLNotationDecl_fromstring(const STR notName, const STR pubId, const STR sysId, const STR baseURI, xercesc::MemoryManager* const manager) {
+	XMLString buff1(notName), buff2(pubId), buff3(sysId), buff4(baseURI);
+	return new xercesc::XMLNotationDecl(buff1.ptr(), buff2.ptr(), buff3.ptr(), buff4.ptr(), manager);
+}
+
+static xercesc::XMLNotationDecl* XMLNotationDecl_fromstring(const STR notName, const STR pubId, const STR sysId, const STR baseURI) {
+	return XMLNotationDecl_fromstring(notName, pubId, sysId, baseURI, xercesc::XMLPlatformUtils::fgMemoryManager);
+}
+
+static xercesc::XMLNotationDecl* XMLNotationDecl_fromstring(const STR notName, const STR pubId, const STR sysId, xercesc::MemoryManager* const manager) {
+	XMLString buff1(notName), buff2(pubId), buff3(sysId);
+	return new xercesc::XMLNotationDecl(buff1.ptr(), buff2.ptr(), buff3.ptr(), nullptr, manager);
+}
+
+static xercesc::XMLNotationDecl* XMLNotationDecl_fromstring(const STR notName, const STR pubId, const STR sysId) {
+	return XMLNotationDecl_fromstring(notName, pubId, sysId, xercesc::XMLPlatformUtils::fgMemoryManager);
+}
+
+static void setName(xercesc::XMLNotationDecl& self, const STR notName) {
 	XMLString buff(notName);
 	self.setName(buff.ptr());
 }
 
-static void setPublicId(xercesc::XMLNotationDecl& self, const STR& newId) {
+static void setPublicId(xercesc::XMLNotationDecl& self, const STR newId) {
 	XMLString buff(newId);
 	self.setPublicId(buff.ptr());
 }
 
-static void setSystemId(xercesc::XMLNotationDecl& self, const STR& newId) {
+static void setSystemId(xercesc::XMLNotationDecl& self, const STR newId) {
 	XMLString buff(newId);
 	self.setSystemId(buff.ptr());
 }
 
-static void setBaseURI(xercesc::XMLNotationDecl& self, const STR& newId) {
+static void setBaseURI(xercesc::XMLNotationDecl& self, const STR newId) {
 	XMLString buff(newId);
 	self.setBaseURI(buff.ptr());
 }
@@ -79,16 +79,8 @@ void XMLNotationDecl_init(void) {
 	//! xercesc::XMLNotationDecl
 	boost::python::class_<xercesc::XMLNotationDecl, boost::noncopyable, boost::python::bases<xercesc::XSerializable> >("XMLNotationDecl", boost::python::init<boost::python::optional<xercesc::MemoryManager* const> >())
 			.def(boost::python::init<const XMLCh* const, const XMLCh* const, const XMLCh* const, boost::python::optional<const XMLCh* const, xercesc::MemoryManager* const> >())
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLNotationDecl*(*)(const XMLString&, const XMLString&, const XMLString&, const XMLString&, xercesc::MemoryManager* const)>(&XMLNotationDecl_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLNotationDecl*(*)(const XMLString&, const XMLString&, const XMLString&, const XMLString&)>(&XMLNotationDecl_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLNotationDecl*(*)(const XMLString&, const XMLString&, const XMLString&, xercesc::MemoryManager* const)>(&XMLNotationDecl_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLNotationDecl*(*)(const XMLString&, const XMLString&, const XMLString&)>(&XMLNotationDecl_fromstring<XMLString>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLNotationDecl*(*)(const std::string&, const std::string&, const std::string&, const std::string&, xercesc::MemoryManager* const)>(&XMLNotationDecl_fromstring<std::string>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLNotationDecl*(*)(const std::string&, const std::string&, const std::string&, const std::string&)>(&XMLNotationDecl_fromstring<std::string>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLNotationDecl*(*)(const std::string&, const std::string&, const std::string&, xercesc::MemoryManager* const)>(&XMLNotationDecl_fromstring<std::string>)))
-			.def("__init__", boost::python::make_constructor(static_cast<xercesc::XMLNotationDecl*(*)(const std::string&, const std::string&, const std::string&)>(&XMLNotationDecl_fromstring<std::string>)))
-			.def(XMLNotationDeclDefVisitor<XMLString>())
-			.def(XMLNotationDeclDefVisitor<std::string>())
+			.def(XMLNotationDeclDefVisitor<XMLString&>())
+			.def(XMLNotationDeclDefVisitor<char*>())
 			.def("getId", &xercesc::XMLNotationDecl::getId)
 			.def("getName", &xercesc::XMLNotationDecl::getName, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getPublicId", &xercesc::XMLNotationDecl::getPublicId, boost::python::return_value_policy<boost::python::return_by_value>())

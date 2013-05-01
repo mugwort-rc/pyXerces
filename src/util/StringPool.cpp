@@ -15,7 +15,7 @@
 
 namespace pyxerces {
 
-template <class STR>
+template <typename STR>
 class XMLStringPoolDefVisitor
 : public boost::python::def_visitor<XMLStringPoolDefVisitor<STR> >
 {
@@ -30,17 +30,17 @@ void visit(T& class_) const {
 	;
 }
 
-static unsigned int addOrFind(xercesc::XMLStringPool& self, const STR& newString) {
+static unsigned int addOrFind(xercesc::XMLStringPool& self, const STR newString) {
 	XMLString buff(newString);
 	return self.addOrFind(buff.ptr());
 }
 
-static bool exists(xercesc::XMLStringPool& self, const STR& newString) {
+static bool exists(xercesc::XMLStringPool& self, const STR newString) {
 	XMLString buff(newString);
 	return self.exists(buff.ptr());
 }
 
-static unsigned int getId(xercesc::XMLStringPool& self, const STR& toFind) {
+static unsigned int getId(xercesc::XMLStringPool& self, const STR toFind) {
 	XMLString buff(toFind);
 	return self.getId(buff.ptr());
 }
@@ -123,8 +123,8 @@ void StringPool_init(void) {
 	//! xercesc::XMLStringPool
 	boost::python::class_<XMLStringPoolWrapper, boost::noncopyable, boost::python::bases<xercesc::XSerializable> >("XMLStringPool", boost::python::init<boost::python::optional<const unsigned int, xercesc::MemoryManager* const> >())
 			.def(boost::python::init<boost::python::optional<xercesc::MemoryManager* const> >())
-			.def(XMLStringPoolDefVisitor<XMLString>())
-			.def(XMLStringPoolDefVisitor<std::string>())
+			.def(XMLStringPoolDefVisitor<XMLString&>())
+			.def(XMLStringPoolDefVisitor<char*>())
 			.def("addOrFind", &xercesc::XMLStringPool::addOrFind)
 			.def("exists", static_cast<bool(xercesc::XMLStringPool::*)(const XMLCh* const) const>(&xercesc::XMLStringPool::exists))
 			.def("exists", static_cast<bool(xercesc::XMLStringPool::*)(const unsigned int) const>(&xercesc::XMLStringPool::exists))
