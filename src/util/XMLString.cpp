@@ -434,6 +434,56 @@ XMLString XMLString::replicate(void) const {
 
 // ==================================================
 
+class XMLStringStringOperatorDefVisitor
+: public boost::python::def_visitor<XMLStringStringOperatorDefVisitor>
+{
+friend class def_visitor_access;
+public:
+template <class T>
+void visit(T& class_) const {
+	class_
+	.def("__add__", &XMLStringStringOperatorDefVisitor::__add__)
+	.def("__lt__", &XMLStringStringOperatorDefVisitor::__lt__)
+	.def("__le__", &XMLStringStringOperatorDefVisitor::__le__)
+	.def("__gt__", &XMLStringStringOperatorDefVisitor::__gt__)
+	.def("__ge__", &XMLStringStringOperatorDefVisitor::__ge__)
+	.def("__eq__", &XMLStringStringOperatorDefVisitor::__eq__)
+	.def("__ne__", &XMLStringStringOperatorDefVisitor::__ne__)
+	;
+}
+
+static XMLString __add__(XMLString& self, const char* rhs) {
+	return self + XMLString(rhs);
+}
+
+static bool __lt__(XMLString& self, const char* rhs) {
+	return self < XMLString(rhs);
+}
+
+static bool __le__(XMLString& self, const char* rhs) {
+	return self <= XMLString(rhs);
+}
+
+static bool __gt__(XMLString& self, const char* rhs) {
+	return self > XMLString(rhs);
+}
+
+static bool __ge__(XMLString& self, const char* rhs) {
+	return self >= XMLString(rhs);
+}
+
+static bool __eq__(XMLString& self, const char* rhs) {
+	return self == XMLString(rhs);
+}
+
+static bool __ne__(XMLString& self, const char* rhs) {
+	return self != XMLString(rhs);
+}
+
+};
+
+// ==================================================
+
 unsigned char* unsigned_cast(char* ch) {
 	return reinterpret_cast<unsigned char*>(ch);
 }
@@ -487,6 +537,7 @@ void XMLString_init(void) {
 			.def(boost::python::init<const char*>())
 			.def(boost::python::init<const XMLCh*>())
 			.def(boost::python::init<const boost::python::list&>())
+			.def(XMLStringStringOperatorDefVisitor())
 			.def("__str__", &XMLString::toString)
 			.def("__repr__", &XMLString::reprString)
 			.def("__add__", &XMLString::operator +)
