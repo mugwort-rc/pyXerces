@@ -65,6 +65,7 @@
 #include "framework/MemBufInputSource.h"
 #include "framework/MemoryManager.h"
 #include "framework/StdOutFormatTarget.h"
+#include "framework/URLInputSource.h"
 #include "framework/ValidationContext.h"
 #include "framework/XMLAttDef.h"
 #include "framework/XMLAttDefList.h"
@@ -189,6 +190,7 @@
 #include "util/XMLResourceIdentifier.h"
 #include "util/XMLString.h"
 #include "util/XMLUni.h"
+#include "util/XMLURL.h"
 
 // validators
 #include "validators/common/ContentLeafNameTypeVector.h"
@@ -333,6 +335,7 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::MemBufInputSource_init();
 	pyxerces::MemoryManager_init();
 	pyxerces::StdOutFormatTarget_init();
+	pyxerces::URLInputSource_init();
 	pyxerces::ValidationContext_init();
 	pyxerces::XMLAttDef_init();
 	pyxerces::XMLAttDefList_init();
@@ -443,6 +446,7 @@ BOOST_PYTHON_MODULE(__Xerces)
 	pyxerces::XMLNetAccessor_init();
 	pyxerces::XMLResourceIdentifier_init();
 	pyxerces::XMLUni_init();
+	pyxerces::XMLURL_init();
 
 	// ==================================================
 	// validators
