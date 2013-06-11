@@ -143,6 +143,7 @@
 #include "sax2/DefaultHandler.h"
 #include "sax2/LexicalHandler.h"
 #include "sax2/SAX2XMLReader.h"
+#include "sax2/XMLReaderFactory.h"
 
 // util
 #include "util/ArrayIndexOutOfBoundsException.h"
@@ -401,6 +402,7 @@ BOOST_PYTHON_MODULE(__Xerces)
 	// --------------------------------------------------
 	pyxerces::Attributes_init();
 	pyxerces::DefaultHandler_init();
+	pyxerces::XMLReaderFactory_init();
 
 	// ==================================================
 	// util
