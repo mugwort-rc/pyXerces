@@ -501,6 +501,9 @@ char* signed_cast(unsigned char* ch) {
 class ConstXMLChToPythonConverter {
 public:
 	static PyObject* convert(const XMLCh* const ptr) {
+		if (ptr == nullptr) {
+			return boost::python::incref(boost::python::object().ptr());
+		}
 		return boost::python::incref(boost::python::object(XMLString(ptr)).ptr());
 	}
 };
