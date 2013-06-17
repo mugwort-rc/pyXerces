@@ -406,6 +406,9 @@ std::string XMLString::toString(void) const {
 
 std::string XMLString::reprString(void) const {
 	boost::python::object global_ns = boost::python::import("__main__").attr("__dict__");
+	if ( ! this->ptr() ) {
+		return "X'' (null)";
+	}
 	global_ns["obj"] = this->toString();
 	// pprint
 	boost::python::exec("import pprint\n"
