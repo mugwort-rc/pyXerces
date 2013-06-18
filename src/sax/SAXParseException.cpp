@@ -14,6 +14,7 @@
 
 #include <xercesc/sax/SAXParseException.hpp>
 
+#include "../common/Exception.h"
 #include "../util/XMLString.h"
 
 namespace pyxerces {
@@ -40,7 +41,7 @@ void SAXParseException_init(void) {
 			.def("getPublicId", &xercesc::SAXParseException::getPublicId, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getSystemId", &xercesc::SAXParseException::getSystemId, boost::python::return_value_policy<boost::python::return_by_value>())
 			;
-	pyXercesSAXParseExceptionType = SAXParseException.ptr();
+	pyXercesSAXParseExceptionType = createException("SAXParseException");
 	boost::python::register_exception_translator<xercesc::SAXParseException>(&translateSAXParseException);
 }
 

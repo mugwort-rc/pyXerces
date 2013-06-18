@@ -10,6 +10,7 @@
 #include <boost/python.hpp>
 #include <xercesc/sax/SAXException.hpp>
 
+#include "../common/Exception.h"
 #include "../util/XMLString.h"
 
 namespace pyxerces {
@@ -56,7 +57,7 @@ void SAXException_init(void) {
 			.def(boost::python::init<const char* const, boost::python::optional<xercesc::MemoryManager* const> >())
 			.def("getMessage", &xercesc::SAXException::getMessage, boost::python::return_value_policy<boost::python::return_by_value>())
 			;
-	pyXercesSAXExceptionType = SAXException.ptr();
+	pyXercesSAXExceptionType = createException("SAXException");
 	boost::python::register_exception_translator<xercesc::SAXException>(&translateSAXException);
 	//! xercesc::SAXNotSupportedException
 	boost::python::class_<xercesc::SAXNotSupportedException, boost::python::bases<xercesc::SAXException> >("SAXNotSupportedException", boost::python::init<boost::python::optional<xercesc::MemoryManager* const> >())

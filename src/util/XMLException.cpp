@@ -14,6 +14,8 @@
 
 #include <xercesc/util/XMLException.hpp>
 
+#include "../common/Exception.h"
+
 namespace pyxerces {
 
 //! XMLException
@@ -62,7 +64,7 @@ void XMLException_init(void) {
 			.def("getErrorType", &xercesc::XMLException::getErrorType)
 			.def("setPosition", &xercesc::XMLException::setPosition)
 			;
-	pyXercesXMLExceptionType = XMLException.ptr();
+	pyXercesXMLExceptionType = createException("XMLException");
 	boost::python::register_exception_translator<xercesc::XMLException>(&translateXMLException);
 }
 

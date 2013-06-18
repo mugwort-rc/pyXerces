@@ -14,6 +14,7 @@
 
 #include <xercesc/dom/DOMException.hpp>
 
+#include "../common/Exception.h"
 #include "../util/XMLString.h"
 
 namespace pyxerces {
@@ -39,7 +40,7 @@ void DOMException_init(void) {
 			.def("getMessage", &xercesc::DOMException::getMessage, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def_readwrite("code", &xercesc::DOMException::code)
 			;
-	pyXercesDOMExceptionType = DOMException.ptr();
+	pyXercesDOMExceptionType = createException("DOMException");
 	boost::python::register_exception_translator<xercesc::DOMException>(&translateDOMException);
 
 	boost::python::scope DOMExceptionScope = DOMException;

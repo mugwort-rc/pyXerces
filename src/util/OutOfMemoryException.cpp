@@ -14,6 +14,7 @@
 
 #include <xercesc/util/OutOfMemoryException.hpp>
 
+#include "../common/Exception.h"
 #include "../util/XMLString.h"
 
 namespace pyxerces {
@@ -39,7 +40,7 @@ void OutOfMemoryException_init(void) {
 			.def("getSrcFile", &xercesc::OutOfMemoryException::getSrcFile)
 			.def("getSrcLine", &xercesc::OutOfMemoryException::getSrcLine)
 			;
-	pyXercesOutOfMemoryExceptionType = OutOfMemoryException.ptr();
+	pyXercesOutOfMemoryExceptionType = createException("OutOfMemoryException", PyExc_MemoryError);
 	boost::python::register_exception_translator<xercesc::OutOfMemoryException>(&translateOutOfMemoryException);
 }
 
