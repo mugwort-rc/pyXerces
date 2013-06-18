@@ -14,6 +14,8 @@
 
 #include <xercesc/dom/DOMException.hpp>
 
+#include "../util/XMLString.h"
+
 namespace pyxerces {
 
 // !DOMException
@@ -22,7 +24,11 @@ PyObject* pyXercesDOMExceptionType = nullptr;
 void translateDOMException(const xercesc::DOMException& e) {
 	assert(pyXercesDOMExceptionType != nullptr);
 	boost::python::object instance(e);
-	PyErr_SetObject(pyXercesDOMExceptionType, instance.ptr());
+
+	boost::python::object exceptionType(boost::python::handle<>(boost::python::borrowed(pyXercesDOMExceptionType)));
+	exceptionType.attr("cause") = instance;
+
+	PyErr_SetString(pyXercesDOMExceptionType, XMLString(e.getMessage()).toString().c_str());
 }
 
 void DOMException_init(void) {

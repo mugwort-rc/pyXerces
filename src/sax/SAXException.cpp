@@ -10,6 +10,8 @@
 #include <boost/python.hpp>
 #include <xercesc/sax/SAXException.hpp>
 
+#include "../util/XMLString.h"
+
 namespace pyxerces {
 
 //! SAXException
@@ -18,21 +20,33 @@ PyObject* pyXercesSAXExceptionType = nullptr;
 void translateSAXException(const xercesc::SAXException& e) {
 	assert(pyXercesSAXExceptionType != nullptr);
 	boost::python::object instance(e);
-	PyErr_SetObject(pyXercesSAXExceptionType, instance.ptr());
+
+	boost::python::object exceptionType(boost::python::handle<>(boost::python::borrowed(pyXercesSAXExceptionType)));
+	exceptionType.attr("cause") = instance;
+
+	PyErr_SetString(pyXercesSAXExceptionType, XMLString(e.getMessage()).toString().c_str());
 }
 
 //! SAXNotSupportedException
 void translateSAXNotSupportedException(const xercesc::SAXNotSupportedException& e) {
 	assert(pyXercesSAXExceptionType != nullptr);
 	boost::python::object instance(e);
-	PyErr_SetObject(pyXercesSAXExceptionType, instance.ptr());
+
+	boost::python::object exceptionType(boost::python::handle<>(boost::python::borrowed(pyXercesSAXExceptionType)));
+	exceptionType.attr("cause") = instance;
+
+	PyErr_SetString(pyXercesSAXExceptionType, XMLString(e.getMessage()).toString().c_str());
 }
 
 //! SAXNotRecognizedException
 void translateSAXNotRecognizedException(const xercesc::SAXNotRecognizedException& e) {
 	assert(pyXercesSAXExceptionType != nullptr);
 	boost::python::object instance(e);
-	PyErr_SetObject(pyXercesSAXExceptionType, instance.ptr());
+
+	boost::python::object exceptionType(boost::python::handle<>(boost::python::borrowed(pyXercesSAXExceptionType)));
+	exceptionType.attr("cause") = instance;
+
+	PyErr_SetString(pyXercesSAXExceptionType, XMLString(e.getMessage()).toString().c_str());
 }
 
 void SAXException_init(void) {

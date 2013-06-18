@@ -14,6 +14,8 @@
 
 #include <xercesc/sax/SAXParseException.hpp>
 
+#include "../util/XMLString.h"
+
 namespace pyxerces {
 
 //! SAXParseException
@@ -22,7 +24,11 @@ PyObject* pyXercesSAXParseExceptionType = nullptr;
 void translateSAXParseException(const xercesc::SAXParseException& e) {
 	assert(pyXercesSAXParseExceptionType != nullptr);
 	boost::python::object instance(e);
-	PyErr_SetObject(pyXercesSAXParseExceptionType, instance.ptr());
+
+	boost::python::object exceptionType(boost::python::handle<>(boost::python::borrowed(pyXercesSAXParseExceptionType)));
+	exceptionType.attr("cause") = instance;
+
+	PyErr_SetString(pyXercesSAXParseExceptionType, XMLString(e.getMessage()).toString().c_str());
 }
 
 void SAXParseException_init(void) {

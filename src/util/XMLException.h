@@ -8,6 +8,8 @@
 #ifndef XMLEXCEPTION_H_
 #define XMLEXCEPTION_H_
 
+#include "XMLString.h"
+
 namespace pyxerces {
 
 void XMLException_init(void);
@@ -18,7 +20,11 @@ extern PyObject* pyXercesXMLExceptionType; \
 void translate##theType(const xercesc::theType& e) { \
 	assert(pyXercesXMLExceptionType != nullptr); \
 	boost::python::object instance(e); \
-	PyErr_SetObject(pyXercesXMLExceptionType, instance.ptr()); \
+\
+	boost::python::object exceptionType(boost::python::handle<>(boost::python::borrowed(pyXercesXMLExceptionType))); \
+	exceptionType.attr("cause") = instance; \
+\
+	PyErr_SetString(pyXercesXMLExceptionType, XMLString(e.getMessage()).toString().c_str()); \
 }
 
 

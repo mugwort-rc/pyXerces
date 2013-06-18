@@ -43,7 +43,11 @@ PyObject* pyXercesXMLExceptionType = nullptr;
 void translateXMLException(const xercesc::XMLException& e) {
 	assert(pyXercesXMLExceptionType != nullptr);
 	boost::python::object instance(e);
-	PyErr_SetObject(pyXercesXMLExceptionType, instance.ptr());
+
+	boost::python::object exceptionType(boost::python::handle<>(boost::python::borrowed(pyXercesXMLExceptionType)));
+	exceptionType.attr("cause") = instance;
+
+	PyErr_SetString(pyXercesXMLExceptionType, XMLString(e.getMessage()).toString().c_str());
 }
 
 void XMLException_init(void) {

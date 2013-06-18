@@ -14,6 +14,8 @@
 
 #include <xercesc/util/OutOfMemoryException.hpp>
 
+#include "../util/XMLString.h"
+
 namespace pyxerces {
 
 PyObject* pyXercesOutOfMemoryExceptionType = nullptr;
@@ -21,7 +23,11 @@ PyObject* pyXercesOutOfMemoryExceptionType = nullptr;
 void translateOutOfMemoryException(const xercesc::OutOfMemoryException& e) {
 	assert(pyXercesOutOfMemoryExceptionType != nullptr);
 	boost::python::object instance(e);
-	PyErr_SetObject(pyXercesOutOfMemoryExceptionType, instance.ptr());
+
+	boost::python::object exceptionType(boost::python::handle<>(boost::python::borrowed(pyXercesOutOfMemoryExceptionType)));
+	exceptionType.attr("cause") = instance;
+
+	PyErr_SetString(pyXercesOutOfMemoryExceptionType, XMLString(e.getMessage()).toString().c_str());
 }
 
 void OutOfMemoryException_init(void) {
