@@ -19,28 +19,25 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class XMLAttDefDefVisitor
-: public boost::python::def_visitor<XMLAttDefDefVisitor<STR> >
+: public boost::python::def_visitor<XMLAttDefDefVisitor>
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("setValue", &XMLAttDefDefVisitor<STR>::setValue)
-	.def("setEnumeration", &XMLAttDefDefVisitor<STR>::setEnumeration)
+	.def("setValue", &XMLAttDefDefVisitor::setValue)
+	.def("setEnumeration", &XMLAttDefDefVisitor::setEnumeration)
 	;
 }
 
-static void setValue(xercesc::XMLAttDef& self, const STR value) {
-	XMLString buff(value);
-	self.setValue(buff.ptr());
+static void setValue(xercesc::XMLAttDef& self, const XMLString& value) {
+	self.setValue(value.ptr());
 }
 
-static void setEnumeration(xercesc::XMLAttDef& self, const STR newValue) {
-	XMLString buff(newValue);
-	self.setValue(buff.ptr());
+static void setEnumeration(xercesc::XMLAttDef& self, const XMLString& newValue) {
+	self.setValue(newValue.ptr());
 }
 
 };
@@ -73,8 +70,7 @@ void XMLAttDef_init(void) {
 			.def("getDefAttTypeString", &xercesc::XMLAttDef::getDefAttTypeString, XMLAttDefGetDefAttTypeString()[boost::python::return_value_policy<boost::python::return_by_value>()])
 			.staticmethod("getAttTypeString")
 			.staticmethod("getDefAttTypeString")
-			.def(XMLAttDefDefVisitor<XMLString&>())
-			.def(XMLAttDefDefVisitor<char*>())
+			.def(XMLAttDefDefVisitor())
 			.def("getFullName", boost::python::pure_virtual(&xercesc::XMLAttDef::getFullName), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("reset", boost::python::pure_virtual(&xercesc::XMLAttDef::reset))
 			.def("getDefaultType", &xercesc::XMLAttDef::getDefaultType)

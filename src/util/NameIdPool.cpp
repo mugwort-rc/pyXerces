@@ -21,28 +21,26 @@
 
 namespace pyxerces {
 
-template <typename TElem, typename STR>
+template <typename TElem>
 class NameIdPoolDefVisitor
-: public boost::python::def_visitor<NameIdPoolDefVisitor<TElem, STR> >
+: public boost::python::def_visitor<NameIdPoolDefVisitor<TElem> >
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("containsKey", &NameIdPoolDefVisitor<TElem, STR>::containsKey)
-	.def("getByKey", &NameIdPoolDefVisitor<TElem, STR>::getByKey, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("containsKey", &NameIdPoolDefVisitor<TElem>::containsKey)
+	.def("getByKey", &NameIdPoolDefVisitor<TElem>::getByKey, boost::python::return_value_policy<boost::python::reference_existing_object>())
 	;
 }
 
-static bool containsKey(xercesc::NameIdPool<TElem>& self, const STR key) {
-	XMLString buff(key);
-	return self.containsKey(buff.ptr());
+static bool containsKey(xercesc::NameIdPool<TElem>& self, const XMLString& key) {
+	return self.containsKey(key.ptr());
 }
 
-static TElem* getByKey(xercesc::NameIdPool<TElem>& self, const STR key) {
-	XMLString buff(key);
-	return self.getByKey(buff.ptr());
+static TElem* getByKey(xercesc::NameIdPool<TElem>& self, const XMLString& key) {
+	return self.getByKey(key.ptr());
 }
 
 };
@@ -52,8 +50,7 @@ void NameIdPool(void) {
 	char pyName[10 + BOOST_MPL_LIMIT_STRING_SIZE + 1] = "NameIdPool";
 	//! xercesc::NameIdPool
 	boost::python::class_<xercesc::NameIdPool<TElem>, boost::noncopyable>(strcat(pyName, boost::mpl::c_str<NAME>::value), boost::python::init<const XMLSize_t, boost::python::optional<const XMLSize_t, xercesc::MemoryManager* const> >())
-			.def(NameIdPoolDefVisitor<TElem, XMLString&>())
-			.def(NameIdPoolDefVisitor<TElem, char*>())
+			.def(NameIdPoolDefVisitor<TElem>())
 			.def("containsKey", &xercesc::NameIdPool<TElem>::containsKey)
 			.def("removeAll", &xercesc::NameIdPool<TElem>::removeAll)
 			.def("getByKey", static_cast<TElem*(xercesc::NameIdPool<TElem>::*)(const XMLCh* const)>(&xercesc::NameIdPool<TElem>::getByKey), boost::python::return_value_policy<boost::python::reference_existing_object>())

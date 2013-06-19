@@ -37,28 +37,25 @@ void resetDocType() {
 
 };
 
-template <typename STR>
 class DTDHandlerDefVisitor
-: public boost::python::def_visitor<DTDHandlerDefVisitor<STR> >
+: public boost::python::def_visitor<DTDHandlerDefVisitor>
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("notationDecl", &DTDHandlerDefVisitor<STR>::notationDecl)
-	.def("unparsedEntityDecl", &DTDHandlerDefVisitor<STR>::unparsedEntityDecl)
+	.def("notationDecl", &DTDHandlerDefVisitor::notationDecl)
+	.def("unparsedEntityDecl", &DTDHandlerDefVisitor::unparsedEntityDecl)
 	;
 }
 
-static void notationDecl(xercesc::DTDHandler& self, const STR name, const STR publicId, const STR systemId) {
-	XMLString buff1(name), buff2(publicId), buff3(systemId);
-	self.notationDecl(buff1.ptr(), buff2.ptr(), buff3.ptr());
+static void notationDecl(xercesc::DTDHandler& self, const XMLString& name, const XMLString& publicId, const XMLString& systemId) {
+	self.notationDecl(name.ptr(), publicId.ptr(), systemId.ptr());
 }
 
-static void unparsedEntityDecl(xercesc::DTDHandler& self, const STR name, const STR publicId, const STR systemId, const STR notationName) {
-	XMLString buff1(name), buff2(publicId), buff3(systemId), buff4(notationName);
-	self.unparsedEntityDecl(buff1.ptr(), buff2.ptr(), buff3.ptr(), buff4.ptr());
+static void unparsedEntityDecl(xercesc::DTDHandler& self, const XMLString& name, const XMLString& publicId, const XMLString& systemId, const XMLString& notationName) {
+	self.unparsedEntityDecl(name.ptr(), publicId.ptr(), systemId.ptr(), notationName.ptr());
 }
 
 };
@@ -66,8 +63,7 @@ static void unparsedEntityDecl(xercesc::DTDHandler& self, const STR name, const 
 void DTDHandler_init(void) {
 	//! xercesc::DTDHandler
 	boost::python::class_<DTDHandlerWrapper, boost::noncopyable>("DTDHandler")
-			.def(DTDHandlerDefVisitor<XMLString&>())
-			.def(DTDHandlerDefVisitor<char*>())
+			.def(DTDHandlerDefVisitor())
 			.def("notationDecl", boost::python::pure_virtual(&xercesc::DTDHandler::notationDecl))
 			.def("unparsedEntityDecl", boost::python::pure_virtual(&xercesc::DTDHandler::unparsedEntityDecl))
 			.def("resetDocType", boost::python::pure_virtual(&xercesc::DTDHandler::resetDocType))

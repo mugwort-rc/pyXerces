@@ -26,9 +26,8 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class AbstractDOMParserDefVisitor
-: public boost::python::def_visitor<AbstractDOMParserDefVisitor<STR> > {
+: public boost::python::def_visitor<AbstractDOMParserDefVisitor> {
 friend class def_visitor_access;
 
 public:
@@ -55,89 +54,72 @@ void visit(T& class_) const {
 	;
 }
 
-static void useScanner(xercesc::AbstractDOMParser& self, const STR scannerName) {
-	XMLString buff(scannerName);
-	self.useScanner(buff.ptr());
+static void useScanner(xercesc::AbstractDOMParser& self, const XMLString& scannerName) {
+	self.useScanner(scannerName.ptr());
 }
 
-static void useImplementation(xercesc::AbstractDOMParser& self, const STR implementationFeatures) {
-	XMLString buff(implementationFeatures);
-	self.useImplementation(buff.ptr());
+static void useImplementation(xercesc::AbstractDOMParser& self, const XMLString& implementationFeatures) {
+	self.useImplementation(implementationFeatures.ptr());
 }
 
-static void handleElementPSVI(xercesc::AbstractDOMParser& self, const STR localName, const STR uri, xercesc::PSVIElement* elementInfo) {
-	XMLString buff1(localName), buff2(uri);
-	self.handleElementPSVI(buff1.ptr(), buff2.ptr(), elementInfo);
+static void handleElementPSVI(xercesc::AbstractDOMParser& self, const XMLString& localName, const XMLString& uri, xercesc::PSVIElement* elementInfo) {
+	self.handleElementPSVI(localName.ptr(), uri.ptr(), elementInfo);
 }
 
-static void handlePartialElementPSVI(xercesc::AbstractDOMParser& self, const STR localName, const STR uri, xercesc::PSVIElement* elementInfo) {
-	XMLString buff1(localName), buff2(uri);
-	self.handlePartialElementPSVI(buff1.ptr(), buff2.ptr(), elementInfo);
+static void handlePartialElementPSVI(xercesc::AbstractDOMParser& self, const XMLString& localName, const XMLString& uri, xercesc::PSVIElement* elementInfo) {
+	self.handlePartialElementPSVI(localName.ptr(), uri.ptr(), elementInfo);
 }
 
-static void handleAttributesPSVI(xercesc::AbstractDOMParser& self, const STR localName, const STR uri, xercesc::PSVIAttributeList* psviAttributes) {
-	XMLString buff1(localName), buff2(uri);
-	self.handleAttributesPSVI(buff1.ptr(), buff2.ptr(), psviAttributes);
+static void handleAttributesPSVI(xercesc::AbstractDOMParser& self, const XMLString& localName, const XMLString& uri, xercesc::PSVIAttributeList* psviAttributes) {
+	self.handleAttributesPSVI(localName.ptr(), uri.ptr(), psviAttributes);
 }
 
-static void docCharacters(xercesc::AbstractDOMParser& self, const STR chars, const bool cdataSection) {
-	XMLString buff(chars);
-	self.docCharacters(buff.ptr(), buff.size(), cdataSection);
+static void docCharacters(xercesc::AbstractDOMParser& self, const XMLString& chars, const bool cdataSection) {
+	self.docCharacters(chars.ptr(), chars.size(), cdataSection);
 }
 
-static void docComment(xercesc::AbstractDOMParser& self, const STR comment) {
-	XMLString buff(comment);
-	self.docComment(buff.ptr());
+static void docComment(xercesc::AbstractDOMParser& self, const XMLString& comment) {
+	self.docComment(comment.ptr());
 }
 
-static void docPI(xercesc::AbstractDOMParser& self, const STR target, const STR data) {
-	XMLString buff1(target), buff2(data);
-	self.docPI(buff1.ptr(), buff2.ptr());
+static void docPI(xercesc::AbstractDOMParser& self, const XMLString& target, const XMLString& data) {
+	self.docPI(target.ptr(), data.ptr());
 }
 
-static void endElement(xercesc::AbstractDOMParser& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const bool isRoot, const STR prefixName) {
-	XMLString buff(prefixName);
-	self.endElement(elemDecl, uriId, isRoot, buff.ptr());
+static void endElement(xercesc::AbstractDOMParser& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const bool isRoot, const XMLString& prefixName) {
+	self.endElement(elemDecl, uriId, isRoot, prefixName.ptr());
 }
 
-static void ignorableWhitespace(xercesc::AbstractDOMParser& self, const STR chars, const bool cdataSection) {
-	XMLString buff(chars);
-	self.ignorableWhitespace(buff.ptr(), buff.size(), cdataSection);
+static void ignorableWhitespace(xercesc::AbstractDOMParser& self, const XMLString& chars, const bool cdataSection) {
+	self.ignorableWhitespace(chars.ptr(), chars.size(), cdataSection);
 }
 
-static void startElement(xercesc::AbstractDOMParser& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const STR prefixName, const xercesc::RefVectorOf<xercesc::XMLAttr>& attrList, const XMLSize_t attrCount, const bool isEmpty, const bool isRoot) {
-	XMLString buff(prefixName);
-	self.startElement(elemDecl, uriId, buff.ptr(), attrList, attrCount, isEmpty, isRoot);
+static void startElement(xercesc::AbstractDOMParser& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const XMLString& prefixName, const xercesc::RefVectorOf<xercesc::XMLAttr>& attrList, const XMLSize_t attrCount, const bool isEmpty, const bool isRoot) {
+	self.startElement(elemDecl, uriId, prefixName.ptr(), attrList, attrCount, isEmpty, isRoot);
 }
 
-static void XMLDecl(xercesc::AbstractDOMParser& self, const STR versionStr, const STR encodingStr, const STR standaloneStr, const STR autoEncodingStr) {
-	XMLString buff1(versionStr), buff2(encodingStr), buff3(standaloneStr), buff4(autoEncodingStr);
-	self.XMLDecl(buff1.ptr(), buff2.ptr(), buff3.ptr(), buff4.ptr());
+static void XMLDecl(xercesc::AbstractDOMParser& self, const XMLString& versionStr, const XMLString& encodingStr, const XMLString& standaloneStr, const XMLString& autoEncodingStr) {
+	self.XMLDecl(versionStr.ptr(), encodingStr.ptr(), standaloneStr.ptr(), autoEncodingStr.ptr());
 }
 
-static void doctypeComment(xercesc::AbstractDOMParser& self, const STR comment) {
-	XMLString buff(comment);
-	self.doctypeComment(buff.ptr());
+static void doctypeComment(xercesc::AbstractDOMParser& self, const XMLString& comment) {
+	self.doctypeComment(comment.ptr());
 }
 
-static void doctypeDecl(xercesc::AbstractDOMParser& self, const xercesc::DTDElementDecl& elemDecl, const STR publicId, const STR systemId, const bool hasIntSubset, const bool hasExtSubset) {
-	XMLString buff1(publicId), buff2(systemId);
-	self.doctypeDecl(elemDecl, buff1.ptr(), buff2.ptr(), hasIntSubset, hasExtSubset);
+static void doctypeDecl(xercesc::AbstractDOMParser& self, const xercesc::DTDElementDecl& elemDecl, const XMLString& publicId, const XMLString& systemId, const bool hasIntSubset, const bool hasExtSubset) {
+	self.doctypeDecl(elemDecl, publicId.ptr(), systemId.ptr(), hasIntSubset, hasExtSubset);
 }
 
-static void doctypePI(xercesc::AbstractDOMParser& self, const STR target, const STR data) {
-	XMLString buff1(target), buff2(data);
-	self.doctypePI(buff1.ptr(), buff2.ptr());
+static void doctypePI(xercesc::AbstractDOMParser& self, const XMLString& target, const XMLString& data) {
+	self.doctypePI(target.ptr(), data.ptr());
 }
 
-static void doctypeWhitespace(xercesc::AbstractDOMParser& self, const STR chars) {
-	XMLString buff(chars);
-	self.doctypeWhitespace(buff.ptr(), buff.size());
+static void doctypeWhitespace(xercesc::AbstractDOMParser& self, const XMLString& chars) {
+	self.doctypeWhitespace(chars.ptr(), chars.size());
 }
 
-static void TextDecl(xercesc::AbstractDOMParser& self, const STR versionStr, const STR encodingStr) {
-	XMLString buff1(versionStr), buff2(encodingStr);
-	self.TextDecl(buff1.ptr(), buff2.ptr());
+static void TextDecl(xercesc::AbstractDOMParser& self, const XMLString& versionStr, const XMLString& encodingStr) {
+	self.TextDecl(versionStr.ptr(), encodingStr.ptr());
 }
 
 };
@@ -440,8 +422,7 @@ void startInputSource(const xercesc::InputSource& inputSource) {
 void AbstractDOMParser_init(void) {
 	//! xercesc::AbstractDOMParser
 	auto AbstractDOMParser = boost::python::class_<AbstractDOMParserWrapper, boost::noncopyable, boost::python::bases<xercesc::XMLDocumentHandler, xercesc::XMLErrorReporter, xercesc::XMLEntityHandler, xercesc::DocTypeHandler, xercesc::PSVIHandler> >("AbstractDOMParser")
-			.def(AbstractDOMParserDefVisitor<XMLString&>())
-			.def(AbstractDOMParserDefVisitor<char*>())
+			.def(AbstractDOMParserDefVisitor())
 			.def("reset", &xercesc::AbstractDOMParser::reset)
 			.def("adoptDocument", &xercesc::AbstractDOMParser::adoptDocument, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getDocument", &xercesc::AbstractDOMParser::getDocument, boost::python::return_value_policy<boost::python::reference_existing_object>())

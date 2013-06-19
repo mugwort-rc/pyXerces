@@ -47,28 +47,25 @@ public:
 	}
 };
 
-template <typename STR>
 class AttributeListDefVisitor
-: public boost::python::def_visitor<AttributeListDefVisitor<STR> >
+: public boost::python::def_visitor<AttributeListDefVisitor>
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("getType", &AttributeListDefVisitor<STR>::getType, boost::python::return_value_policy<boost::python::return_by_value>())
-	.def("getValue", &AttributeListDefVisitor<STR>::getValue, boost::python::return_value_policy<boost::python::return_by_value>())
+	.def("getType", &AttributeListDefVisitor::getType, boost::python::return_value_policy<boost::python::return_by_value>())
+	.def("getValue", &AttributeListDefVisitor::getValue, boost::python::return_value_policy<boost::python::return_by_value>())
 	;
 }
 
-static const XMLCh* getType(xercesc::AttributeList& self, const STR name) {
-	XMLString buff(name);
-	return self.getType(buff.ptr());
+static const XMLCh* getType(xercesc::AttributeList& self, const XMLString& name) {
+	return self.getType(name.ptr());
 }
 
-static const XMLCh* getValue(xercesc::AttributeList& self, const STR name) {
-	XMLString buff(name);
-	return self.getValue(buff.ptr());
+static const XMLCh* getValue(xercesc::AttributeList& self, const XMLString& name) {
+	return self.getValue(name.ptr());
 }
 
 };
@@ -76,8 +73,7 @@ static const XMLCh* getValue(xercesc::AttributeList& self, const STR name) {
 void AttributeList_init(void) {
 	//! xercesc::AttributeList
 	boost::python::class_<AttributeListWrapper, boost::noncopyable>("AttributeList")
-			.def(AttributeListDefVisitor<XMLString&>())
-			.def(AttributeListDefVisitor<char*>())
+			.def(AttributeListDefVisitor())
 			.def("getLength", &xercesc::AttributeList::getLength)
 			.def("getName", &xercesc::AttributeList::getName, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getType", boost::python::pure_virtual(static_cast<const XMLCh*(xercesc::AttributeList::*)(const XMLSize_t) const>(&xercesc::AttributeList::getType)), boost::python::return_value_policy<boost::python::return_by_value>())

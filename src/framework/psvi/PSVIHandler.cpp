@@ -19,9 +19,8 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class PSVIHandlerDefVisitor
-: public boost::python::def_visitor<PSVIHandlerDefVisitor<STR> >
+: public boost::python::def_visitor<PSVIHandlerDefVisitor>
 {
 friend class def_visitor_access;
 public:
@@ -34,19 +33,16 @@ void visit(T& class_) const {
 	;
 }
 
-static void handleElementPSVI(xercesc::PSVIHandler& self, const STR localName, const STR uri, xercesc::PSVIElement* elementInfo) {
-	XMLString buff1(localName), buff2(uri);
-	self.handleElementPSVI(buff1.ptr(), buff2.ptr(), elementInfo);
+static void handleElementPSVI(xercesc::PSVIHandler& self, const XMLString& localName, const XMLString& uri, xercesc::PSVIElement* elementInfo) {
+	self.handleElementPSVI(localName.ptr(), uri.ptr(), elementInfo);
 }
 
-static void handlePartialElementPSVI(xercesc::PSVIHandler& self, const STR localName, const STR uri, xercesc::PSVIElement* elementInfo) {
-	XMLString buff1(localName), buff2(uri);
-	self.handlePartialElementPSVI(buff1.ptr(), buff2.ptr(), elementInfo);
+static void handlePartialElementPSVI(xercesc::PSVIHandler& self, const XMLString& localName, const XMLString& uri, xercesc::PSVIElement* elementInfo) {
+	self.handlePartialElementPSVI(localName.ptr(), uri.ptr(), elementInfo);
 }
 
-static void handleAttributesPSVI(xercesc::PSVIHandler& self, const STR localName, const STR uri, xercesc::PSVIAttributeList* psviAttributes) {
-	XMLString buff1(localName), buff2(uri);
-	self.handleAttributesPSVI(buff1.ptr(), buff2.ptr(), psviAttributes);
+static void handleAttributesPSVI(xercesc::PSVIHandler& self, const XMLString& localName, const XMLString& uri, xercesc::PSVIAttributeList* psviAttributes) {
+	self.handleAttributesPSVI(localName.ptr(), uri.ptr(), psviAttributes);
 }
 
 };
@@ -76,8 +72,7 @@ void handleAttributesPSVI(const XMLCh* const localName, const XMLCh* const uri, 
 void PSVIHandler_init(void) {
 	//! xercesc::PSVIHandler
 	boost::python::class_<PSVIHandlerWrapper, boost::noncopyable>("PSVIHandler")
-			.def(PSVIHandlerDefVisitor<XMLString&>())
-			.def(PSVIHandlerDefVisitor<char*>())
+			.def(PSVIHandlerDefVisitor())
 			.def("handleElementPSVI", boost::python::pure_virtual(&xercesc::PSVIHandler::handleElementPSVI))
 			.def("handlePartialElementPSVI", &xercesc::PSVIHandler::handlePartialElementPSVI)
 			.def("handleAttributesPSVI", boost::python::pure_virtual(&xercesc::PSVIHandler::handleAttributesPSVI))

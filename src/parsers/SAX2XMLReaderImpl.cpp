@@ -34,20 +34,19 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class SAX2XMLReaderImplDefVisitor
-: public boost::python::def_visitor<SAX2XMLReaderImplDefVisitor<STR> >
+: public boost::python::def_visitor<SAX2XMLReaderImplDefVisitor>
 {
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("getFeature", &SAX2XMLReaderImplDefVisitor<STR>::getFeature)
-	.def("getProperty", &SAX2XMLReaderImplDefVisitor<STR>::getProperty, boost::python::return_value_policy<boost::python::return_opaque_pointer>())
-	.def("setFeature", &SAX2XMLReaderImplDefVisitor<STR>::setFeature)
-	.def("setProperty", &SAX2XMLReaderImplDefVisitor<STR>::setProperty)
-	.def("parse", &SAX2XMLReaderImplDefVisitor<STR>::parse)
-	.def("getGrammar", &SAX2XMLReaderImplDefVisitor<STR>::getGrammar, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("getFeature", &SAX2XMLReaderImplDefVisitor::getFeature)
+	.def("getProperty", &SAX2XMLReaderImplDefVisitor::getProperty, boost::python::return_value_policy<boost::python::return_opaque_pointer>())
+	.def("setFeature", &SAX2XMLReaderImplDefVisitor::setFeature)
+	.def("setProperty", &SAX2XMLReaderImplDefVisitor::setProperty)
+	.def("parse", &SAX2XMLReaderImplDefVisitor::parse)
+	.def("getGrammar", &SAX2XMLReaderImplDefVisitor::getGrammar, boost::python::return_value_policy<boost::python::reference_existing_object>())
 	.def("docCharacters", &SAX2XMLReaderImplDefVisitor::docCharacters)
 	.def("docComment", &SAX2XMLReaderImplDefVisitor::docComment)
 	.def("docPI", &SAX2XMLReaderImplDefVisitor::docPI)
@@ -65,104 +64,84 @@ void visit(T& class_) const {
 	;
 }
 
-static bool getFeature(xercesc::SAX2XMLReaderImpl& self, const STR name) {
-	XMLString buff(name);
-	return self.getFeature(buff.ptr());
+static bool getFeature(xercesc::SAX2XMLReaderImpl& self, const XMLString& name) {
+	return self.getFeature(name.ptr());
 }
 
-static void* getProperty(xercesc::SAX2XMLReaderImpl& self, const STR name) {
-	XMLString buff(name);
-	return self.getProperty(buff.ptr());
+static void* getProperty(xercesc::SAX2XMLReaderImpl& self, const XMLString& name) {
+	return self.getProperty(name.ptr());
 }
 
-static void setFeature(xercesc::SAX2XMLReaderImpl& self, const STR name, const bool value) {
-	XMLString buff(name);
-	self.setFeature(buff.ptr(), value);
+static void setFeature(xercesc::SAX2XMLReaderImpl& self, const XMLString& name, const bool value) {
+	self.setFeature(name.ptr(), value);
 }
 
-static void setProperty(xercesc::SAX2XMLReaderImpl& self, const STR name, void* value) {
-	XMLString buff(name);
-	self.setProperty(buff.ptr(), value);
+static void setProperty(xercesc::SAX2XMLReaderImpl& self, const XMLString& name, void* value) {
+	self.setProperty(name.ptr(), value);
 }
 
-static void parse(xercesc::SAX2XMLReaderImpl& self, const STR systemId) {
-	XMLString buff(systemId);
-	self.parse(buff.ptr());
+static void parse(xercesc::SAX2XMLReaderImpl& self, const XMLString& systemId) {
+	self.parse(systemId.ptr());
 }
 
-static xercesc::Grammar* getGrammar(xercesc::SAX2XMLReaderImpl& self, const STR nameSpaceKey) {
-	XMLString buff(nameSpaceKey);
-	return self.getGrammar(buff.ptr());
+static xercesc::Grammar* getGrammar(xercesc::SAX2XMLReaderImpl& self, const XMLString& nameSpaceKey) {
+	return self.getGrammar(nameSpaceKey.ptr());
 }
 
-static void docCharacters(xercesc::SAX2XMLReaderImpl& self, const STR chars, const bool cdataSection) {
-	XMLString buff(chars);
-	self.docCharacters(buff.ptr(), buff.size(), cdataSection);
+static void docCharacters(xercesc::SAX2XMLReaderImpl& self, const XMLString& chars, const bool cdataSection) {
+	self.docCharacters(chars.ptr(), chars.size(), cdataSection);
 }
 
-static void docComment(xercesc::SAX2XMLReaderImpl& self, const STR comment) {
-	XMLString buff(comment);
-	self.docComment(buff.ptr());
+static void docComment(xercesc::SAX2XMLReaderImpl& self, const XMLString& comment) {
+	self.docComment(comment.ptr());
 }
 
-static void docPI(xercesc::SAX2XMLReaderImpl& self, const STR target, const STR data) {
-	XMLString buff1(target), buff2(data);
-	self.docPI(buff1.ptr(), buff2.ptr());
+static void docPI(xercesc::SAX2XMLReaderImpl& self, const XMLString& target, const XMLString& data) {
+	self.docPI(target.ptr(), data.ptr());
 }
 
-static void endElement(xercesc::SAX2XMLReaderImpl& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const bool isRoot, const STR prefixName) {
-	XMLString buff(prefixName);
-	self.endElement(elemDecl, uriId, isRoot, buff.ptr());
+static void endElement(xercesc::SAX2XMLReaderImpl& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const bool isRoot, const XMLString& prefixName) {
+	self.endElement(elemDecl, uriId, isRoot, prefixName.ptr());
 }
 
-static void ignorableWhitespace(xercesc::SAX2XMLReaderImpl& self, const STR& chars, const bool cdataSection) {
-	XMLString buff(chars);
-	self.ignorableWhitespace(buff.ptr(), buff.size(), cdataSection);
+static void ignorableWhitespace(xercesc::SAX2XMLReaderImpl& self, const XMLString& chars, const bool cdataSection) {
+	self.ignorableWhitespace(chars.ptr(), chars.size(), cdataSection);
 }
 
-static void startElement(xercesc::SAX2XMLReaderImpl& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const STR prefixName, const xercesc::RefVectorOf<xercesc::XMLAttr>& attrList, const XMLSize_t attrCount, const bool isEmpty, const bool isRoot) {
-	XMLString buff(prefixName);
-	self.startElement(elemDecl, uriId, buff.ptr(), attrList, attrCount, isEmpty, isRoot);
+static void startElement(xercesc::SAX2XMLReaderImpl& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int uriId, const XMLString& prefixName, const xercesc::RefVectorOf<xercesc::XMLAttr>& attrList, const XMLSize_t attrCount, const bool isEmpty, const bool isRoot) {
+	self.startElement(elemDecl, uriId, prefixName.ptr(), attrList, attrCount, isEmpty, isRoot);
 }
 
-static void XMLDecl(xercesc::SAX2XMLReaderImpl& self, const STR versionStr, const STR encodingStr, const STR standaloneStr, const STR autoEncodingStr) {
-	XMLString buff1(versionStr), buff2(encodingStr), buff3(standaloneStr), buff4(autoEncodingStr);
-	self.XMLDecl(buff1.ptr(), buff2.ptr(), buff3.ptr(), buff4.ptr());
+static void XMLDecl(xercesc::SAX2XMLReaderImpl& self, const XMLString& versionStr, const XMLString& encodingStr, const XMLString& standaloneStr, const XMLString& autoEncodingStr) {
+	self.XMLDecl(versionStr.ptr(), encodingStr.ptr(), standaloneStr.ptr(), autoEncodingStr.ptr());
 }
 
-static void error(xercesc::SAX2XMLReaderImpl& self, const unsigned int errCode, const STR errDomain, const xercesc::XMLErrorReporter::ErrTypes type, const STR errorText, const STR systemId, const STR publicId, const XMLFileLoc lineNum, const XMLFileLoc colNum) {
-	XMLString buff1(errDomain), buff2(errorText), buff3(systemId), buff4(publicId);
-	self.error(errCode, buff1.ptr(), type, buff2.ptr(), buff3.ptr(), buff4.ptr(), lineNum, colNum);
+static void error(xercesc::SAX2XMLReaderImpl& self, const unsigned int errCode, const XMLString& errDomain, const xercesc::XMLErrorReporter::ErrTypes type, const XMLString& errorText, const XMLString& systemId, const XMLString& publicId, const XMLFileLoc lineNum, const XMLFileLoc colNum) {
+	self.error(errCode, errDomain.ptr(), type, errorText.ptr(), systemId.ptr(), publicId.ptr(), lineNum, colNum);
 }
 
-static bool expandSystemId(xercesc::SAX2XMLReaderImpl& self, const STR systemId, xercesc::XMLBuffer& toFill) {
-	XMLString buff(systemId);
-	return self.expandSystemId(buff.ptr(), toFill);
+static bool expandSystemId(xercesc::SAX2XMLReaderImpl& self, const XMLString& systemId, xercesc::XMLBuffer& toFill) {
+	return self.expandSystemId(systemId.ptr(), toFill);
 }
 
-static void doctypeComment(xercesc::SAX2XMLReaderImpl& self, const STR comment) {
-	XMLString buff(comment);
-	self.doctypeComment(buff.ptr());
+static void doctypeComment(xercesc::SAX2XMLReaderImpl& self, const XMLString& comment) {
+	self.doctypeComment(comment.ptr());
 }
 
-static void doctypeDecl(xercesc::SAX2XMLReaderImpl& self, const xercesc::DTDElementDecl& elemDecl, const STR publicId, const STR systemId, const bool hasIntSubset, const bool hasExtSubset) {
-	XMLString buff1(publicId), buff2(systemId);
-	self.doctypeDecl(elemDecl, buff1.ptr(), buff2.ptr(), hasIntSubset, hasExtSubset);
+static void doctypeDecl(xercesc::SAX2XMLReaderImpl& self, const xercesc::DTDElementDecl& elemDecl, const XMLString& publicId, const XMLString& systemId, const bool hasIntSubset, const bool hasExtSubset) {
+	self.doctypeDecl(elemDecl, publicId.ptr(), systemId.ptr(), hasIntSubset, hasExtSubset);
 }
 
-static void doctypePI(xercesc::SAX2XMLReaderImpl& self, const STR target, const STR data) {
-	XMLString buff1(target), buff2(data);
-	self.doctypePI(buff1.ptr(), buff2.ptr());
+static void doctypePI(xercesc::SAX2XMLReaderImpl& self, const XMLString& target, const XMLString& data) {
+	self.doctypePI(target.ptr(), data.ptr());
 }
 
-static void doctypeWhitespace(xercesc::SAX2XMLReaderImpl& self, const STR chars) {
-	XMLString buff(chars);
-	self.doctypeWhitespace(buff.ptr(), buff.size());
+static void doctypeWhitespace(xercesc::SAX2XMLReaderImpl& self, const XMLString& chars) {
+	self.doctypeWhitespace(chars.ptr(), chars.size());
 }
 
-static void TextDecl(xercesc::SAX2XMLReaderImpl& self, const STR versionStr, const STR encodingStr) {
-	XMLString buff1(versionStr), buff2(encodingStr);
-	self.TextDecl(buff1.ptr(), buff2.ptr());
+static void TextDecl(xercesc::SAX2XMLReaderImpl& self, const XMLString& versionStr, const XMLString& encodingStr) {
+	self.TextDecl(versionStr.ptr(), encodingStr.ptr());
 }
 
 };
@@ -800,8 +779,7 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(SAX2XMLReaderImplDoctypeDeclOverloads, do
 void SAX2XMLReaderImpl_init(void) {
 	//! xercesc::SAX2XMLReaderImpl
 	boost::python::class_<SAX2XMLReaderImplWrapper, boost::noncopyable, boost::python::bases<xercesc::SAX2XMLReader, xercesc::XMLDocumentHandler, xercesc::XMLErrorReporter, xercesc::XMLEntityHandler, xercesc::DocTypeHandler> >("SAX2XMLReaderImpl", boost::python::init<boost::python::optional<xercesc::MemoryManager* const, xercesc::XMLGrammarPool* const> >())
-			.def(SAX2XMLReaderImplDefVisitor<XMLString&>())
-			.def(SAX2XMLReaderImplDefVisitor<char*>())
+			.def(SAX2XMLReaderImplDefVisitor())
 			.def("getContentHandler", &xercesc::SAX2XMLReaderImpl::getContentHandler, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getDTDHandler", &xercesc::SAX2XMLReaderImpl::getDTDHandler, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getEntityResolver", &xercesc::SAX2XMLReaderImpl::getEntityResolver, boost::python::return_value_policy<boost::python::reference_existing_object>())

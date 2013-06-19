@@ -15,28 +15,25 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class XMLDTDDescriptionDefVisitor
-: public boost::python::def_visitor<XMLDTDDescriptionDefVisitor<STR> >
+: public boost::python::def_visitor<XMLDTDDescriptionDefVisitor>
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("setRootName", &XMLDTDDescriptionDefVisitor<STR>::setRootName)
-	.def("setSystemId", &XMLDTDDescriptionDefVisitor<STR>::setSystemId)
+	.def("setRootName", &XMLDTDDescriptionDefVisitor::setRootName)
+	.def("setSystemId", &XMLDTDDescriptionDefVisitor::setSystemId)
 	;
 }
 
-static void setRootName(xercesc::XMLDTDDescription& self, const STR name) {
-	XMLString buff(name);
-	self.setRootName(buff.ptr());
+static void setRootName(xercesc::XMLDTDDescription& self, const XMLString& name) {
+	self.setRootName(name.ptr());
 }
 
-static void setSystemId(xercesc::XMLDTDDescription& self, const STR id) {
-	XMLString buff(id);
-	self.setSystemId(buff.ptr());
+static void setSystemId(xercesc::XMLDTDDescription& self, const XMLString& id) {
+	self.setSystemId(id.ptr());
 }
 
 };
@@ -89,8 +86,7 @@ PyDECL_XSERIALIZABLEWrapper
 void XMLDTDDescription_init(void) {
 	//! xercesc::XMLDTDDescription
 	boost::python::class_<XMLDTDDescriptionWrapper, boost::noncopyable, boost::python::bases<xercesc::XMLGrammarDescription> >("XMLDTDDescription")
-			.def(XMLDTDDescriptionDefVisitor<XMLString&>())
-			.def(XMLDTDDescriptionDefVisitor<char*>())
+			.def(XMLDTDDescriptionDefVisitor())
 			.def("getGrammarType", &xercesc::XMLDTDDescription::getGrammarType)
 			.def("getRootName", boost::python::pure_virtual(&xercesc::XMLDTDDescription::getRootName), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getSystemId", &xercesc::XMLDTDDescription::getSystemId, boost::python::return_value_policy<boost::python::return_by_value>())

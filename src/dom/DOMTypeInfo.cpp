@@ -14,9 +14,8 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class DOMTypeInfoDefVisitor
-: public boost::python::def_visitor<DOMTypeInfoDefVisitor<STR> >
+: public boost::python::def_visitor<DOMTypeInfoDefVisitor>
 {
 friend class def_visitor_access;
 public:
@@ -27,9 +26,8 @@ void visit(T& class_) const {
 	;
 }
 
-static bool isDerivedFrom(xercesc::DOMTypeInfo& self, const STR typeNamespaceArg, const STR typeNameArg, xercesc::DOMTypeInfo::DerivationMethods derivationMethod) {
-	XMLString buff1(typeNamespaceArg), buff2(typeNameArg);
-	return self.isDerivedFrom(buff1.ptr(), buff2.ptr(), derivationMethod);
+static bool isDerivedFrom(xercesc::DOMTypeInfo& self, const XMLString& typeNamespaceArg, const XMLString& typeNameArg, xercesc::DOMTypeInfo::DerivationMethods derivationMethod) {
+	return self.isDerivedFrom(typeNamespaceArg.ptr(), typeNameArg.ptr(), derivationMethod);
 }
 
 };
@@ -55,8 +53,7 @@ bool isDerivedFrom(const XMLCh* typeNamespaceArg, const XMLCh* typeNameArg, Deri
 void DOMTypeInfo_init(void) {
 	//! xercesc::DOMTypeInfo
 	auto DOMTypeInfo = boost::python::class_<DOMTypeInfoWrapper, boost::noncopyable>("DOMTypeInfo")
-			.def(DOMTypeInfoDefVisitor<XMLString&>())
-			.def(DOMTypeInfoDefVisitor<char*>())
+			.def(DOMTypeInfoDefVisitor())
 			.def("getTypeName", boost::python::pure_virtual(&xercesc::DOMTypeInfo::getTypeName), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getTypeNamespace", boost::python::pure_virtual(&xercesc::DOMTypeInfo::getTypeNamespace), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("isDerivedFrom", boost::python::pure_virtual(&xercesc::DOMTypeInfo::isDerivedFrom))

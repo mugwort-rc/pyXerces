@@ -20,9 +20,8 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class HandlerBaseDefVisitor
-: public boost::python::def_visitor<HandlerBaseDefVisitor<STR> >
+: public boost::python::def_visitor<HandlerBaseDefVisitor>
 {
 friend class def_visitor_access;
 public:
@@ -35,49 +34,41 @@ void visit(T& class_) const {
 	.def("processingInstruction", &HandlerBaseDefVisitor::processingInstruction)
 	.def("startElement", &HandlerBaseDefVisitor::startElement)
 	.def("resolveEntity", &HandlerBaseDefVisitor::resolveEntity, boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("notationDecl", &HandlerBaseDefVisitor<STR>::notationDecl)
-	.def("unparsedEntityDecl", &HandlerBaseDefVisitor<STR>::unparsedEntityDecl)
+	.def("notationDecl", &HandlerBaseDefVisitor::notationDecl)
+	.def("unparsedEntityDecl", &HandlerBaseDefVisitor::unparsedEntityDecl)
 	;
 }
 
-static void characters(xercesc::HandlerBase& self, const STR chars) {
-	XMLString buff(chars);
-	self.characters(buff.ptr(), buff.size());
+static void characters(xercesc::HandlerBase& self, const XMLString& chars) {
+	self.characters(chars.ptr(), chars.size());
 }
 
-static void endElement(xercesc::HandlerBase& self, const STR name) {
-	XMLString buff(name);
-	self.endElement(buff.ptr());
+static void endElement(xercesc::HandlerBase& self, const XMLString& name) {
+	self.endElement(name.ptr());
 }
 
-static void ignorableWhitespace(xercesc::HandlerBase& self, const STR chars) {
-	XMLString buff(chars);
-	self.ignorableWhitespace(buff.ptr(), buff.size());
+static void ignorableWhitespace(xercesc::HandlerBase& self, const XMLString& chars) {
+	self.ignorableWhitespace(chars.ptr(), chars.size());
 }
 
-static void processingInstruction(xercesc::HandlerBase& self, const STR target, const STR data) {
-	XMLString buff1(target), buff2(data);
-	self.processingInstruction(buff1.ptr(), buff2.ptr());
+static void processingInstruction(xercesc::HandlerBase& self, const XMLString& target, const XMLString& data) {
+	self.processingInstruction(target.ptr(), data.ptr());
 }
 
-static void startElement(xercesc::HandlerBase& self, const STR name, xercesc::AttributeList& attrs) {
-	XMLString buff(name);
-	self.startElement(buff.ptr(), attrs);
+static void startElement(xercesc::HandlerBase& self, const XMLString& name, xercesc::AttributeList& attrs) {
+	self.startElement(name.ptr(), attrs);
 }
 
-static xercesc::InputSource* resolveEntity(xercesc::HandlerBase& self, const STR publicId, const STR systemId) {
-	XMLString buff1(publicId), buff2(systemId);
-	return self.resolveEntity(buff1.ptr(), buff2.ptr());
+static xercesc::InputSource* resolveEntity(xercesc::HandlerBase& self, const XMLString& publicId, const XMLString& systemId) {
+	return self.resolveEntity(publicId.ptr(), systemId.ptr());
 }
 
-static void notationDecl(xercesc::HandlerBase& self, const STR name, const STR publicId, const STR systemId) {
-	XMLString buff1(name), buff2(publicId), buff3(systemId);
-	self.notationDecl(buff1.ptr(), buff2.ptr(), buff3.ptr());
+static void notationDecl(xercesc::HandlerBase& self, const XMLString& name, const XMLString& publicId, const XMLString& systemId) {
+	self.notationDecl(name.ptr(), publicId.ptr(), systemId.ptr());
 }
 
-static void unparsedEntityDecl(xercesc::HandlerBase& self, const STR name, const STR publicId, const STR systemId, const STR notationName) {
-	XMLString buff1(name), buff2(publicId), buff3(systemId), buff4(notationName);
-	self.unparsedEntityDecl(buff1.ptr(), buff2.ptr(), buff3.ptr(), buff4.ptr());
+static void unparsedEntityDecl(xercesc::HandlerBase& self, const XMLString& name, const XMLString& publicId, const XMLString& systemId, const XMLString& notationName) {
+	self.unparsedEntityDecl(name.ptr(), publicId.ptr(), systemId.ptr(), notationName.ptr());
 }
 
 };
@@ -226,8 +217,7 @@ void resetDocType() {
 void HandlerBase_init(void) {
 	//! xercesc::HandlerBase
 	boost::python::class_<HandlerBaseWrapper, boost::noncopyable, boost::python::bases<xercesc::EntityResolver, xercesc::DTDHandler, xercesc::DocumentHandler, xercesc::ErrorHandler> >("HandlerBase")
-			.def(HandlerBaseDefVisitor<XMLString&>())
-			.def(HandlerBaseDefVisitor<char*>())
+			.def(HandlerBaseDefVisitor())
 			.def("characters", &xercesc::HandlerBase::characters)
 			.def("endDocument", &xercesc::HandlerBase::endDocument)
 			.def("endElement", &xercesc::HandlerBase::endElement)

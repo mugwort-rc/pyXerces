@@ -53,22 +53,20 @@ bool derivedFromType(const xercesc::XSTypeDefinition* const ancestorType) {
 
 };
 
-template <typename STR>
 class XSTypeDefinitionDefVisitor
-: public boost::python::def_visitor<XSTypeDefinitionDefVisitor<STR> >
+: public boost::python::def_visitor<XSTypeDefinitionDefVisitor>
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("derivedFrom", &XSTypeDefinitionDefVisitor<STR>::derivedFrom)
+	.def("derivedFrom", &XSTypeDefinitionDefVisitor::derivedFrom)
 	;
 }
 
-static bool derivedFrom(xercesc::XSTypeDefinition& self, const STR typeNamespace, const STR name) {
-	XMLString buff1(typeNamespace), buff2(name);
-	return self.derivedFrom(buff1.ptr(), buff2.ptr());
+static bool derivedFrom(xercesc::XSTypeDefinition& self, const XMLString& typeNamespace, const XMLString& name) {
+	return self.derivedFrom(typeNamespace.ptr(), name.ptr());
 }
 
 };
@@ -76,8 +74,7 @@ static bool derivedFrom(xercesc::XSTypeDefinition& self, const STR typeNamespace
 void XSTypeDefinition_init(void) {
 	//! xercesc::XSTypeDefinition
 	auto XSTypeDefinition = boost::python::class_<XSTypeDefinitionWrapper, boost::noncopyable, boost::python::bases<xercesc::XSObject> >("XSTypeDefinition", boost::python::init<xercesc::XSTypeDefinition::TYPE_CATEGORY, xercesc::XSTypeDefinition* const, xercesc::XSModel* const, boost::python::optional<xercesc::MemoryManager* const> >())
-			.def(XSTypeDefinitionDefVisitor<XMLString&>())
-			.def(XSTypeDefinitionDefVisitor<char*>())
+			.def(XSTypeDefinitionDefVisitor())
 			.def("getName", &xercesc::XSTypeDefinition::getName, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getNamespace", &xercesc::XSTypeDefinition::getNamespace, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getNamespaceItem", &xercesc::XSTypeDefinition::getNamespaceItem, boost::python::return_value_policy<boost::python::reference_existing_object>())

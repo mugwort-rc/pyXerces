@@ -25,51 +25,44 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class SAX2XMLReaderDefVisitor
-: public boost::python::def_visitor<SAX2XMLReaderDefVisitor<STR> >
+: public boost::python::def_visitor<SAX2XMLReaderDefVisitor>
 {
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("getFeature", &SAX2XMLReaderDefVisitor<STR>::getFeature)
-	.def("getProperty", &SAX2XMLReaderDefVisitor<STR>::getProperty, boost::python::return_value_policy<boost::python::return_opaque_pointer>())
-	.def("setFeature", &SAX2XMLReaderDefVisitor<STR>::setFeature)
-	.def("setProperty", &SAX2XMLReaderDefVisitor<STR>::setProperty)
-	.def("parse", &SAX2XMLReaderDefVisitor<STR>::parse)
-	.def("getGrammar", &SAX2XMLReaderDefVisitor<STR>::getGrammar, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("getFeature", &SAX2XMLReaderDefVisitor::getFeature)
+	.def("getProperty", &SAX2XMLReaderDefVisitor::getProperty, boost::python::return_value_policy<boost::python::return_opaque_pointer>())
+	.def("setFeature", &SAX2XMLReaderDefVisitor::setFeature)
+	.def("setProperty", &SAX2XMLReaderDefVisitor::setProperty)
+	.def("parse", &SAX2XMLReaderDefVisitor::parse)
+	.def("getGrammar", &SAX2XMLReaderDefVisitor::getGrammar, boost::python::return_value_policy<boost::python::reference_existing_object>())
 	;
 }
 
-static bool getFeature(xercesc::SAX2XMLReader& self, const STR name) {
-	XMLString buff(name);
-	return self.getFeature(buff.ptr());
+static bool getFeature(xercesc::SAX2XMLReader& self, const XMLString& name) {
+	return self.getFeature(name.ptr());
 }
 
-static void* getProperty(xercesc::SAX2XMLReader& self, const STR name) {
-	XMLString buff(name);
-	return self.getProperty(buff.ptr());
+static void* getProperty(xercesc::SAX2XMLReader& self, const XMLString& name) {
+	return self.getProperty(name.ptr());
 }
 
-static void setFeature(xercesc::SAX2XMLReader& self, const STR name, const bool value) {
-	XMLString buff(name);
-	self.setFeature(buff.ptr(), value);
+static void setFeature(xercesc::SAX2XMLReader& self, const XMLString& name, const bool value) {
+	self.setFeature(name.ptr(), value);
 }
 
-static void setProperty(xercesc::SAX2XMLReader& self, const STR name, void* value) {
-	XMLString buff(name);
-	self.setProperty(buff.ptr(), value);
+static void setProperty(xercesc::SAX2XMLReader& self, const XMLString& name, void* value) {
+	self.setProperty(name.ptr(), value);
 }
 
-static void parse(xercesc::SAX2XMLReader& self, const STR systemId) {
-	XMLString buff(systemId);
-	self.parse(buff.ptr());
+static void parse(xercesc::SAX2XMLReader& self, const XMLString& systemId) {
+	self.parse(systemId.ptr());
 }
 
-static xercesc::Grammar* getGrammar(xercesc::SAX2XMLReader& self, const STR nameSpaceKey) {
-	XMLString buff(nameSpaceKey);
-	return self.getGrammar(buff.ptr());
+static xercesc::Grammar* getGrammar(xercesc::SAX2XMLReader& self, const XMLString& nameSpaceKey) {
+	return self.getGrammar(nameSpaceKey.ptr());
 }
 
 };
@@ -255,8 +248,7 @@ bool removeAdvDocHandler(xercesc::XMLDocumentHandler* const toRemove) {
 void SAX2XMLReader_init(void) {
 	//! xercesc::SAX2XMLReader
 	auto SAX2XMLReader = boost::python::class_<SAX2XMLReaderWrapper, boost::noncopyable>("SAX2XMLReader")
-			.def(SAX2XMLReaderDefVisitor<XMLString&>())
-			.def(SAX2XMLReaderDefVisitor<char*>())
+			.def(SAX2XMLReaderDefVisitor())
 			.def("getContentHandler", boost::python::pure_virtual(&xercesc::SAX2XMLReader::getContentHandler), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getDTDHandler", boost::python::pure_virtual(&xercesc::SAX2XMLReader::getDTDHandler), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getEntityResolver", boost::python::pure_virtual(&xercesc::SAX2XMLReader::getEntityResolver), boost::python::return_value_policy<boost::python::reference_existing_object>())

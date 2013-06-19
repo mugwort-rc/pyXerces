@@ -57,9 +57,8 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class DOMDocumentDefVisitor
-: public boost::python::def_visitor<DOMDocumentDefVisitor<STR> >
+: public boost::python::def_visitor<DOMDocumentDefVisitor>
 {
 friend class def_visitor_access;
 public:
@@ -82,111 +81,91 @@ void visit(T& class_) const {
 	.def("setDocumentURI", &DOMDocumentDefVisitor::setDocumentURI)
 	.def("renameNode", &DOMDocumentDefVisitor::renameNode, boost::python::return_value_policy<boost::python::reference_existing_object>())
 	.def("createEntity", &DOMDocumentDefVisitor::createEntity, boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createDocumentType", static_cast<xercesc::DOMDocumentType*(*)(xercesc::DOMDocument&, const STR)>(&DOMDocumentDefVisitor::createDocumentType), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("createDocumentType", static_cast<xercesc::DOMDocumentType*(*)(xercesc::DOMDocument&, const STR, const STR, const STR)>(&DOMDocumentDefVisitor::createDocumentType), boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("createDocumentType", static_cast<xercesc::DOMDocumentType*(*)(xercesc::DOMDocument&, const XMLString&)>(&DOMDocumentDefVisitor::createDocumentType), boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("createDocumentType", static_cast<xercesc::DOMDocumentType*(*)(xercesc::DOMDocument&, const XMLString&, const XMLString&, const XMLString&)>(&DOMDocumentDefVisitor::createDocumentType), boost::python::return_value_policy<boost::python::reference_existing_object>())
 	.def("createNotation", &DOMDocumentDefVisitor::createNotation, boost::python::return_value_policy<boost::python::reference_existing_object>())
 	.def("createElementNS", &DOMDocumentDefVisitor::nonStandardCreateElementNS, boost::python::return_value_policy<boost::python::reference_existing_object>())
 	;
 }
 
-static xercesc::DOMElement* createElement(xercesc::DOMDocument& self, const STR tagName) {
-	XMLString buff(tagName);
-	return self.createElement(buff.ptr());
+static xercesc::DOMElement* createElement(xercesc::DOMDocument& self, const XMLString& tagName) {
+	return self.createElement(tagName.ptr());
 }
 
-static xercesc::DOMText* createTextNode(xercesc::DOMDocument& self, const STR data) {
-	XMLString buff(data);
-	return self.createTextNode(buff.ptr());
+static xercesc::DOMText* createTextNode(xercesc::DOMDocument& self, const XMLString& data) {
+	return self.createTextNode(data.ptr());
 }
 
-static xercesc::DOMComment* createComment(xercesc::DOMDocument& self, const STR data) {
-	XMLString buff(data);
-	return self.createComment(buff.ptr());
+static xercesc::DOMComment* createComment(xercesc::DOMDocument& self, const XMLString& data) {
+	return self.createComment(data.ptr());
 }
 
-static xercesc::DOMCDATASection* createCDATASection(xercesc::DOMDocument& self, const STR data) {
-	XMLString buff(data);
-	return self.createCDATASection(buff.ptr());
+static xercesc::DOMCDATASection* createCDATASection(xercesc::DOMDocument& self, const XMLString& data) {
+	return self.createCDATASection(data.ptr());
 }
 
-static xercesc::DOMProcessingInstruction* createProcessingInstruction(xercesc::DOMDocument& self, const STR target, const STR data) {
-	XMLString buff1(target), buff2(data);
-	return self.createProcessingInstruction(buff1.ptr(), buff2.ptr());
+static xercesc::DOMProcessingInstruction* createProcessingInstruction(xercesc::DOMDocument& self, const XMLString& target, const XMLString& data) {
+	return self.createProcessingInstruction(target.ptr(), data.ptr());
 }
 
-static xercesc::DOMAttr* createAttribute(xercesc::DOMDocument& self, const STR name) {
-	XMLString buff(name);
-	return self.createAttribute(buff.ptr());
+static xercesc::DOMAttr* createAttribute(xercesc::DOMDocument& self, const XMLString& name) {
+	return self.createAttribute(name.ptr());
 }
 
-static xercesc::DOMEntityReference* createEntityReference(xercesc::DOMDocument& self, const STR name) {
-	XMLString buff(name);
-	return self.createEntityReference(buff.ptr());
+static xercesc::DOMEntityReference* createEntityReference(xercesc::DOMDocument& self, const XMLString& name) {
+	return self.createEntityReference(name.ptr());
 }
 
-static xercesc::DOMNodeList* getElementsByTagName(xercesc::DOMDocument& self, const STR tagName) {
-	XMLString buff(tagName);
-	return self.getElementsByTagName(buff.ptr());
+static xercesc::DOMNodeList* getElementsByTagName(xercesc::DOMDocument& self, const XMLString& tagName) {
+	return self.getElementsByTagName(tagName.ptr());
 }
 
-static xercesc::DOMElement* createElementNS(xercesc::DOMDocument& self, const STR namespaceURI, const STR qualifiedName) {
-	XMLString buff1(namespaceURI), buff2(qualifiedName);
-	return self.createElementNS(buff1.ptr(), buff2.ptr());
+static xercesc::DOMElement* createElementNS(xercesc::DOMDocument& self, const XMLString& namespaceURI, const XMLString& qualifiedName) {
+	return self.createElementNS(namespaceURI.ptr(), namespaceURI.ptr());
 }
 
-static xercesc::DOMAttr* createAttributeNS(xercesc::DOMDocument& self, const STR namespaceURI, const STR qualifiedName) {
-	XMLString buff1(namespaceURI), buff2(qualifiedName);
-	return self.createAttributeNS(buff1.ptr(), buff2.ptr());
+static xercesc::DOMAttr* createAttributeNS(xercesc::DOMDocument& self, const XMLString& namespaceURI, const XMLString& qualifiedName) {
+	return self.createAttributeNS(namespaceURI.ptr(), qualifiedName.ptr());
 }
 
-static xercesc::DOMNodeList* getElementsByTagNameNS(xercesc::DOMDocument& self, const STR namespaceURI, const STR localName) {
-	XMLString buff1(namespaceURI), buff2(localName);
-	return self.getElementsByTagNameNS(buff1.ptr(), buff2.ptr());
+static xercesc::DOMNodeList* getElementsByTagNameNS(xercesc::DOMDocument& self, const XMLString& namespaceURI, const XMLString& localName) {
+	return self.getElementsByTagNameNS(namespaceURI.ptr(), localName.ptr());
 }
 
-static xercesc::DOMElement* getElementById(xercesc::DOMDocument& self, const STR elementId) {
-	XMLString buff(elementId);
-	return self.getElementById(buff.ptr());
+static xercesc::DOMElement* getElementById(xercesc::DOMDocument& self, const XMLString& elementId) {
+	return self.getElementById(elementId.ptr());
 }
 
-static void setXmlVersion(xercesc::DOMDocument& self, const STR version) {
-	XMLString buff(version);
-	self.setXmlVersion(buff.ptr());
+static void setXmlVersion(xercesc::DOMDocument& self, const XMLString& version) {
+	self.setXmlVersion(version.ptr());
 }
 
-static void setDocumentURI(xercesc::DOMDocument& self, const STR documentURI) {
-	XMLString buff(documentURI);
-	self.setDocumentURI(buff.ptr());
+static void setDocumentURI(xercesc::DOMDocument& self, const XMLString& documentURI) {
+	self.setDocumentURI(documentURI.ptr());
 }
 
-static xercesc::DOMNode* renameNode(xercesc::DOMDocument& self, xercesc::DOMNode* n, const STR namespaceURI, const STR qualifiedName) {
-	XMLString buff1(namespaceURI), buff2(qualifiedName);
-	return self.renameNode(n, buff1.ptr(), buff2.ptr());
+static xercesc::DOMNode* renameNode(xercesc::DOMDocument& self, xercesc::DOMNode* n, const XMLString& namespaceURI, const XMLString& qualifiedName) {
+	return self.renameNode(n, namespaceURI.ptr(), qualifiedName.ptr());
 }
 
-static xercesc::DOMEntity* createEntity(xercesc::DOMDocument& self, const STR name) {
-	XMLString buff(name);
-	return self.createEntity(buff.ptr());
+static xercesc::DOMEntity* createEntity(xercesc::DOMDocument& self, const XMLString& name) {
+	return self.createEntity(name.ptr());
 }
 
-static xercesc::DOMDocumentType* createDocumentType(xercesc::DOMDocument& self, const STR name) {
-	XMLString buff(name);
-	return self.createDocumentType(buff.ptr());
+static xercesc::DOMDocumentType* createDocumentType(xercesc::DOMDocument& self, const XMLString& name) {
+	return self.createDocumentType(name.ptr());
 }
 
-static xercesc::DOMDocumentType* createDocumentType(xercesc::DOMDocument& self, const STR qName, const STR publicId, const STR systemId) {
-	XMLString buff1(qName), buff2(publicId), buff3(systemId);
-	return self.createDocumentType(buff1.ptr(), buff2.ptr(), buff3.ptr());
+static xercesc::DOMDocumentType* createDocumentType(xercesc::DOMDocument& self, const XMLString& qName, const XMLString& publicId, const XMLString& systemId) {
+	return self.createDocumentType(qName.ptr(), publicId.ptr(), systemId.ptr());
 }
 
-static xercesc::DOMNotation* createNotation(xercesc::DOMDocument& self, const STR name) {
-	XMLString buff(name);
-	return self.createNotation(buff.ptr());
+static xercesc::DOMNotation* createNotation(xercesc::DOMDocument& self, const XMLString& name) {
+	return self.createNotation(name.ptr());
 }
 
-static xercesc::DOMElement* nonStandardCreateElementNS(xercesc::DOMDocument& self, const STR namespaceURI, const STR qualifiedName, const XMLFileLoc lineNum, const XMLFileLoc columnNum) {
-	XMLString buff1(namespaceURI), buff2(qualifiedName);
-	return self.createElementNS(buff1.ptr(), buff2.ptr(), lineNum, columnNum);
+static xercesc::DOMElement* nonStandardCreateElementNS(xercesc::DOMDocument& self, const XMLString& namespaceURI, const XMLString& qualifiedName, const XMLFileLoc lineNum, const XMLFileLoc columnNum) {
+	return self.createElementNS(namespaceURI.ptr(), qualifiedName.ptr(), lineNum, columnNum);
 }
 
 };
@@ -529,8 +508,7 @@ void release() {
 void DOMDocument_init(void) {
 	//! xercesc::DOMDocument
 	auto DOMDocument = boost::python::class_<DOMDocumentWrapper, boost::noncopyable, boost::python::bases<xercesc::DOMDocumentRange, xercesc::DOMXPathEvaluator, xercesc::DOMDocumentTraversal, xercesc::DOMNode> >("DOMDocument")
-			.def(DOMDocumentDefVisitor<XMLString&>())
-			.def(DOMDocumentDefVisitor<char*>())
+			.def(DOMDocumentDefVisitor())
 			.def("createElement", boost::python::pure_virtual(&xercesc::DOMDocument::createElement), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("createDocumentFragment", boost::python::pure_virtual(&xercesc::DOMDocument::createDocumentFragment), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("createTextNode", boost::python::pure_virtual(&xercesc::DOMDocument::createTextNode), boost::python::return_value_policy<boost::python::reference_existing_object>())

@@ -24,43 +24,40 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class SelectorMatcherDefVisitor
-: public boost::python::def_visitor<SelectorMatcherDefVisitor<STR> >
+: public boost::python::def_visitor<SelectorMatcherDefVisitor>
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("startElement", static_cast<void(*)(xercesc::SelectorMatcher&, const xercesc::XMLElementDecl&, const unsigned int, const STR, const xercesc::RefVectorOf<xercesc::XMLAttr>&, const XMLSize_t, xercesc::ValidationContext*)>(&SelectorMatcherDefVisitor<STR>::startElement))
-	.def("startElement", static_cast<void(*)(xercesc::SelectorMatcher&, const xercesc::XMLElementDecl&, const unsigned int, const STR, const xercesc::RefVectorOf<xercesc::XMLAttr>&, const XMLSize_t)>(&SelectorMatcherDefVisitor<STR>::startElement))
-	.def("endElement", static_cast<void(*)(xercesc::SelectorMatcher&, const xercesc::XMLElementDecl&, const STR, xercesc::ValidationContext*, xercesc::DatatypeValidator*)>(&SelectorMatcherDefVisitor<STR>::endElement))
-	.def("endElement", static_cast<void(*)(xercesc::SelectorMatcher&, const xercesc::XMLElementDecl&, const STR, xercesc::ValidationContext*)>(&SelectorMatcherDefVisitor<STR>::endElement))
-	.def("endElement", static_cast<void(*)(xercesc::SelectorMatcher&, const xercesc::XMLElementDecl&, const STR)>(&SelectorMatcherDefVisitor<STR>::endElement))
+	.def("startElement", static_cast<void(*)(xercesc::SelectorMatcher&, const xercesc::XMLElementDecl&, const unsigned int, const XMLString&, const xercesc::RefVectorOf<xercesc::XMLAttr>&, const XMLSize_t, xercesc::ValidationContext*)>(&SelectorMatcherDefVisitor::startElement))
+	.def("startElement", static_cast<void(*)(xercesc::SelectorMatcher&, const xercesc::XMLElementDecl&, const unsigned int, const XMLString&, const xercesc::RefVectorOf<xercesc::XMLAttr>&, const XMLSize_t)>(&SelectorMatcherDefVisitor::startElement))
+	.def("endElement", static_cast<void(*)(xercesc::SelectorMatcher&, const xercesc::XMLElementDecl&, const XMLString&, xercesc::ValidationContext*, xercesc::DatatypeValidator*)>(&SelectorMatcherDefVisitor::endElement))
+	.def("endElement", static_cast<void(*)(xercesc::SelectorMatcher&, const xercesc::XMLElementDecl&, const XMLString&, xercesc::ValidationContext*)>(&SelectorMatcherDefVisitor::endElement))
+	.def("endElement", static_cast<void(*)(xercesc::SelectorMatcher&, const xercesc::XMLElementDecl&, const XMLString&)>(&SelectorMatcherDefVisitor::endElement))
 	;
 }
 
-static void startElement(xercesc::SelectorMatcher& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int urlId, const STR elemPrefix, const xercesc::RefVectorOf<xercesc::XMLAttr>& attrList, const XMLSize_t attrCount, xercesc::ValidationContext* validationContext) {
-	XMLString buff(elemPrefix);
-	self.startElement(elemDecl, urlId, buff.ptr(), attrList, attrCount, validationContext);
+static void startElement(xercesc::SelectorMatcher& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int urlId, const XMLString& elemPrefix, const xercesc::RefVectorOf<xercesc::XMLAttr>& attrList, const XMLSize_t attrCount, xercesc::ValidationContext* validationContext) {
+	self.startElement(elemDecl, urlId, elemPrefix.ptr(), attrList, attrCount, validationContext);
 }
 
-static void startElement(xercesc::SelectorMatcher& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int urlId, const STR elemPrefix, const xercesc::RefVectorOf<xercesc::XMLAttr>& attrList, const XMLSize_t attrCount) {
-	SelectorMatcherDefVisitor<STR>::startElement(self, elemDecl, urlId, elemPrefix, attrList, attrCount, nullptr);
+static void startElement(xercesc::SelectorMatcher& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int urlId, const XMLString& elemPrefix, const xercesc::RefVectorOf<xercesc::XMLAttr>& attrList, const XMLSize_t attrCount) {
+	SelectorMatcherDefVisitor::startElement(self, elemDecl, urlId, elemPrefix, attrList, attrCount, nullptr);
 }
 
-static void endElement(xercesc::SelectorMatcher& self, const xercesc::XMLElementDecl& elemDecl, const STR elemContent, xercesc::ValidationContext* validationContext, xercesc::DatatypeValidator* actualValidator) {
-	XMLString buff(elemContent);
-	self.endElement(elemDecl, buff.ptr(), validationContext, actualValidator);
+static void endElement(xercesc::SelectorMatcher& self, const xercesc::XMLElementDecl& elemDecl, const XMLString& elemContent, xercesc::ValidationContext* validationContext, xercesc::DatatypeValidator* actualValidator) {
+	self.endElement(elemDecl, elemContent.ptr(), validationContext, actualValidator);
 }
 
-static void endElement(xercesc::SelectorMatcher& self, const xercesc::XMLElementDecl& elemDecl, const STR elemContent, xercesc::ValidationContext* validationContext) {
-	SelectorMatcherDefVisitor<STR>::endElement(self, elemDecl, elemContent, validationContext, nullptr);
+static void endElement(xercesc::SelectorMatcher& self, const xercesc::XMLElementDecl& elemDecl, const XMLString& elemContent, xercesc::ValidationContext* validationContext) {
+	SelectorMatcherDefVisitor::endElement(self, elemDecl, elemContent, validationContext, nullptr);
 }
 
-static void endElement(xercesc::SelectorMatcher& self, const xercesc::XMLElementDecl& elemDecl, const STR elemContent) {
-	SelectorMatcherDefVisitor<STR>::endElement(self, elemDecl, elemContent, nullptr);
+static void endElement(xercesc::SelectorMatcher& self, const xercesc::XMLElementDecl& elemDecl, const XMLString& elemContent) {
+	SelectorMatcherDefVisitor::endElement(self, elemDecl, elemContent, nullptr);
 }
 
 };
@@ -85,8 +82,7 @@ void IC_Selector_init(void) {
 			;
 	//! xercesc::SelectorMatcher
 	boost::python::class_<xercesc::SelectorMatcher, boost::noncopyable, boost::python::bases<xercesc::XPathMatcher> >("SelectorMatcher", boost::python::no_init)
-			.def(SelectorMatcherDefVisitor<XMLString&>())
-			.def(SelectorMatcherDefVisitor<char*>())
+			.def(SelectorMatcherDefVisitor())
 			.def("getInitialDepth", &xercesc::SelectorMatcher::getInitialDepth)
 			.def("startDocumentFragment", &xercesc::SelectorMatcher::startDocumentFragment)
 			.def("startElement", &xercesc::SelectorMatcher::startElement, SelectorMatcherStartElementOverloads())

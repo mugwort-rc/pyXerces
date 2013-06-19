@@ -14,28 +14,25 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class XMLBufferDefVisitor
-: public boost::python::def_visitor<XMLBufferDefVisitor<STR> > {
+: public boost::python::def_visitor<XMLBufferDefVisitor> {
 friend class def_visitor_access;
 
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("append", static_cast<void(*)(xercesc::XMLBuffer&, const STR)>(&XMLBufferDefVisitor::append))
-	.def("set", static_cast<void(*)(xercesc::XMLBuffer&, const STR)>(&XMLBufferDefVisitor::set))
+	.def("append", static_cast<void(*)(xercesc::XMLBuffer&, const XMLString&)>(&XMLBufferDefVisitor::append))
+	.def("set", static_cast<void(*)(xercesc::XMLBuffer&, const XMLString&)>(&XMLBufferDefVisitor::set))
 	;
 }
 
-static void append(xercesc::XMLBuffer& self, const STR chars) {
-	XMLString buff(chars);
-	self.append(buff.ptr());
+static void append(xercesc::XMLBuffer& self, const XMLString& chars) {
+	self.append(chars.ptr());
 }
 
-static void set(xercesc::XMLBuffer& self, const STR chars) {
-	XMLString buff(chars);
-	self.set(buff.ptr());
+static void set(xercesc::XMLBuffer& self, const XMLString& chars) {
+	self.set(chars.ptr());
 }
 
 };
@@ -53,8 +50,7 @@ bool bufferFull(xercesc::XMLBuffer& buffer) {
 void XMLBuffer_init(void) {
 	//! xercesc::XMLBuffer
 	boost::python::class_<xercesc::XMLBuffer, boost::noncopyable>("XMLBuffer", boost::python::init<boost::python::optional<const XMLSize_t, xercesc::MemoryManager* const> >())
-			.def(XMLBufferDefVisitor<XMLString&>())
-			.def(XMLBufferDefVisitor<char*>())
+			.def(XMLBufferDefVisitor())
 			.def("setFullHandler", &xercesc::XMLBuffer::setFullHandler)
 			.def("append", static_cast<void(xercesc::XMLBuffer::*)(const XMLCh)>(&xercesc::XMLBuffer::append))
 			.def("append", static_cast<void(xercesc::XMLBuffer::*)(const XMLCh* const, const XMLSize_t)>(&xercesc::XMLBuffer::append))

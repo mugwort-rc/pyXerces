@@ -32,9 +32,8 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class DOMCharacterDataDefVisitor
-: public boost::python::def_visitor<DOMCharacterDataDefVisitor<STR> >
+: public boost::python::def_visitor<DOMCharacterDataDefVisitor>
 {
 friend class def_visitor_access;
 public:
@@ -48,24 +47,20 @@ void visit(T& class_) const {
 	;
 }
 
-static void appendData(xercesc::DOMCharacterData& self, const STR arg) {
-	XMLString buff(arg);
-	self.appendData(buff.ptr());
+static void appendData(xercesc::DOMCharacterData& self, const XMLString& arg) {
+	self.appendData(arg.ptr());
 }
 
-static void insertData(xercesc::DOMCharacterData& self, XMLSize_t offset, const STR arg) {
-	XMLString buff(arg);
-	self.insertData(offset, buff);
+static void insertData(xercesc::DOMCharacterData& self, XMLSize_t offset, const XMLString& arg) {
+	self.insertData(offset, arg.ptr());
 }
 
-static void replaceData(xercesc::DOMCharacterData& self, XMLSize_t offset, XMLSize_t count, const STR arg) {
-	XMLString buff(arg);
-	self.replaceData(offset, count, buff.ptr());
+static void replaceData(xercesc::DOMCharacterData& self, XMLSize_t offset, XMLSize_t count, const XMLString& arg) {
+	self.replaceData(offset, count, arg.ptr());
 }
 
-static void setData(xercesc::DOMCharacterData& self, const STR data) {
-	XMLString buff(data);
-	self.setData(buff.ptr());
+static void setData(xercesc::DOMCharacterData& self, const XMLString& data) {
+	self.setData(data.ptr());
 }
 
 };
@@ -265,8 +260,7 @@ void release() {
 void DOMCharacterData_init(void) {
 	//! xercesc::DOMCharacterData
 	boost::python::class_<DOMCharacterDataWrapper, boost::noncopyable, boost::python::bases<xercesc::DOMNode> >("DOMCharacterData")
-			.def(DOMCharacterDataDefVisitor<XMLString&>())
-			.def(DOMCharacterDataDefVisitor<char*>())
+			.def(DOMCharacterDataDefVisitor())
 			.def("getData", boost::python::pure_virtual(&xercesc::DOMCharacterData::getData), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getLength", boost::python::pure_virtual(&xercesc::DOMCharacterData::getLength))
 			.def("substringData", boost::python::pure_virtual(&xercesc::DOMCharacterData::substringData), boost::python::return_value_policy<boost::python::return_by_value>())

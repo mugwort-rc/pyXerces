@@ -15,9 +15,8 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class DTDGrammarDefVisitor
-: public boost::python::def_visitor<DTDGrammarDefVisitor<STR> >
+: public boost::python::def_visitor<DTDGrammarDefVisitor>
 {
 friend class def_visitor_access;
 public:
@@ -28,45 +27,38 @@ void visit(T& class_) const {
 	.def("getElemId", &DTDGrammarDefVisitor::getElemId)
 	.def("getElemDecl", &DTDGrammarDefVisitor::getElemDecl, boost::python::return_value_policy<boost::python::reference_existing_object>())
 	.def("getNotationDecl", &DTDGrammarDefVisitor::getNotationDecl, boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("putElemDecl", static_cast<xercesc::XMLElementDecl*(*)(xercesc::DTDGrammar&, const unsigned int, const STR, const STR, const STR, unsigned int, const bool)>(&DTDGrammarDefVisitor::putElemDecl), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("putElemDecl", static_cast<xercesc::XMLElementDecl*(*)(xercesc::DTDGrammar&, const unsigned int, const STR, const STR, const STR, unsigned int)>(&DTDGrammarDefVisitor::putElemDecl), boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("putElemDecl", static_cast<xercesc::XMLElementDecl*(*)(xercesc::DTDGrammar&, const unsigned int, const XMLString&, const XMLString&, const XMLString&, unsigned int, const bool)>(&DTDGrammarDefVisitor::putElemDecl), boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("putElemDecl", static_cast<xercesc::XMLElementDecl*(*)(xercesc::DTDGrammar&, const unsigned int, const XMLString&, const XMLString&, const XMLString&, unsigned int)>(&DTDGrammarDefVisitor::putElemDecl), boost::python::return_value_policy<boost::python::reference_existing_object>())
 	.def("getEntityDecl", &DTDGrammarDefVisitor::getEntityDecl, boost::python::return_value_policy<boost::python::reference_existing_object>())
 	;
 }
 
-static xercesc::XMLElementDecl* findOrAddElemDecl(xercesc::DTDGrammar& self, const unsigned int uriId, const STR baseName, const STR prefixName, const STR qName, unsigned int scope, bool& wasAdded) {
-	XMLString buff1(baseName), buff2(prefixName), buff3(qName);
-	return self.findOrAddElemDecl(uriId, buff1.ptr(), buff2.ptr(), buff3.ptr(), scope, wasAdded);
+static xercesc::XMLElementDecl* findOrAddElemDecl(xercesc::DTDGrammar& self, const unsigned int uriId, const XMLString& baseName, const XMLString& prefixName, const XMLString& qName, unsigned int scope, bool& wasAdded) {
+	return self.findOrAddElemDecl(uriId, baseName.ptr(), prefixName.ptr(), qName.ptr(), scope, wasAdded);
 }
 
-static XMLSize_t getElemId(xercesc::DTDGrammar& self, const unsigned int uriId, const STR baseName, const STR qName, unsigned int scope) {
-	XMLString buff1(baseName), buff2(qName);
-	return self.getElemId(uriId, buff1.ptr(), buff2.ptr(), scope);
+static XMLSize_t getElemId(xercesc::DTDGrammar& self, const unsigned int uriId, const XMLString& baseName, const XMLString& qName, unsigned int scope) {
+	return self.getElemId(uriId, baseName.ptr(), qName.ptr(), scope);
 }
 
-static xercesc::XMLElementDecl* getElemDecl(xercesc::DTDGrammar& self, const unsigned int uriId, const STR baseName, const STR qName, unsigned int scope) {
-	XMLString buff1(baseName), buff2(qName);
-	return self.getElemDecl(uriId, buff1.ptr(), buff2.ptr(), scope);
+static xercesc::XMLElementDecl* getElemDecl(xercesc::DTDGrammar& self, const unsigned int uriId, const XMLString& baseName, const XMLString& qName, unsigned int scope) {
+	return self.getElemDecl(uriId, baseName.ptr(), qName.ptr(), scope);
 }
 
-static xercesc::XMLNotationDecl* getNotationDecl(xercesc::DTDGrammar& self, const STR notName) {
-	XMLString buff(notName);
-	return self.getNotationDecl(buff.ptr());
+static xercesc::XMLNotationDecl* getNotationDecl(xercesc::DTDGrammar& self, const XMLString& notName) {
+	return self.getNotationDecl(notName.ptr());
 }
 
-static xercesc::XMLElementDecl* putElemDecl(xercesc::DTDGrammar& self, const unsigned int uriId, const STR baseName, const STR prefixName, const STR qName, unsigned int scope, const bool notDeclared) {
-	XMLString buff1(baseName), buff2(prefixName), buff3(qName);
-	return self.putElemDecl(uriId, buff1.ptr(), buff2.ptr(), buff3.ptr(), scope, notDeclared);
+static xercesc::XMLElementDecl* putElemDecl(xercesc::DTDGrammar& self, const unsigned int uriId, const XMLString& baseName, const XMLString& prefixName, const XMLString& qName, unsigned int scope, const bool notDeclared) {
+	return self.putElemDecl(uriId, baseName.ptr(), prefixName.ptr(), qName.ptr(), scope, notDeclared);
 }
 
-static xercesc::XMLElementDecl* putElemDecl(xercesc::DTDGrammar& self, const unsigned int uriId, const STR baseName, const STR prefixName, const STR qName, unsigned int scope) {
-	XMLString buff1(baseName), buff2(prefixName), buff3(qName);
-	return self.putElemDecl(uriId, buff1.ptr(), buff2.ptr(), buff3.ptr(), scope, false);
+static xercesc::XMLElementDecl* putElemDecl(xercesc::DTDGrammar& self, const unsigned int uriId, const XMLString& baseName, const XMLString& prefixName, const XMLString& qName, unsigned int scope) {
+	return self.putElemDecl(uriId, baseName.ptr(), prefixName.ptr(), qName.ptr(), scope, false);
 }
 
-static xercesc::DTDEntityDecl* getEntityDecl(xercesc::DTDGrammar& self, const STR entName) {
-	XMLString buff(entName);
-	return self.getEntityDecl(buff.ptr());
+static xercesc::DTDEntityDecl* getEntityDecl(xercesc::DTDGrammar& self, const XMLString& entName) {
+	return self.getEntityDecl(entName.ptr());
 }
 
 };
@@ -236,8 +228,7 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(DTDGrammarPutElemDeclMiniOverloads, putEl
 void DTDGrammar_init(void) {
 	//! xercesc::DTDGrammar
 	boost::python::class_<DTDGrammarWrapper, boost::noncopyable, boost::python::bases<xercesc::Grammar> >("DTDGrammar", boost::python::init<boost::python::optional<xercesc::MemoryManager* const> >())
-			.def(DTDGrammarDefVisitor<XMLString&>())
-			.def(DTDGrammarDefVisitor<char*>())
+			.def(DTDGrammarDefVisitor())
 			.def("getGrammarType", &xercesc::DTDGrammar::getGrammarType)
 			.def("getTargetNamespace", &xercesc::DTDGrammar::getTargetNamespace, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("findOrAddElemDecl", &xercesc::DTDGrammar::findOrAddElemDecl, boost::python::return_value_policy<boost::python::reference_existing_object>())

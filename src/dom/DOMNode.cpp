@@ -138,9 +138,8 @@ static xercesc::DOMXPathNamespace* toDOMXPathNamespace(xercesc::DOMNode& self) {
 
 };
 
-template <typename STR>
 class DOMNodeStringDefVisitor
-: public boost::python::def_visitor<DOMNodeStringDefVisitor<STR> >
+: public boost::python::def_visitor<DOMNodeStringDefVisitor>
 {
 friend class def_visitor_access;
 public:
@@ -160,54 +159,44 @@ void visit(T& class_) const {
 	;
 }
 
-static void setNodeValue(xercesc::DOMNode& self, const STR nodeValue) {
-	XMLString buff(nodeValue);
-	self.setNodeValue(buff.ptr());
+static void setNodeValue(xercesc::DOMNode& self, const XMLString& nodeValue) {
+	self.setNodeValue(nodeValue.ptr());
 }
 
-static bool isSupported(xercesc::DOMNode& self, const STR feature, const STR version) {
-	XMLString buff1(feature), buff2(version);
-	return self.isSupported(buff1.ptr(), buff2.ptr());
+static bool isSupported(xercesc::DOMNode& self, const XMLString& feature, const XMLString& version) {
+	return self.isSupported(feature.ptr(), version.ptr());
 }
 
-static void setPrefix(xercesc::DOMNode& self, const STR prefix) {
-	XMLString buff(prefix);
-	self.setPrefix(buff.ptr());
+static void setPrefix(xercesc::DOMNode& self, const XMLString& prefix) {
+	self.setPrefix(prefix.ptr());
 }
 
-static void* setUserData(xercesc::DOMNode& self, const STR key, void* data, xercesc::DOMUserDataHandler* handler) {
-	XMLString buff(key);
-	return self.setUserData(buff.ptr(), data, handler);
+static void* setUserData(xercesc::DOMNode& self, const XMLString& key, void* data, xercesc::DOMUserDataHandler* handler) {
+	return self.setUserData(key.ptr(), data, handler);
 }
 
-static void* getUserData(xercesc::DOMNode& self, const STR key) {
-	XMLString buff(key);
-	return self.getUserData(buff.ptr());
+static void* getUserData(xercesc::DOMNode& self, const XMLString& key) {
+	return self.getUserData(key.ptr());
 }
 
-static void setTextContent(xercesc::DOMNode& self, const STR textContent) {
-	XMLString buff(textContent);
-	self.setTextContent(buff.ptr());
+static void setTextContent(xercesc::DOMNode& self, const XMLString& textContent) {
+	self.setTextContent(textContent.ptr());
 }
 
-static const XMLCh* lookupPrefix(xercesc::DOMNode& self, const STR namespaceURI) {
-	XMLString buff(namespaceURI);
-	return self.lookupPrefix(buff.ptr());
+static const XMLCh* lookupPrefix(xercesc::DOMNode& self, const XMLString& namespaceURI) {
+	return self.lookupPrefix(namespaceURI.ptr());
 }
 
-static bool isDefaultNamespace(xercesc::DOMNode& self, const STR namespaceURI) {
-	XMLString buff(namespaceURI);
-	return self.isDefaultNamespace(buff.ptr());
+static bool isDefaultNamespace(xercesc::DOMNode& self, const XMLString& namespaceURI) {
+	return self.isDefaultNamespace(namespaceURI.ptr());
 }
 
-static const XMLCh* lookupNamespaceURI(xercesc::DOMNode& self, const STR prefix) {
-	XMLString buff(prefix);
-	return self.lookupNamespaceURI(buff.ptr());
+static const XMLCh* lookupNamespaceURI(xercesc::DOMNode& self, const XMLString& prefix) {
+	return self.lookupNamespaceURI(prefix.ptr());
 }
 
-static void* getFeature(xercesc::DOMNode& self, const STR feature, const STR version) {
-	XMLString buff1(feature), buff2(version);
-	return self.getFeature(buff1.ptr(), buff2.ptr());
+static void* getFeature(xercesc::DOMNode& self, const XMLString& feature, const XMLString& version) {
+	return self.getFeature(feature.ptr(), version.ptr());
 }
 
 };
@@ -375,8 +364,7 @@ void DOMNode_init(void) {
 	//! xercesc::DOMNode
 	auto DOMNode = boost::python::class_<DOMNodeWrapper, boost::noncopyable>("DOMNode")
 			.def(DOMNodeDefVisitor())
-			.def(DOMNodeStringDefVisitor<XMLString&>())
-			.def(DOMNodeStringDefVisitor<char*>())
+			.def(DOMNodeStringDefVisitor())
 			.def("getNodeName", boost::python::pure_virtual(&xercesc::DOMNode::getNodeName), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getNodeValue", boost::python::pure_virtual(&xercesc::DOMNode::getNodeValue), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getNodeType", boost::python::pure_virtual(&xercesc::DOMNode::getNodeType))

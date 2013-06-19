@@ -34,9 +34,8 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class DOMAttrDefVisitor
-: public boost::python::def_visitor<DOMAttrDefVisitor<STR> >
+: public boost::python::def_visitor<DOMAttrDefVisitor>
 {
 friend class def_visitor_access;
 public:
@@ -47,9 +46,8 @@ void visit(T& class_) const {
 	;
 }
 
-static void setValue(xercesc::DOMAttr& self, const STR value) {
-	XMLString buff(value);
-	self.setValue(buff.ptr());
+static void setValue(xercesc::DOMAttr& self, const XMLString& value) {
+	self.setValue(value.ptr());
 }
 
 };
@@ -245,8 +243,7 @@ void release() {
 void DOMAttr_init(void) {
 	//! xercesc::DOMAttr
 	boost::python::class_<DOMAttrWrapper, boost::noncopyable, boost::python::bases<xercesc::DOMNode> >("DOMAttr")
-			.def(DOMAttrDefVisitor<XMLString&>())
-			.def(DOMAttrDefVisitor<char*>())
+			.def(DOMAttrDefVisitor())
 			.def("getName", boost::python::pure_virtual(&xercesc::DOMAttr::getName), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getSpecified", boost::python::pure_virtual(&xercesc::DOMAttr::getSpecified))
 			.def("getValue", boost::python::pure_virtual(&xercesc::DOMAttr::getValue), boost::python::return_value_policy<boost::python::return_by_value>())

@@ -8,9 +8,13 @@
 #include "XMLString.h"
 
 #include <math.h>
+#include <boost/format.hpp>
 #include <boost/scoped_ptr.hpp>
 
 #include <xercesc/util/XMLUniDefs.hpp>
+
+//! for forward declaration
+#include <xercesc/util/TransService.hpp>
 
 #include <xercesc/util/XMLString.hpp>
 
@@ -73,36 +77,12 @@ private:
 
 // ==================================================
 
-boost::shared_ptr<XMLChManager> fromlist(const boost::python::list& li) {
-	std::size_t len = boost::python::len(li);
-	boost::scoped_ptr<XMLCh> buffer(new XMLCh[len+1]);
-	std::size_t i = 0;
-	for(i = 0; i < len; ++i){
-		if( ! boost::python::extract<XMLCh>(li[i]).check()){
-			return boost::shared_ptr<XMLChManager>();
-		}
-		buffer.get()[i] = boost::python::extract<XMLCh>(li[i]);
-	}
-	buffer.get()[i] = xercesc::chNull;
-	return XMLChManager::replicate(buffer.get());
-}
-
-// ==================================================
-
 XMLString::XMLString(void)
 	: _ch()
 {}
 
-XMLString::XMLString(const char* str)
-	: _ch(XMLChManager::transcode(str))
-{}
-
 XMLString::XMLString(const XMLCh* ptr)
 	: _ch(XMLChManager::replicate(ptr))
-{}
-
-XMLString::XMLString(const boost::python::list& initializeList)
-	: _ch(fromlist(initializeList))
 {}
 
 XMLString::XMLString(const XMLString& copy)
@@ -182,9 +162,9 @@ XMLString XMLString::subString(const XMLSize_t start, const XMLSize_t end) const
 		PyErr_SetString(PyExc_IndexError, "Index out of range");
 		boost::python::throw_error_already_set();
 	}
-	XMLString result("");
-	xercesc::XMLString::subString(result.ptr(), this->ptr(), start, end);
-	return result;
+	boost::scoped_ptr<XMLCh> buffer(new XMLCh[end-start+1]);
+	xercesc::XMLString::subString(buffer.get(), this->ptr(), start, end);
+	return XMLString(buffer.get());
 }
 
 bool XMLString::startsWith(const XMLString& prefix) const {
@@ -378,9 +358,9 @@ XMLString XMLString::makeUName(const XMLString& URI, const XMLString& name) {
 }
 
 XMLString XMLString::fixURI(const XMLString& str) {
-	XMLString result("");
-	xercesc::XMLString::fixURI(str.ptr(), result.ptr());
-	return result;
+	boost::scoped_ptr<XMLCh> buffer(new XMLCh[str.size() + 8 + 1]);
+	xercesc::XMLString::fixURI(str.ptr(), buffer.get());
+	return XMLString(buffer.get());
 }
 
 XMLString XMLString::sizeToText(const unsigned int toFormat, const unsigned int radix, xercesc::MemoryManager* const manager) {
@@ -407,14 +387,17 @@ std::string XMLString::toString(void) const {
 std::string XMLString::reprString(void) const {
 	boost::python::object global_ns = boost::python::import("__main__").attr("__dict__");
 	if ( ! this->ptr() ) {
-		return "X'' (null)";
+		return "<XMLString object null>";
 	}
-	global_ns["obj"] = this->toString();
-	// pprint
-	boost::python::exec("import pprint\n"
-						"pp  = pprint.PrettyPrinter()\n"
-						"__res = 'X'+pp.pformat(obj)", global_ns, global_ns);
-	return boost::python::extract<std::string>(global_ns["__res"]);
+	boost::python::object obj(*this);
+	boost::python::object uni = obj.attr("__unicode__")();
+	boost::python::object pprint = boost::python::import("pprint");
+	boost::python::object pp = pprint.attr("PrettyPrinter")();
+	boost::python::object ret = pp.attr("pformat")(uni);
+	std::string printable = boost::python::extract<std::string>(ret);
+	boost::format fmter("<XMLString object %1$s>");
+	fmter % printable;
+	return fmter.str();
 }
 
 std::string XMLString::transcode(const XMLCh* ptr) {
@@ -437,62 +420,100 @@ XMLString XMLString::replicate(void) const {
 
 // ==================================================
 
-class XMLStringStringOperatorDefVisitor
-: public boost::python::def_visitor<XMLStringStringOperatorDefVisitor>
+class XMLStringEncodeDefVisitor
+: public boost::python::def_visitor<XMLStringEncodeDefVisitor>
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("__add__", &XMLStringStringOperatorDefVisitor::__add__)
-	.def("__lt__", &XMLStringStringOperatorDefVisitor::__lt__)
-	.def("__le__", &XMLStringStringOperatorDefVisitor::__le__)
-	.def("__gt__", &XMLStringStringOperatorDefVisitor::__gt__)
-	.def("__ge__", &XMLStringStringOperatorDefVisitor::__ge__)
-	.def("__eq__", &XMLStringStringOperatorDefVisitor::__eq__)
-	.def("__ne__", &XMLStringStringOperatorDefVisitor::__ne__)
+	.def("encode", &XMLStringEncodeDefVisitor::encode)
+	.def("__unicode__", &XMLStringEncodeDefVisitor::__unicode__)
 	;
 }
 
-static XMLString __add__(XMLString& self, const char* rhs) {
-	return self + XMLString(rhs);
+static std::string encode(XMLString& self, const char* encoding) {
+	const unsigned int length = 1024;
+	xercesc::XMLTransService::Codes           failReason;
+	boost::scoped_ptr<xercesc::XMLTranscoder> transcoder(xercesc::XMLPlatformUtils::fgTransService->makeNewTranscoderFor(encoding, failReason, length));
+
+	const XMLSize_t size = self.size();
+	XMLSize_t eaten = 0, eated = 0;
+	std::string result;
+	boost::scoped_ptr<unsigned char> buffer(new unsigned char[length+1]);
+	while ( size > eated ) {
+		XMLSize_t r_size = transcoder->transcodeTo(self.ptr()+eated, size-eated, buffer.get(), length, eaten, xercesc::XMLTranscoder::UnRep_RepChar);
+		result.append(reinterpret_cast<char*>(buffer.get()), r_size);
+		eated += eaten;
+	}
+
+	return result;
 }
 
-static bool __lt__(XMLString& self, const char* rhs) {
-	return self < XMLString(rhs);
-}
-
-static bool __le__(XMLString& self, const char* rhs) {
-	return self <= XMLString(rhs);
-}
-
-static bool __gt__(XMLString& self, const char* rhs) {
-	return self > XMLString(rhs);
-}
-
-static bool __ge__(XMLString& self, const char* rhs) {
-	return self >= XMLString(rhs);
-}
-
-static bool __eq__(XMLString& self, const char* rhs) {
-	return self == XMLString(rhs);
-}
-
-static bool __ne__(XMLString& self, const char* rhs) {
-	return self != XMLString(rhs);
+static boost::python::object __unicode__(XMLString& self) {
+	boost::python::object buff(self);
+	return buff.attr("encode")("utf-16").attr("decode")("utf-16");
 }
 
 };
 
 // ==================================================
 
-unsigned char* unsigned_cast(char* ch) {
-	return reinterpret_cast<unsigned char*>(ch);
+XMLString* makeFromTranscode(const std::string& str) {
+	XMLCh* buff = xercesc::XMLString::transcode(str.c_str());
+	XMLString* ptr = new XMLString(buff);
+	xercesc::XMLString::release(&buff);
+	return ptr;
 }
 
-char* signed_cast(unsigned char* ch) {
-	return reinterpret_cast<char*>(ch);
+XMLString* makeFromList(const boost::python::list& li) {
+	std::size_t len = boost::python::len(li);
+	boost::scoped_ptr<XMLCh> buffer(new XMLCh[len+1]);
+	std::size_t i = 0;
+	for(i = 0; i < len; ++i){
+		if( ! boost::python::extract<XMLCh>(li[i]).check()){
+			return new XMLString();
+		}
+		buffer.get()[i] = boost::python::extract<XMLCh>(li[i]);
+	}
+	buffer.get()[i] = xercesc::chNull;
+	return new XMLString(buffer.get());
+}
+
+XMLString* makeWithEncoding(const std::string& data, const char* encoding) {
+	const unsigned int length = 1024;
+	xercesc::XMLTransService::Codes           failReason;
+	boost::scoped_ptr<xercesc::XMLTranscoder> transcoder(xercesc::XMLPlatformUtils::fgTransService->makeNewTranscoderFor(encoding, failReason, length));
+
+	const XMLSize_t size = data.size();
+	XMLSize_t eaten = 0, eated = 0;
+	boost::scoped_ptr<XMLCh> buffer(new XMLCh[length+1]);
+	boost::scoped_ptr<unsigned char> charSizes(new unsigned char[size]);
+	XMLString* result = new XMLString;
+	while ( size  > eated ) {
+		XMLSize_t r_size = transcoder->transcodeFrom(reinterpret_cast<const unsigned char*>(data.c_str())+eated, data.size()-eated, buffer.get(), length, eaten, charSizes.get());
+		buffer.get()[r_size] = 0;
+		*result += XMLString(buffer.get());
+		eated += eaten;
+	}
+
+	return result;
+}
+
+XMLString* makeFromUnicode(const std::wstring& data) {
+	std::string BOM;
+	BOM.append(1, static_cast<char>(0xff));
+	BOM.append(1, static_cast<char>(0xfe));
+
+	boost::python::object buff(data);
+	buff = buff.attr("encode")("utf-16");
+	boost::python::object startswith = buff.attr("startswith");
+	if (boost::python::extract<bool>(buff.attr("startswith")(BOM))) {
+		buff = buff.slice(2, boost::python::len(buff));
+	}
+	std::string source = boost::python::extract<std::string>(buff);
+	return makeWithEncoding(source, "utf-16");
 }
 
 // ==================================================
@@ -509,26 +530,64 @@ public:
 };
 
 //! XMLChPtr -> XMLString
-class XMLChPtrToXMLStringConverter {
-public:
-	static PyObject* convert(const XMLChPtr& ptr) {
-		return boost::python::incref(boost::python::object(ptr.toString()).ptr());
-	}
-};
-
 class XMLChPtrConverter {
 public:
 	static void* convertible(PyObject* obj) {
-		if( ! boost::python::extract<XMLChPtr>(obj).check()) {
+		if( ! boost::python::extract<XMLChPtr>(boost::python::object(boost::python::handle<>(boost::python::borrowed(obj)))).check()) {
 			return nullptr;
 		}
 		return obj;
 	}
 
 	static void construct(PyObject* obj, boost::python::converter::rvalue_from_python_stage1_data* data) {
-		XMLChPtr ptr = boost::python::extract<XMLChPtr>(obj);
-		XMLString* storage = new(reinterpret_cast<boost::python::converter::rvalue_from_python_storage<XMLString>*>(data)->storage.bytes) XMLString(ptr.ptr());
-		data->convertible = storage;
+		XMLChPtr ptr = boost::python::extract<XMLChPtr>(boost::python::object(boost::python::handle<>(boost::python::borrowed(obj))));
+		data->convertible = new (reinterpret_cast<boost::python::converter::rvalue_from_python_storage<XMLString>*>(data)->storage.bytes) XMLString(ptr.ptr());
+	}
+};
+
+class NoneConverter {
+public:
+	static void* convertible(PyObject* obj) {
+		if( ! boost::python::object(boost::python::handle<>(boost::python::borrowed(obj))).is_none()) {
+			return nullptr;
+		}
+		return obj;
+	}
+
+	static void construct(PyObject* obj, boost::python::converter::rvalue_from_python_stage1_data* data) {
+		data->convertible = new (reinterpret_cast<boost::python::converter::rvalue_from_python_storage<XMLString>*>(data)->storage.bytes) XMLString();
+	}
+};
+
+class StringConverter {
+public:
+	static void* convertible(PyObject* obj) {
+		if( ! boost::python::extract<std::string>(boost::python::object(boost::python::handle<>(boost::python::borrowed(obj)))).check()) {
+			return nullptr;
+		}
+		return obj;
+	}
+
+	static void construct(PyObject* obj, boost::python::converter::rvalue_from_python_stage1_data* data) {
+		std::string str = boost::python::extract<std::string>(boost::python::object(boost::python::handle<>(boost::python::borrowed(obj))));
+		boost::scoped_ptr<XMLString> buff(makeFromTranscode(str));
+		data->convertible = new (reinterpret_cast<boost::python::converter::rvalue_from_python_storage<XMLString>*>(data)->storage.bytes) XMLString(buff->ptr());
+	}
+};
+
+class UnicodeConverter {
+public:
+	static void* convertible(PyObject* obj) {
+		if( ! boost::python::extract<std::wstring>(boost::python::object(boost::python::handle<>(boost::python::borrowed(obj)))).check()) {
+			return nullptr;
+		}
+		return obj;
+	}
+
+	static void construct(PyObject* obj, boost::python::converter::rvalue_from_python_stage1_data* data) {
+		std::wstring str = boost::python::extract<std::wstring>(boost::python::object(boost::python::handle<>(boost::python::borrowed(obj))));
+		boost::scoped_ptr<XMLString> buff(makeFromUnicode(str));
+		data->convertible = new (reinterpret_cast<boost::python::converter::rvalue_from_python_storage<XMLString>*>(data)->storage.bytes) XMLString(buff->ptr());
 	}
 };
 
@@ -540,10 +599,12 @@ BOOST_PYTHON_FUNCTION_OVERLOADS(XMLStringBinToTextOverloads, XMLString::binToTex
 void XMLString_init(void) {
 	//! string <=> XMLCh*
 	boost::python::class_<XMLString>("XMLString")
-			.def(boost::python::init<const char*>())
 			.def(boost::python::init<const XMLCh*>())
-			.def(boost::python::init<const boost::python::list&>())
-			.def(XMLStringStringOperatorDefVisitor())
+			.def("__init__", boost::python::make_constructor(&makeFromTranscode))
+			.def("__init__", boost::python::make_constructor(&makeWithEncoding))
+			.def("__init__", boost::python::make_constructor(&makeFromUnicode))
+			.def("__init__", boost::python::make_constructor(&makeFromList))
+			.def(XMLStringEncodeDefVisitor())
 			.def("__str__", &XMLString::toString)
 			.def("__repr__", &XMLString::reprString)
 			.def("__add__", &XMLString::operator +)
@@ -608,16 +669,17 @@ void XMLString_init(void) {
 	//! implicit cast
 	boost::python::implicitly_convertible<XMLString, const XMLCh*>();
 
-	//! char* -> unsigned char*
-	boost::python::def("unsigned_cast", &pyxerces::unsigned_cast, boost::python::return_value_policy<boost::python::return_opaque_pointer>());
-	//! unsigned char* -> char*
-	boost::python::def("signed_cast", &pyxerces::signed_cast, boost::python::return_value_policy<boost::python::return_opaque_pointer>());
-
 	//! const XMLCh* -> XMLString
 	boost::python::to_python_converter<const XMLCh*, pyxerces::ConstXMLChToPythonConverter>();
 
 	//! XMLChPtr -> XMLString
 	boost::python::converter::registry::push_back(&XMLChPtrConverter::convertible, &XMLChPtrConverter::construct, boost::python::type_id<XMLString>());
+	//! None -> XMLString
+	boost::python::converter::registry::push_back(&NoneConverter::convertible, &NoneConverter::construct, boost::python::type_id<XMLString>());
+	//! char* -> XMLString
+	boost::python::converter::registry::push_back(&StringConverter::convertible, &StringConverter::construct, boost::python::type_id<XMLString>());
+	//! wchar_t* -> XMLString
+	boost::python::converter::registry::push_back(&UnicodeConverter::convertible, &UnicodeConverter::construct, boost::python::type_id<XMLString>());
 }
 
 } /* namespace pyxerces */

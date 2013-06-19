@@ -20,130 +20,110 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class DefaultHandlerDefVisitor
-: public boost::python::def_visitor<DefaultHandlerDefVisitor<STR> >
+: public boost::python::def_visitor<DefaultHandlerDefVisitor>
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("characters", &DefaultHandlerDefVisitor<STR>::characters)
-	.def("endElement", &DefaultHandlerDefVisitor<STR>::endElement)
-	.def("ignorableWhitespace", &DefaultHandlerDefVisitor<STR>::ignorableWhitespace)
-	.def("processingInstruction", &DefaultHandlerDefVisitor<STR>::processingInstruction)
-	.def("startElement", &DefaultHandlerDefVisitor<STR>::startElement)
-	.def("startPrefixMapping", &DefaultHandlerDefVisitor<STR>::startPrefixMapping)
-	.def("endPrefixMapping", &DefaultHandlerDefVisitor<STR>::endPrefixMapping)
-	.def("skippedEntity", &DefaultHandlerDefVisitor<STR>::skippedEntity)
-	.def("resolveEntity", &DefaultHandlerDefVisitor<STR>::resolveEntity, boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("notationDecl", &DefaultHandlerDefVisitor<STR>::notationDecl)
-	.def("unparsedEntityDecl", &DefaultHandlerDefVisitor<STR>::unparsedEntityDecl)
-	.def("comment", &DefaultHandlerDefVisitor<STR>::comment)
-	.def("endEntity", &DefaultHandlerDefVisitor<STR>::endEntity)
-	.def("startDTD", &DefaultHandlerDefVisitor<STR>::startDTD)
-	.def("startEntity", &DefaultHandlerDefVisitor<STR>::startEntity)
-	.def("elementDecl", &DefaultHandlerDefVisitor<STR>::elementDecl)
-	.def("attributeDecl", &DefaultHandlerDefVisitor<STR>::attributeDecl)
-	.def("internalEntityDecl", &DefaultHandlerDefVisitor<STR>::internalEntityDecl)
-	.def("externalEntityDecl", &DefaultHandlerDefVisitor<STR>::externalEntityDecl)
+	.def("characters", &DefaultHandlerDefVisitor::characters)
+	.def("endElement", &DefaultHandlerDefVisitor::endElement)
+	.def("ignorableWhitespace", &DefaultHandlerDefVisitor::ignorableWhitespace)
+	.def("processingInstruction", &DefaultHandlerDefVisitor::processingInstruction)
+	.def("startElement", &DefaultHandlerDefVisitor::startElement)
+	.def("startPrefixMapping", &DefaultHandlerDefVisitor::startPrefixMapping)
+	.def("endPrefixMapping", &DefaultHandlerDefVisitor::endPrefixMapping)
+	.def("skippedEntity", &DefaultHandlerDefVisitor::skippedEntity)
+	.def("resolveEntity", &DefaultHandlerDefVisitor::resolveEntity, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("notationDecl", &DefaultHandlerDefVisitor::notationDecl)
+	.def("unparsedEntityDecl", &DefaultHandlerDefVisitor::unparsedEntityDecl)
+	.def("comment", &DefaultHandlerDefVisitor::comment)
+	.def("endEntity", &DefaultHandlerDefVisitor::endEntity)
+	.def("startDTD", &DefaultHandlerDefVisitor::startDTD)
+	.def("startEntity", &DefaultHandlerDefVisitor::startEntity)
+	.def("elementDecl", &DefaultHandlerDefVisitor::elementDecl)
+	.def("attributeDecl", &DefaultHandlerDefVisitor::attributeDecl)
+	.def("internalEntityDecl", &DefaultHandlerDefVisitor::internalEntityDecl)
+	.def("externalEntityDecl", &DefaultHandlerDefVisitor::externalEntityDecl)
 	;
 }
 
-static void characters(xercesc::DefaultHandler& self, const STR chars, const XMLSize_t length) {
-	XMLString buff(chars);
-	self.characters(buff.ptr(), length);
+static void characters(xercesc::DefaultHandler& self, const XMLString& chars, const XMLSize_t length) {
+	self.characters(chars.ptr(), length);
 }
 
-static void endElement(xercesc::DefaultHandler& self, const STR uri, const STR localname, const STR qname) {
-	XMLString buff1(uri), buff2(localname), buff3(qname);
-	self.endElement(buff1.ptr(), buff2.ptr(), buff3.ptr());
+static void endElement(xercesc::DefaultHandler& self, const XMLString& uri, const XMLString& localname, const XMLString& qname) {
+	self.endElement(uri.ptr(), localname.ptr(), qname.ptr());
 }
 
-static void ignorableWhitespace(xercesc::DefaultHandler& self, const STR chars, const XMLSize_t length) {
-	XMLString buff(chars);
-	self.ignorableWhitespace(buff.ptr(), length);
+static void ignorableWhitespace(xercesc::DefaultHandler& self, const XMLString& chars, const XMLSize_t length) {
+	self.ignorableWhitespace(chars.ptr(), length);
 }
 
-static void processingInstruction(xercesc::DefaultHandler& self, const STR target, const STR data) {
-	XMLString buff1(target), buff2(data);
-	self.processingInstruction(buff1.ptr(), buff2.ptr());
+static void processingInstruction(xercesc::DefaultHandler& self, const XMLString& target, const XMLString& data) {
+	self.processingInstruction(target.ptr(), data.ptr());
 }
 
-static void startElement(xercesc::DefaultHandler& self, const STR uri, const STR localname, const STR qname, const xercesc::Attributes& attrs) {
-	XMLString buff1(uri), buff2(localname), buff3(qname);
-	self.startElement(buff1.ptr(), buff2.ptr(), buff3.ptr(), attrs);
+static void startElement(xercesc::DefaultHandler& self, const XMLString& uri, const XMLString& localname, const XMLString& qname, const xercesc::Attributes& attrs) {
+	self.startElement(uri.ptr(), localname.ptr(), qname.ptr(), attrs);
 }
 
-static void startPrefixMapping(xercesc::DefaultHandler& self, const STR prefix, const STR uri) {
-	XMLString buff1(prefix), buff2(uri);
-	self.startPrefixMapping(buff1.ptr(), buff2.ptr());
+static void startPrefixMapping(xercesc::DefaultHandler& self, const XMLString& prefix, const XMLString& uri) {
+	self.startPrefixMapping(prefix.ptr(), uri.ptr());
 }
 
-static void endPrefixMapping(xercesc::DefaultHandler& self, const STR prefix) {
-	XMLString buff(prefix);
-	self.endPrefixMapping(buff.ptr());
+static void endPrefixMapping(xercesc::DefaultHandler& self, const XMLString& prefix) {
+	self.endPrefixMapping(prefix.ptr());
 }
 
-static void skippedEntity(xercesc::DefaultHandler& self, const STR name) {
-	XMLString buff(name);
-	self.endPrefixMapping(buff.ptr());
+static void skippedEntity(xercesc::DefaultHandler& self, const XMLString& name) {
+	self.endPrefixMapping(name.ptr());
 }
 
-static xercesc::InputSource* resolveEntity(xercesc::DefaultHandler& self, const STR publicId, const STR systemId) {
-	XMLString buff1(publicId), buff2(systemId);
-	return self.resolveEntity(buff1.ptr(), buff2.ptr());
+static xercesc::InputSource* resolveEntity(xercesc::DefaultHandler& self, const XMLString& publicId, const XMLString& systemId) {
+	return self.resolveEntity(publicId.ptr(), systemId.ptr());
 }
 
-static void notationDecl(xercesc::DefaultHandler& self, const STR name, const STR publicId, const STR systemId) {
-	XMLString buff1(name), buff2(publicId), buff3(systemId);
-	self.notationDecl(buff1.ptr(), buff2.ptr(), buff3.ptr());
+static void notationDecl(xercesc::DefaultHandler& self, const XMLString& name, const XMLString& publicId, const XMLString& systemId) {
+	self.notationDecl(name.ptr(), publicId.ptr(), systemId.ptr());
 }
 
-static void unparsedEntityDecl(xercesc::DefaultHandler& self, const STR name, const STR publicId, const STR systemId, const STR notationName) {
-	XMLString buff1(name), buff2(publicId), buff3(systemId), buff4(notationName);
-	self.unparsedEntityDecl(buff1.ptr(), buff2.ptr(), buff3.ptr(), buff4.ptr());
+static void unparsedEntityDecl(xercesc::DefaultHandler& self, const XMLString& name, const XMLString& publicId, const XMLString& systemId, const XMLString& notationName) {
+	self.unparsedEntityDecl(name.ptr(), publicId.ptr(), systemId.ptr(), notationName.ptr());
 }
 
-static void comment(xercesc::DefaultHandler& self, const STR chars, const XMLSize_t length) {
-	XMLString buff(chars);
-	self.comment(buff.ptr(), length);
+static void comment(xercesc::DefaultHandler& self, const XMLString& chars, const XMLSize_t length) {
+	self.comment(chars.ptr(), length);
 }
 
-static void endEntity(xercesc::DefaultHandler& self, const STR name) {
-	XMLString buff(name);
-	self.endEntity(buff.ptr());
+static void endEntity(xercesc::DefaultHandler& self, const XMLString& name) {
+	self.endEntity(name.ptr());
 }
 
-static void startDTD(xercesc::DefaultHandler& self, const STR name, const STR publicId, const STR systemId) {
-	XMLString buff1(name), buff2(publicId), buff3(systemId);
-	self.startDTD(buff1.ptr(), buff2.ptr(), buff3.ptr());
+static void startDTD(xercesc::DefaultHandler& self, const XMLString& name, const XMLString& publicId, const XMLString& systemId) {
+	self.startDTD(name.ptr(), publicId.ptr(), systemId.ptr());
 }
 
-static void startEntity(xercesc::DefaultHandler& self, const STR name) {
-	XMLString buff(name);
-	self.startEntity(buff.ptr());
+static void startEntity(xercesc::DefaultHandler& self, const XMLString& name) {
+	self.startEntity(name.ptr());
 }
 
-static void elementDecl(xercesc::DefaultHandler& self, const STR name, const STR model) {
-	XMLString buff1(name), buff2(model);
-	self.elementDecl(buff1.ptr(), buff2.ptr());
+static void elementDecl(xercesc::DefaultHandler& self, const XMLString& name, const XMLString& model) {
+	self.elementDecl(name.ptr(), model.ptr());
 }
 
-static void attributeDecl(xercesc::DefaultHandler& self, const STR eName, const STR aName, const STR type, const STR mode, const STR value) {
-	XMLString buff1(eName), buff2(aName), buff3(type), buff4(mode), buff5(value);
-	self.attributeDecl(buff1.ptr(), buff2.ptr(), buff3.ptr(), buff4.ptr(), buff5.ptr());
+static void attributeDecl(xercesc::DefaultHandler& self, const XMLString& eName, const XMLString& aName, const XMLString& type, const XMLString& mode, const XMLString& value) {
+	self.attributeDecl(eName.ptr(), aName.ptr(), type.ptr(), mode.ptr(), value.ptr());
 }
 
-static void internalEntityDecl(xercesc::DefaultHandler& self, const STR name, const STR value) {
-	XMLString buff1(name), buff2(value);
-	self.internalEntityDecl(buff1.ptr(), buff2.ptr());
+static void internalEntityDecl(xercesc::DefaultHandler& self, const XMLString& name, const XMLString& value) {
+	self.internalEntityDecl(name.ptr(), value.ptr());
 }
 
-static void externalEntityDecl(xercesc::DefaultHandler& self, const STR name, const STR publicId, const STR systemId) {
-	XMLString buff1(name), buff2(publicId), buff3(systemId);
-	self.externalEntityDecl(buff1.ptr(), buff2.ptr(), buff3.ptr());
+static void externalEntityDecl(xercesc::DefaultHandler& self, const XMLString& name, const XMLString& publicId, const XMLString& systemId) {
+	self.externalEntityDecl(name.ptr(), publicId.ptr(), systemId.ptr());
 }
 
 };
@@ -405,8 +385,7 @@ void externalEntityDecl(const XMLCh* const name, const XMLCh* const publicId, co
 void DefaultHandler_init(void) {
 	//! xercesc::DefaultHandler
 	boost::python::class_<DefaultHandlerWrapper, boost::noncopyable, boost::python::bases<xercesc::EntityResolver, xercesc::DTDHandler, xercesc::ContentHandler, xercesc::ErrorHandler, xercesc::LexicalHandler, xercesc::DeclHandler> >("DefaultHandler")
-			.def(DefaultHandlerDefVisitor<XMLString&>())
-			.def(DefaultHandlerDefVisitor<char*>())
+			.def(DefaultHandlerDefVisitor())
 			.def("characters", &xercesc::DefaultHandler::characters)
 			.def("endDocument", &xercesc::DefaultHandler::endDocument)
 			.def("endElement", &xercesc::DefaultHandler::endElement)

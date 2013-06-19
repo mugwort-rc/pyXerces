@@ -19,64 +19,55 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class ContentHandlerDefVisitor
-: public boost::python::def_visitor<ContentHandlerDefVisitor<STR> >
+: public boost::python::def_visitor<ContentHandlerDefVisitor>
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("characters", &ContentHandlerDefVisitor<STR>::characters)
-	.def("endElement", &ContentHandlerDefVisitor<STR>::endElement)
-	.def("ignorableWhitespace", &ContentHandlerDefVisitor<STR>::ignorableWhitespace)
-	.def("processingInstruction", &ContentHandlerDefVisitor<STR>::processingInstruction)
-	.def("startElement", &ContentHandlerDefVisitor<STR>::startElement)
-	.def("startPrefixMapping", &ContentHandlerDefVisitor<STR>::startPrefixMapping)
-	.def("endPrefixMapping", &ContentHandlerDefVisitor<STR>::endPrefixMapping)
-	.def("skippedEntity", &ContentHandlerDefVisitor<STR>::skippedEntity)
+	.def("characters", &ContentHandlerDefVisitor::characters)
+	.def("endElement", &ContentHandlerDefVisitor::endElement)
+	.def("ignorableWhitespace", &ContentHandlerDefVisitor::ignorableWhitespace)
+	.def("processingInstruction", &ContentHandlerDefVisitor::processingInstruction)
+	.def("startElement", &ContentHandlerDefVisitor::startElement)
+	.def("startPrefixMapping", &ContentHandlerDefVisitor::startPrefixMapping)
+	.def("endPrefixMapping", &ContentHandlerDefVisitor::endPrefixMapping)
+	.def("skippedEntity", &ContentHandlerDefVisitor::skippedEntity)
 	;
 }
 
-static void characters(xercesc::ContentHandler& self, const STR chars, const XMLSize_t length) {
-	XMLString buff(chars);
-	self.characters(buff.ptr(), length);
+static void characters(xercesc::ContentHandler& self, const XMLString& chars, const XMLSize_t length) {
+	self.characters(chars.ptr(), length);
 }
 
-static void endElement(xercesc::ContentHandler& self, const STR uri, const STR localname, const STR qname) {
-	XMLString buff1(uri), buff2(localname), buff3(qname);
-	self.endElement(buff1.ptr(), buff2.ptr(), buff3.ptr());
+static void endElement(xercesc::ContentHandler& self, const XMLString& uri, const XMLString& localname, const XMLString& qname) {
+	self.endElement(uri.ptr(), localname.ptr(), qname.ptr());
 }
 
-static void ignorableWhitespace(xercesc::ContentHandler& self, const STR chars, const XMLSize_t length) {
-	XMLString buff(chars);
-	self.ignorableWhitespace(buff.ptr(), length);
+static void ignorableWhitespace(xercesc::ContentHandler& self, const XMLString& chars, const XMLSize_t length) {
+	self.ignorableWhitespace(chars.ptr(), length);
 }
 
-static void processingInstruction(xercesc::ContentHandler& self, const STR target, const STR data) {
-	XMLString buff1(target), buff2(data);
-	self.processingInstruction(buff1.ptr(), buff2.ptr());
+static void processingInstruction(xercesc::ContentHandler& self, const XMLString& target, const XMLString& data) {
+	self.processingInstruction(target.ptr(), data.ptr());
 }
 
-static void startElement(xercesc::ContentHandler& self, const STR uri, const STR localname, const STR qname, const xercesc::Attributes& attrs) {
-	XMLString buff1(uri), buff2(localname), buff3(qname);
-	self.startElement(buff1.ptr(), buff2.ptr(), buff3.ptr(), attrs);
+static void startElement(xercesc::ContentHandler& self, const XMLString& uri, const XMLString& localname, const XMLString& qname, const xercesc::Attributes& attrs) {
+	self.startElement(uri.ptr(), localname.ptr(), qname.ptr(), attrs);
 }
 
-static void startPrefixMapping(xercesc::ContentHandler& self, const STR prefix, const STR uri) {
-	XMLString buff1(prefix), buff2(uri);
-	self.startPrefixMapping(buff1.ptr(), buff2.ptr());
+static void startPrefixMapping(xercesc::ContentHandler& self, const XMLString& prefix, const XMLString& uri) {
+	self.startPrefixMapping(prefix.ptr(), uri.ptr());
 }
 
-static void endPrefixMapping(xercesc::ContentHandler& self, const STR prefix) {
-	XMLString buff(prefix);
-	self.endPrefixMapping(buff.ptr());
+static void endPrefixMapping(xercesc::ContentHandler& self, const XMLString& prefix) {
+	self.endPrefixMapping(prefix.ptr());
 }
 
-static void skippedEntity(xercesc::ContentHandler& self, const STR name) {
-	XMLString buff(name);
-	self.endPrefixMapping(buff.ptr());
+static void skippedEntity(xercesc::ContentHandler& self, const XMLString& name) {
+	self.endPrefixMapping(name.ptr());
 }
 
 };
@@ -134,8 +125,7 @@ void skippedEntity(const XMLCh* const name) {
 void ContentHandler_init(void) {
 	//! xercesc::ContentHandler
 	boost::python::class_<ContentHandlerWrapper, boost::noncopyable>("ContentHandler")
-			.def(ContentHandlerDefVisitor<XMLString&>())
-			.def(ContentHandlerDefVisitor<char*>())
+			.def(ContentHandlerDefVisitor())
 			.def("characters", boost::python::pure_virtual(&xercesc::ContentHandler::characters))
 			.def("endDocument", boost::python::pure_virtual(&xercesc::ContentHandler::endDocument))
 			.def("endElement", boost::python::pure_virtual(&xercesc::ContentHandler::endElement))

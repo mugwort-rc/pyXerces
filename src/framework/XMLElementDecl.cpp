@@ -20,28 +20,25 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class XMLElementDeclDefVisitor
-: public boost::python::def_visitor<XMLElementDeclDefVisitor<STR> > {
+: public boost::python::def_visitor<XMLElementDeclDefVisitor> {
 friend class def_visitor_access;
 
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("setElementName", static_cast<void(*)(xercesc::XMLElementDecl&, const STR, const STR, const int)>(&XMLElementDeclDefVisitor::setElementName))
-	.def("setElementName", static_cast<void(*)(xercesc::XMLElementDecl&, const STR, const int)>(&XMLElementDeclDefVisitor::setElementName))
+	.def("setElementName", static_cast<void(*)(xercesc::XMLElementDecl&, const XMLString&, const XMLString&, const int)>(&XMLElementDeclDefVisitor::setElementName))
+	.def("setElementName", static_cast<void(*)(xercesc::XMLElementDecl&, const XMLString&, const int)>(&XMLElementDeclDefVisitor::setElementName))
 	;
 }
 
-static void setElementName(xercesc::XMLElementDecl& self, const STR prefix, const STR localPart, const int uriId) {
-	XMLString buff1(prefix), buff2(localPart);
-	self.setElementName(buff1.ptr(), buff2.ptr(), uriId);
+static void setElementName(xercesc::XMLElementDecl& self, const XMLString& prefix, const XMLString& localPart, const int uriId) {
+	self.setElementName(prefix.ptr(), localPart.ptr(), uriId);
 }
 
-static void setElementName(xercesc::XMLElementDecl& self, const STR rawName, const int uriId) {
-	XMLString buff(rawName);
-	self.setElementName(buff.ptr(), uriId);
+static void setElementName(xercesc::XMLElementDecl& self, const XMLString& rawName, const int uriId) {
+	self.setElementName(rawName.ptr(), uriId);
 }
 
 };
@@ -98,8 +95,7 @@ XMLElementDecl::objectType  getObjectType() const {
 void XMLElementDecl_init(void) {
 	//! xercesc::XMLElementDecl
 	auto XMLElementDecl = boost::python::class_<XMLElementDeclWrapper, boost::noncopyable, boost::python::bases<xercesc::XSerializable> >("XMLElementDecl")
-			.def(XMLElementDeclDefVisitor<XMLString&>())
-			.def(XMLElementDeclDefVisitor<char*>())
+			.def(XMLElementDeclDefVisitor())
 			.def("getAttDefList", boost::python::pure_virtual(&xercesc::XMLElementDecl::getAttDefList), boost::python::return_internal_reference<>())
 			.def("getCharDataOpts", boost::python::pure_virtual(&xercesc::XMLElementDecl::getCharDataOpts))
 			.def("hasAttDefs", boost::python::pure_virtual(&xercesc::XMLElementDecl::hasAttDefs))

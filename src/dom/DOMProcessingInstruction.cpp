@@ -32,9 +32,8 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class DOMProcessingInstructionDefVisitor
-: public boost::python::def_visitor<DOMProcessingInstructionDefVisitor<STR> >
+: public boost::python::def_visitor<DOMProcessingInstructionDefVisitor>
 {
 friend class def_visitor_access;
 public:
@@ -45,9 +44,8 @@ void visit(T& class_) const {
 	;
 }
 
-static void setData(xercesc::DOMProcessingInstruction& self, const STR data) {
-	XMLString buff(data);
-	self.setData(buff.ptr());
+static void setData(xercesc::DOMProcessingInstruction& self, const XMLString& data) {
+	self.setData(data.ptr());
 }
 
 };
@@ -227,8 +225,7 @@ void release() {
 void DOMProcessingInstruction_init(void) {
 	//! xercesc::DOMProcessingInstruction
 	boost::python::class_<DOMProcessingInstructionWrapper, boost::noncopyable, boost::python::bases<xercesc::DOMNode> >("DOMProcessingInstruction")
-			.def(DOMProcessingInstructionDefVisitor<XMLString&>())
-			.def(DOMProcessingInstructionDefVisitor<char*>())
+			.def(DOMProcessingInstructionDefVisitor())
 			.def("getTarget", boost::python::pure_virtual(&xercesc::DOMProcessingInstruction::getTarget), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getData", boost::python::pure_virtual(&xercesc::DOMProcessingInstruction::getData), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("setData", boost::python::pure_virtual(&xercesc::DOMProcessingInstruction::setData))

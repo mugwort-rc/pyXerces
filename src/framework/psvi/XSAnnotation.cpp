@@ -20,26 +20,24 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class XSAnnotationDefVisitor
-: public boost::python::def_visitor<XSAnnotationDefVisitor<STR> >
+: public boost::python::def_visitor<XSAnnotationDefVisitor>
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("__init__", boost::python::make_constructor(static_cast<xercesc::XSAnnotation*(*)(const STR, xercesc::MemoryManager* const)>(&XSAnnotation_fromstring)))
-	.def("__init__", boost::python::make_constructor(static_cast<xercesc::XSAnnotation*(*)(const STR)>(&XSAnnotation_fromstring)))
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::XSAnnotation*(*)(const XMLString&, xercesc::MemoryManager* const)>(&XSAnnotation_fromstring)))
+	.def("__init__", boost::python::make_constructor(static_cast<xercesc::XSAnnotation*(*)(const XMLString&)>(&XSAnnotation_fromstring)))
 	;
 }
 
-static xercesc::XSAnnotation* XSAnnotation_fromstring(const STR contents, xercesc::MemoryManager* const manager) {
-	XMLString buff(contents);
-	return new xercesc::XSAnnotation(buff.ptr(), manager);
+static xercesc::XSAnnotation* XSAnnotation_fromstring(const XMLString& contents, xercesc::MemoryManager* const manager) {
+	return new xercesc::XSAnnotation(contents.ptr(), manager);
 }
 
-static xercesc::XSAnnotation* XSAnnotation_fromstring(const STR contents) {
+static xercesc::XSAnnotation* XSAnnotation_fromstring(const XMLString& contents) {
 	return XSAnnotation_fromstring(contents, xercesc::XMLPlatformUtils::fgMemoryManager);
 }
 
@@ -49,8 +47,7 @@ void XSAnnotation_init(void) {
 	//! xercesc::XSAnnotation
 	auto XSAnnotation = boost::python::class_<xercesc::XSAnnotation, boost::noncopyable, boost::python::bases<xercesc::XSerializable, xercesc::XSObject> >("XSAnnotation", boost::python::init<const XMLCh* const, boost::python::optional<xercesc::MemoryManager* const> >())
 			.def(boost::python::init<xercesc::MemoryManager* const>())
-			.def(XSAnnotationDefVisitor<XMLString&>())
-			.def(XSAnnotationDefVisitor<char*>())
+			.def(XSAnnotationDefVisitor())
 			.def("writeAnnotation", static_cast<void(xercesc::XSAnnotation::*)(xercesc::DOMNode*, xercesc::XSAnnotation::ANNOTATION_TARGET)>(&xercesc::XSAnnotation::writeAnnotation))
 			.def("writeAnnotation", static_cast<void(xercesc::XSAnnotation::*)(xercesc::ContentHandler*)>(&xercesc::XSAnnotation::writeAnnotation))
 			.def("getAnnotationString", static_cast<const XMLCh*(xercesc::XSAnnotation::*)(void) const>(&xercesc::XSAnnotation::getAnnotationString), boost::python::return_value_policy<boost::python::return_by_value>())

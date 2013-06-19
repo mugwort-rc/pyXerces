@@ -15,28 +15,25 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class XercesAttGroupInfoDefVisitor
-: public boost::python::def_visitor<XercesAttGroupInfoDefVisitor<STR> >
+: public boost::python::def_visitor<XercesAttGroupInfoDefVisitor>
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("getAttDef", &XercesAttGroupInfoDefVisitor<STR>::getAttDef, boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("containsAttribute", &XercesAttGroupInfoDefVisitor<STR>::containsAttribute)
+	.def("getAttDef", &XercesAttGroupInfoDefVisitor::getAttDef, boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("containsAttribute", &XercesAttGroupInfoDefVisitor::containsAttribute)
 	;
 }
 
-static xercesc::SchemaAttDef* getAttDef(xercesc::XercesAttGroupInfo& self, const STR baseName, const int urlId) {
-	XMLString buff(baseName);
-	return const_cast<xercesc::SchemaAttDef*>(self.getAttDef(buff.ptr(), urlId));
+static xercesc::SchemaAttDef* getAttDef(xercesc::XercesAttGroupInfo& self, const XMLString& baseName, const int urlId) {
+	return const_cast<xercesc::SchemaAttDef*>(self.getAttDef(baseName.ptr(), urlId));
 }
 
-static bool containsAttribute(xercesc::XercesAttGroupInfo& self, const STR name, const int urlId) {
-	XMLString buff(name);
-	return self.containsAttribute(buff.ptr(), urlId);
+static bool containsAttribute(xercesc::XercesAttGroupInfo& self, const XMLString& name, const int urlId) {
+	return self.containsAttribute(name.ptr(), urlId);
 }
 
 };
@@ -45,8 +42,7 @@ void XercesAttGroupInfo_init(void) {
 	//! xercesc::XercesAttGroupInfo
 	boost::python::class_<xercesc::XercesAttGroupInfo, boost::noncopyable, boost::python::bases<xercesc::XSerializable> >("XercesAttGroupInfo", boost::python::init<unsigned int, unsigned int, boost::python::optional<xercesc::MemoryManager* const> >())
 			.def(boost::python::init<boost::python::optional<xercesc::MemoryManager* const> >())
-			.def(XercesAttGroupInfoDefVisitor<XMLString&>())
-			.def(XercesAttGroupInfoDefVisitor<char*>())
+			.def(XercesAttGroupInfoDefVisitor())
 			.def("containsTypeWithId", &xercesc::XercesAttGroupInfo::containsTypeWithId)
 			.def("attributeCount", &xercesc::XercesAttGroupInfo::attributeCount)
 			.def("anyAttributeCount", &xercesc::XercesAttGroupInfo::anyAttributeCount)

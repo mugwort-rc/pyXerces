@@ -20,9 +20,8 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class XMLEntityHandlerDefVisitor
-: public boost::python::def_visitor<XMLEntityHandlerDefVisitor<STR> > {
+: public boost::python::def_visitor<XMLEntityHandlerDefVisitor> {
 friend class def_visitor_access;
 
 public:
@@ -33,9 +32,8 @@ void visit(T& class_) const {
 	;
 }
 
-static bool expandSystemId(xercesc::XMLEntityHandler& self, const STR systemId, xercesc::XMLBuffer& toFill) {
-	XMLString buff(systemId);
-	return self.expandSystemId(buff.ptr(), toFill);
+static bool expandSystemId(xercesc::XMLEntityHandler& self, const XMLString& systemId, xercesc::XMLBuffer& toFill) {
+	return self.expandSystemId(systemId.ptr(), toFill);
 }
 
 };
@@ -69,8 +67,7 @@ void startInputSource(const xercesc::InputSource& inputSource) {
 void XMLEntityHandler_init(void) {
 	//! xercesc::XMLEntityHandler
 	boost::python::class_<XMLEntityHandlerWrapper, boost::noncopyable>("XMLEntityHandler")
-			.def(XMLEntityHandlerDefVisitor<XMLString&>())
-			.def(XMLEntityHandlerDefVisitor<char*>())
+			.def(XMLEntityHandlerDefVisitor())
 			.def("endInputSource", boost::python::pure_virtual(&xercesc::XMLEntityHandler::endInputSource))
 			.def("expandSystemId", boost::python::pure_virtual(&xercesc::XMLEntityHandler::expandSystemId))
 			.def("resetEntities", boost::python::pure_virtual(&xercesc::XMLEntityHandler::resetEntities))

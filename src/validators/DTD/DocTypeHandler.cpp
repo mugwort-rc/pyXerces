@@ -14,9 +14,8 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class DocTypeHandlerDefVisitor
-: public boost::python::def_visitor<DocTypeHandlerDefVisitor<STR> > {
+: public boost::python::def_visitor<DocTypeHandlerDefVisitor> {
 friend class def_visitor_access;
 
 public:
@@ -31,29 +30,24 @@ void visit(T& class_) const {
 	;
 }
 
-static void doctypeComment(xercesc::DocTypeHandler& self, const STR comment) {
-	XMLString buff(comment);
-	self.doctypeComment(buff.ptr());
+static void doctypeComment(xercesc::DocTypeHandler& self, const XMLString& comment) {
+	self.doctypeComment(comment.ptr());
 }
 
-static void doctypeDecl(xercesc::DocTypeHandler& self, const xercesc::DTDElementDecl& elemDecl, const STR publicId, const STR systemId, const bool hasIntSubset, const bool hasExtSubset) {
-	XMLString buff1(publicId), buff2(systemId);
-	self.doctypeDecl(elemDecl, buff1.ptr(), buff2.ptr(), hasIntSubset, hasExtSubset);
+static void doctypeDecl(xercesc::DocTypeHandler& self, const xercesc::DTDElementDecl& elemDecl, const XMLString& publicId, const XMLString& systemId, const bool hasIntSubset, const bool hasExtSubset) {
+	self.doctypeDecl(elemDecl, publicId.ptr(), systemId.ptr(), hasIntSubset, hasExtSubset);
 }
 
-static void doctypePI(xercesc::DocTypeHandler& self, const STR target, const STR data) {
-	XMLString buff1(target), buff2(data);
-	self.doctypePI(buff1.ptr(), buff2.ptr());
+static void doctypePI(xercesc::DocTypeHandler& self, const XMLString& target, const XMLString& data) {
+	self.doctypePI(target.ptr(), data.ptr());
 }
 
-static void doctypeWhitespace(xercesc::DocTypeHandler& self, const STR chars) {
-	XMLString buff(chars);
-	self.doctypeWhitespace(buff.ptr(), buff.size());
+static void doctypeWhitespace(xercesc::DocTypeHandler& self, const XMLString& chars) {
+	self.doctypeWhitespace(chars.ptr(), chars.size());
 }
 
-static void TextDecl(xercesc::DocTypeHandler& self, const STR versionStr, const STR encodingStr) {
-	XMLString buff1(versionStr), buff2(encodingStr);
-	self.TextDecl(buff1.ptr(), buff2.ptr());
+static void TextDecl(xercesc::DocTypeHandler& self, const XMLString& versionStr, const XMLString& encodingStr) {
+	self.TextDecl(versionStr.ptr(), encodingStr.ptr());
 }
 
 };
@@ -131,8 +125,7 @@ void TextDecl(const XMLCh* const versionStr, const XMLCh* const encodingStr) {
 void DocTypeHandler_init(void) {
 	//! xercesc::DocTypeHandler
 	boost::python::class_<DocTypeHandlerWrapper, boost::noncopyable>("DocTypeHandler")
-			.def(DocTypeHandlerDefVisitor<XMLString&>())
-			.def(DocTypeHandlerDefVisitor<char*>())
+			.def(DocTypeHandlerDefVisitor())
 			.def("attDef", boost::python::pure_virtual(&xercesc::DocTypeHandler::attDef))
 			.def("doctypeComment", boost::python::pure_virtual(&xercesc::DocTypeHandler::doctypeComment))
 			.def("doctypeDecl", boost::python::pure_virtual(&xercesc::DocTypeHandler::doctypeDecl), (boost::python::arg("elemDecl"), boost::python::arg("publicId"), boost::python::arg("systemId"), boost::python::arg("hasIntSubset"), boost::python::arg("hasExtSubset") = false))

@@ -14,9 +14,8 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class DOMXPathNSResolverDefVisitor
-: public boost::python::def_visitor<DOMXPathNSResolverDefVisitor<STR> >
+: public boost::python::def_visitor<DOMXPathNSResolverDefVisitor>
 {
 friend class def_visitor_access;
 public:
@@ -29,19 +28,16 @@ void visit(T& class_) const {
 	;
 }
 
-static const XMLCh* lookupNamespaceURI(xercesc::DOMXPathNSResolver& self, const STR prefix) {
-	XMLString buff(prefix);
-	return self.lookupNamespaceURI(buff.ptr());
+static const XMLCh* lookupNamespaceURI(xercesc::DOMXPathNSResolver& self, const XMLString& prefix) {
+	return self.lookupNamespaceURI(prefix.ptr());
 }
 
-static const XMLCh* lookupPrefix(xercesc::DOMXPathNSResolver& self, const STR namespaceURI) {
-	XMLString buff(namespaceURI);
-	return self.lookupPrefix(buff.ptr());
+static const XMLCh* lookupPrefix(xercesc::DOMXPathNSResolver& self, const XMLString& namespaceURI) {
+	return self.lookupPrefix(namespaceURI.ptr());
 }
 
-static void addNamespaceBinding(xercesc::DOMXPathNSResolver& self, const STR prefix, const STR uri) {
-	XMLString buff1(prefix), buff2(uri);
-	self.addNamespaceBinding(buff1.ptr(), buff2.ptr());
+static void addNamespaceBinding(xercesc::DOMXPathNSResolver& self, const XMLString& prefix, const XMLString& uri) {
+	self.addNamespaceBinding(prefix.ptr(), uri.ptr());
 }
 
 };
@@ -71,8 +67,7 @@ void release() {
 void DOMXPathNSResolver_init(void) {
 	//! xercesc::DOMXPathNSResolver
 	boost::python::class_<DOMXPathNSResolverWrapper, boost::noncopyable>("DOMXPathNSResolver")
-			.def(DOMXPathNSResolverDefVisitor<XMLString&>())
-			.def(DOMXPathNSResolverDefVisitor<char*>())
+			.def(DOMXPathNSResolverDefVisitor())
 			.def("lookupNamespaceURI", boost::python::pure_virtual(&xercesc::DOMXPathNSResolver::lookupNamespaceURI), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("lookupPrefix", boost::python::pure_virtual(&xercesc::DOMXPathNSResolver::lookupPrefix), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("addNamespaceBinding", boost::python::pure_virtual(&xercesc::DOMXPathNSResolver::addNamespaceBinding))

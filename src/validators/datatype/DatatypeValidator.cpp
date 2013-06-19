@@ -19,71 +19,65 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class DatatypeValidatorDefVisitor
-: public boost::python::def_visitor<DatatypeValidatorDefVisitor<STR> >
+: public boost::python::def_visitor<DatatypeValidatorDefVisitor>
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("getCanonicalRepresentation", static_cast<const XMLCh*(*)(xercesc::DatatypeValidator&, const STR, xercesc::MemoryManager*, bool)>(&DatatypeValidatorDefVisitor<STR>::getCanonicalRepresentation), boost::python::return_value_policy<boost::python::return_by_value>())
-	.def("getCanonicalRepresentation", static_cast<const XMLCh*(*)(xercesc::DatatypeValidator&, const STR, xercesc::MemoryManager*)>(&DatatypeValidatorDefVisitor<STR>::getCanonicalRepresentation), boost::python::return_value_policy<boost::python::return_by_value>())
-	.def("getCanonicalRepresentation", static_cast<const XMLCh*(*)(xercesc::DatatypeValidator&, const STR)>(&DatatypeValidatorDefVisitor<STR>::getCanonicalRepresentation), boost::python::return_value_policy<boost::python::return_by_value>())
-	.def("validate", static_cast<void(*)(xercesc::DatatypeValidator&, const STR, xercesc::ValidationContext* const, xercesc::MemoryManager* const)>(&DatatypeValidatorDefVisitor<STR>::validate))
-	.def("validate", static_cast<void(*)(xercesc::DatatypeValidator&, const STR, xercesc::ValidationContext* const)>(&DatatypeValidatorDefVisitor<STR>::validate))
-	.def("validate", static_cast<void(*)(xercesc::DatatypeValidator&, const STR)>(&DatatypeValidatorDefVisitor<STR>::validate))
-	.def("compare", static_cast<int(*)(xercesc::DatatypeValidator&, const STR, const STR, xercesc::MemoryManager* const)>(&DatatypeValidatorDefVisitor<STR>::compare))
-	.def("compare", static_cast<int(*)(xercesc::DatatypeValidator&, const STR, const STR)>(&DatatypeValidatorDefVisitor<STR>::compare))
-	.def("setTypeName", static_cast<void(*)(xercesc::DatatypeValidator&, const STR)>(&DatatypeValidatorDefVisitor<STR>::setTypeName))
-	.def("setTypeName", static_cast<void(*)(xercesc::DatatypeValidator&, const STR, const STR)>(&DatatypeValidatorDefVisitor<STR>::setTypeName))
+	.def("getCanonicalRepresentation", static_cast<const XMLCh*(*)(xercesc::DatatypeValidator&, const XMLString&, xercesc::MemoryManager*, bool)>(&DatatypeValidatorDefVisitor::getCanonicalRepresentation), boost::python::return_value_policy<boost::python::return_by_value>())
+	.def("getCanonicalRepresentation", static_cast<const XMLCh*(*)(xercesc::DatatypeValidator&, const XMLString&, xercesc::MemoryManager*)>(&DatatypeValidatorDefVisitor::getCanonicalRepresentation), boost::python::return_value_policy<boost::python::return_by_value>())
+	.def("getCanonicalRepresentation", static_cast<const XMLCh*(*)(xercesc::DatatypeValidator&, const XMLString&)>(&DatatypeValidatorDefVisitor::getCanonicalRepresentation), boost::python::return_value_policy<boost::python::return_by_value>())
+	.def("validate", static_cast<void(*)(xercesc::DatatypeValidator&, const XMLString&, xercesc::ValidationContext* const, xercesc::MemoryManager* const)>(&DatatypeValidatorDefVisitor::validate))
+	.def("validate", static_cast<void(*)(xercesc::DatatypeValidator&, const XMLString&, xercesc::ValidationContext* const)>(&DatatypeValidatorDefVisitor::validate))
+	.def("validate", static_cast<void(*)(xercesc::DatatypeValidator&, const XMLString&)>(&DatatypeValidatorDefVisitor::validate))
+	.def("compare", static_cast<int(*)(xercesc::DatatypeValidator&, const XMLString&, const XMLString&, xercesc::MemoryManager* const)>(&DatatypeValidatorDefVisitor::compare))
+	.def("compare", static_cast<int(*)(xercesc::DatatypeValidator&, const XMLString&, const XMLString&)>(&DatatypeValidatorDefVisitor::compare))
+	.def("setTypeName", static_cast<void(*)(xercesc::DatatypeValidator&, const XMLString&)>(&DatatypeValidatorDefVisitor::setTypeName))
+	.def("setTypeName", static_cast<void(*)(xercesc::DatatypeValidator&, const XMLString&, const XMLString&)>(&DatatypeValidatorDefVisitor::setTypeName))
 	;
 }
 
-static const XMLCh* getCanonicalRepresentation(xercesc::DatatypeValidator& self, const STR rawData, xercesc::MemoryManager* const memMgr, bool toValidate) {
-	XMLString buff(rawData);
-	return self.getCanonicalRepresentation(buff.ptr(), memMgr, toValidate);
+static const XMLCh* getCanonicalRepresentation(xercesc::DatatypeValidator& self, const XMLString& rawData, xercesc::MemoryManager* const memMgr, bool toValidate) {
+	return self.getCanonicalRepresentation(rawData.ptr(), memMgr, toValidate);
 }
 
-static const XMLCh* getCanonicalRepresentation(xercesc::DatatypeValidator& self, const STR rawData, xercesc::MemoryManager* const memMgr) {
-	return DatatypeValidatorDefVisitor<STR>::getCanonicalRepresentation(self, rawData, memMgr, false);
+static const XMLCh* getCanonicalRepresentation(xercesc::DatatypeValidator& self, const XMLString& rawData, xercesc::MemoryManager* const memMgr) {
+	return DatatypeValidatorDefVisitor::getCanonicalRepresentation(self, rawData, memMgr, false);
 }
 
-static const XMLCh* getCanonicalRepresentation(xercesc::DatatypeValidator& self, const STR rawData) {
-	return DatatypeValidatorDefVisitor<STR>::getCanonicalRepresentation(self, rawData, nullptr);
+static const XMLCh* getCanonicalRepresentation(xercesc::DatatypeValidator& self, const XMLString& rawData) {
+	return DatatypeValidatorDefVisitor::getCanonicalRepresentation(self, rawData, nullptr);
 }
 
-static void validate(xercesc::DatatypeValidator& self, const STR content, xercesc::ValidationContext* const context, xercesc::MemoryManager* const manager) {
-	XMLString buff(content);
-	self.validate(buff.ptr(), context, manager);
+static void validate(xercesc::DatatypeValidator& self, const XMLString& content, xercesc::ValidationContext* const context, xercesc::MemoryManager* const manager) {
+	self.validate(content.ptr(), context, manager);
 }
 
-static void validate(xercesc::DatatypeValidator& self, const STR content, xercesc::ValidationContext* const context) {
-	DatatypeValidatorDefVisitor<STR>::validate(self, content, context, xercesc::XMLPlatformUtils::fgMemoryManager);
+static void validate(xercesc::DatatypeValidator& self, const XMLString& content, xercesc::ValidationContext* const context) {
+	DatatypeValidatorDefVisitor::validate(self, content, context, xercesc::XMLPlatformUtils::fgMemoryManager);
 }
 
-static void validate(xercesc::DatatypeValidator& self, const STR content) {
-	DatatypeValidatorDefVisitor<STR>::validate(self, content, nullptr);
+static void validate(xercesc::DatatypeValidator& self, const XMLString& content) {
+	DatatypeValidatorDefVisitor::validate(self, content, nullptr);
 }
 
-static int compare(xercesc::DatatypeValidator& self, const STR value1, const STR value2, xercesc::MemoryManager* const manager) {
-	XMLString buff1(value1), buff2(value2);
-	return self.compare(buff1.ptr(), buff2.ptr(), manager);
+static int compare(xercesc::DatatypeValidator& self, const XMLString& value1, const XMLString& value2, xercesc::MemoryManager* const manager) {
+	return self.compare(value1.ptr(), value2.ptr(), manager);
 }
 
-static int compare(xercesc::DatatypeValidator& self, const STR value1, const STR value2) {
-	return DatatypeValidatorDefVisitor<STR>::compare(self, value1, value2, xercesc::XMLPlatformUtils::fgMemoryManager);
+static int compare(xercesc::DatatypeValidator& self, const XMLString& value1, const XMLString& value2) {
+	return DatatypeValidatorDefVisitor::compare(self, value1, value2, xercesc::XMLPlatformUtils::fgMemoryManager);
 }
 
-static void setTypeName(xercesc::DatatypeValidator& self, const STR typeName) {
-	XMLString buff(typeName);
-	self.setTypeName(buff.ptr());
+static void setTypeName(xercesc::DatatypeValidator& self, const XMLString& typeName) {
+	self.setTypeName(typeName.ptr());
 }
 
-static void setTypeName(xercesc::DatatypeValidator& self, const STR name, const STR uri) {
-	XMLString buff1(name), buff2(uri);
-	self.setTypeName(buff1.ptr(), buff2.ptr());
+static void setTypeName(xercesc::DatatypeValidator& self, const XMLString& name, const XMLString& uri) {
+	self.setTypeName(name.ptr(), uri.ptr());
 }
 
 };
@@ -109,8 +103,7 @@ DatatypeValidator* newInstance(xercesc::RefHashTableOf<xercesc::KVStringPair>* c
 void DatatypeValidator_init(void) {
 	//! xercesc::DatatypeValidator
 	auto DatatypeValidator = boost::python::class_<xercesc::DatatypeValidator, boost::noncopyable, boost::python::bases<xercesc::XSerializable> >("DatatypeValidator", boost::python::no_init)
-			.def(DatatypeValidatorDefVisitor<XMLString&>())
-			.def(DatatypeValidatorDefVisitor<char*>())
+			.def(DatatypeValidatorDefVisitor())
 			.def("getFinalSet", &xercesc::DatatypeValidator::getFinalSet)
 			.def("getFacets", &xercesc::DatatypeValidator::getFacets, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getWSFacet", &xercesc::DatatypeValidator::getWSFacet)

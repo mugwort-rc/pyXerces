@@ -15,34 +15,30 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class XMLStringPoolDefVisitor
-: public boost::python::def_visitor<XMLStringPoolDefVisitor<STR> >
+: public boost::python::def_visitor<XMLStringPoolDefVisitor>
 {
 friend class def_veisitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("addOrFind", &XMLStringPoolDefVisitor<STR>::addOrFind)
-	.def("exists", &XMLStringPoolDefVisitor<STR>::exists)
-	.def("getId", &XMLStringPoolDefVisitor<STR>::getId)
+	.def("addOrFind", &XMLStringPoolDefVisitor::addOrFind)
+	.def("exists", &XMLStringPoolDefVisitor::exists)
+	.def("getId", &XMLStringPoolDefVisitor::getId)
 	;
 }
 
-static unsigned int addOrFind(xercesc::XMLStringPool& self, const STR newString) {
-	XMLString buff(newString);
-	return self.addOrFind(buff.ptr());
+static unsigned int addOrFind(xercesc::XMLStringPool& self, const XMLString& newString) {
+	return self.addOrFind(newString.ptr());
 }
 
-static bool exists(xercesc::XMLStringPool& self, const STR newString) {
-	XMLString buff(newString);
-	return self.exists(buff.ptr());
+static bool exists(xercesc::XMLStringPool& self, const XMLString& newString) {
+	return self.exists(newString.ptr());
 }
 
-static unsigned int getId(xercesc::XMLStringPool& self, const STR toFind) {
-	XMLString buff(toFind);
-	return self.getId(buff.ptr());
+static unsigned int getId(xercesc::XMLStringPool& self, const XMLString& toFind) {
+	return self.getId(toFind.ptr());
 }
 
 };
@@ -123,8 +119,7 @@ void StringPool_init(void) {
 	//! xercesc::XMLStringPool
 	boost::python::class_<XMLStringPoolWrapper, boost::noncopyable, boost::python::bases<xercesc::XSerializable> >("XMLStringPool", boost::python::init<boost::python::optional<const unsigned int, xercesc::MemoryManager* const> >())
 			.def(boost::python::init<boost::python::optional<xercesc::MemoryManager* const> >())
-			.def(XMLStringPoolDefVisitor<XMLString&>())
-			.def(XMLStringPoolDefVisitor<char*>())
+			.def(XMLStringPoolDefVisitor())
 			.def("addOrFind", &xercesc::XMLStringPool::addOrFind)
 			.def("exists", static_cast<bool(xercesc::XMLStringPool::*)(const XMLCh* const) const>(&xercesc::XMLStringPool::exists))
 			.def("exists", static_cast<bool(xercesc::XMLStringPool::*)(const unsigned int) const>(&xercesc::XMLStringPool::exists))

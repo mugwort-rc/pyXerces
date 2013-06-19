@@ -20,9 +20,8 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class DOMXPathEvaluatorDefVisitor
-: public boost::python::def_visitor<DOMXPathEvaluatorDefVisitor<STR> >
+: public boost::python::def_visitor<DOMXPathEvaluatorDefVisitor>
 {
 friend class def_visitor_access;
 public:
@@ -34,14 +33,12 @@ void visit(T& class_) const {
 	;
 }
 
-static xercesc::DOMXPathExpression* createExpression(xercesc::DOMXPathEvaluator& self, const STR expression, const xercesc::DOMXPathNSResolver* resolver) {
-	XMLString buff(expression);
-	return self.createExpression(buff.ptr(), resolver);
+static xercesc::DOMXPathExpression* createExpression(xercesc::DOMXPathEvaluator& self, const XMLString& expression, const xercesc::DOMXPathNSResolver* resolver) {
+	return self.createExpression(expression.ptr(), resolver);
 }
 
-static xercesc::DOMXPathResult* evaluate(xercesc::DOMXPathEvaluator& self, const STR expression, const xercesc::DOMNode* contextNode, const xercesc::DOMXPathNSResolver* resolver, xercesc::DOMXPathResult::ResultType type, xercesc::DOMXPathResult* result) {
-	XMLString buff(expression);
-	return self.evaluate(buff.ptr(), contextNode, resolver, type, result);
+static xercesc::DOMXPathResult* evaluate(xercesc::DOMXPathEvaluator& self, const XMLString& expression, const xercesc::DOMNode* contextNode, const xercesc::DOMXPathNSResolver* resolver, xercesc::DOMXPathResult::ResultType type, xercesc::DOMXPathResult* result) {
+	return self.evaluate(expression.ptr(), contextNode, resolver, type, result);
 }
 
 };
@@ -67,8 +64,7 @@ xercesc::DOMXPathResult* evaluate(const XMLCh *expression, const xercesc::DOMNod
 void DOMXPathEvaluator_init(void) {
 	//! xercesc::DOMXPathEvaluator
 	boost::python::class_<DOMXPathEvaluatorWrapper, boost::noncopyable>("DOMXPathEvaluator")
-			.def(DOMXPathEvaluatorDefVisitor<XMLString&>())
-			.def(DOMXPathEvaluatorDefVisitor<char*>())
+			.def(DOMXPathEvaluatorDefVisitor())
 			.def("createExpression", boost::python::pure_virtual(&xercesc::DOMXPathEvaluator::createExpression), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("createNSResolver", boost::python::pure_virtual(&xercesc::DOMXPathEvaluator::createNSResolver), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("evaluate", boost::python::pure_virtual(&xercesc::DOMXPathEvaluator::evaluate), boost::python::return_value_policy<boost::python::reference_existing_object>())

@@ -27,22 +27,10 @@ public:
 XMLString(void);
 /*!
  * Constructor
- * @param [in]		str		convert string
- * @type str: const char*
- */
-XMLString(const char* str);
-/*!
- * Constructor
  * @param [in]		ptr		raw XMLCh*
  * @type ptr: XMLCh*
  */
 XMLString(const XMLCh* ptr);
-/*!
- * Constructor
- * @param [in]		initializeList	initialize XMLCh value list
- * @type initializeList: boost::python::list
- */
-XMLString(const boost::python::list& initializeList);
 /*!
  * Copy constructor
  * @param [in]		copy	copy value

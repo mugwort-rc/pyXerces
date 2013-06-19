@@ -26,9 +26,8 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class XMLGrammarPoolDefVisitor
-: public boost::python::def_visitor<XMLGrammarPoolDefVisitor<STR> >
+: public boost::python::def_visitor<XMLGrammarPoolDefVisitor>
 {
 friend class def_visitor_access;
 public:
@@ -41,19 +40,16 @@ void visit(T& class_) const {
 	;
 }
 
-static xercesc::Grammar* orphanGrammar(xercesc::XMLGrammarPool& self, const STR nameSpaceKey) {
-	XMLString buff(nameSpaceKey);
-	return self.orphanGrammar(buff.ptr());
+static xercesc::Grammar* orphanGrammar(xercesc::XMLGrammarPool& self, const XMLString& nameSpaceKey) {
+	return self.orphanGrammar(nameSpaceKey.ptr());
 }
 
-static xercesc::XMLDTDDescription* createDTDDescription(xercesc::XMLGrammarPool& self, const STR systemId) {
-	XMLString buff(systemId);
-	return self.createDTDDescription(buff.ptr());
+static xercesc::XMLDTDDescription* createDTDDescription(xercesc::XMLGrammarPool& self, const XMLString& systemId) {
+	return self.createDTDDescription(systemId.ptr());
 }
 
-static xercesc::XMLSchemaDescription* createSchemaDescription(xercesc::XMLGrammarPool& self, const STR targetNamespace) {
-	XMLString buff(targetNamespace);
-	return self.createSchemaDescription(buff.ptr());
+static xercesc::XMLSchemaDescription* createSchemaDescription(xercesc::XMLGrammarPool& self, const XMLString& targetNamespace) {
+	return self.createSchemaDescription(targetNamespace.ptr());
 }
 
 };
@@ -129,8 +125,7 @@ void deserializeGrammars(xercesc::BinInputStream* const stream) {
 void XMLGrammarPool_init(void) {
 	//! xercesc::XMLGrammarPool
 	boost::python::class_<XMLGrammarPoolWrapper, boost::noncopyable>("XMLGrammarPool")
-			.def(XMLGrammarPoolDefVisitor<XMLString&>())
-			.def(XMLGrammarPoolDefVisitor<char*>())
+			.def(XMLGrammarPoolDefVisitor())
 			.def("cacheGrammar", boost::python::pure_virtual(&xercesc::XMLGrammarPool::cacheGrammar))
 			.def("retrieveGrammar", boost::python::pure_virtual(&xercesc::XMLGrammarPool::retrieveGrammar), boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("orphanGrammar", boost::python::pure_virtual(&xercesc::XMLGrammarPool::orphanGrammar), boost::python::return_value_policy<boost::python::reference_existing_object>())

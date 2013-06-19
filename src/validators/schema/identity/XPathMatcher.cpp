@@ -25,43 +25,40 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class XPathMatcherDefVisitor
-: public boost::python::def_visitor<XPathMatcherDefVisitor<STR> >
+: public boost::python::def_visitor<XPathMatcherDefVisitor>
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("startElement", static_cast<void(*)(xercesc::XPathMatcher&, const xercesc::XMLElementDecl&, const unsigned int, const STR, const xercesc::RefVectorOf<xercesc::XMLAttr>&, const XMLSize_t, xercesc::ValidationContext*)>(&XPathMatcherDefVisitor<STR>::startElement))
-	.def("startElement", static_cast<void(*)(xercesc::XPathMatcher&, const xercesc::XMLElementDecl&, const unsigned int, const STR, const xercesc::RefVectorOf<xercesc::XMLAttr>&, const XMLSize_t)>(&XPathMatcherDefVisitor<STR>::startElement))
-	.def("endElement", static_cast<void(*)(xercesc::XPathMatcher&, const xercesc::XMLElementDecl&, const STR, xercesc::ValidationContext*, xercesc::DatatypeValidator*)>(&XPathMatcherDefVisitor<STR>::endElement))
-	.def("endElement", static_cast<void(*)(xercesc::XPathMatcher&, const xercesc::XMLElementDecl&, const STR, xercesc::ValidationContext*)>(&XPathMatcherDefVisitor<STR>::endElement))
-	.def("endElement", static_cast<void(*)(xercesc::XPathMatcher&, const xercesc::XMLElementDecl&, const STR)>(&XPathMatcherDefVisitor<STR>::endElement))
+	.def("startElement", static_cast<void(*)(xercesc::XPathMatcher&, const xercesc::XMLElementDecl&, const unsigned int, const XMLString&, const xercesc::RefVectorOf<xercesc::XMLAttr>&, const XMLSize_t, xercesc::ValidationContext*)>(&XPathMatcherDefVisitor::startElement))
+	.def("startElement", static_cast<void(*)(xercesc::XPathMatcher&, const xercesc::XMLElementDecl&, const unsigned int, const XMLString&, const xercesc::RefVectorOf<xercesc::XMLAttr>&, const XMLSize_t)>(&XPathMatcherDefVisitor::startElement))
+	.def("endElement", static_cast<void(*)(xercesc::XPathMatcher&, const xercesc::XMLElementDecl&, const XMLString&, xercesc::ValidationContext*, xercesc::DatatypeValidator*)>(&XPathMatcherDefVisitor::endElement))
+	.def("endElement", static_cast<void(*)(xercesc::XPathMatcher&, const xercesc::XMLElementDecl&, const XMLString&, xercesc::ValidationContext*)>(&XPathMatcherDefVisitor::endElement))
+	.def("endElement", static_cast<void(*)(xercesc::XPathMatcher&, const xercesc::XMLElementDecl&, const XMLString&)>(&XPathMatcherDefVisitor::endElement))
 	;
 }
 
-static void startElement(xercesc::XPathMatcher& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int urlId, const STR elemPrefix, const xercesc::RefVectorOf<xercesc::XMLAttr>& attrList, const XMLSize_t attrCount, xercesc::ValidationContext* validationContext) {
-	XMLString buff(elemPrefix);
-	self.startElement(elemDecl, urlId, buff.ptr(), attrList, attrCount, validationContext);
+static void startElement(xercesc::XPathMatcher& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int urlId, const XMLString& elemPrefix, const xercesc::RefVectorOf<xercesc::XMLAttr>& attrList, const XMLSize_t attrCount, xercesc::ValidationContext* validationContext) {
+	self.startElement(elemDecl, urlId, elemPrefix.ptr(), attrList, attrCount, validationContext);
 }
 
-static void startElement(xercesc::XPathMatcher& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int urlId, const STR elemPrefix, const xercesc::RefVectorOf<xercesc::XMLAttr>& attrList, const XMLSize_t attrCount) {
-	XPathMatcherDefVisitor<STR>::startElement(self, elemDecl, urlId, elemPrefix, attrList, attrCount, nullptr);
+static void startElement(xercesc::XPathMatcher& self, const xercesc::XMLElementDecl& elemDecl, const unsigned int urlId, const XMLString& elemPrefix, const xercesc::RefVectorOf<xercesc::XMLAttr>& attrList, const XMLSize_t attrCount) {
+	XPathMatcherDefVisitor::startElement(self, elemDecl, urlId, elemPrefix, attrList, attrCount, nullptr);
 }
 
-static void endElement(xercesc::XPathMatcher& self, const xercesc::XMLElementDecl& elemDecl, const STR elemContent, xercesc::ValidationContext* validationContext, xercesc::DatatypeValidator* actualValidator) {
-	XMLString buff(elemContent);
-	self.endElement(elemDecl, buff.ptr(), validationContext, actualValidator);
+static void endElement(xercesc::XPathMatcher& self, const xercesc::XMLElementDecl& elemDecl, const XMLString& elemContent, xercesc::ValidationContext* validationContext, xercesc::DatatypeValidator* actualValidator) {
+	self.endElement(elemDecl, elemContent.ptr(), validationContext, actualValidator);
 }
 
-static void endElement(xercesc::XPathMatcher& self, const xercesc::XMLElementDecl& elemDecl, const STR elemContent, xercesc::ValidationContext* validationContext) {
-	XPathMatcherDefVisitor<STR>::endElement(self, elemDecl, elemContent, validationContext, nullptr);
+static void endElement(xercesc::XPathMatcher& self, const xercesc::XMLElementDecl& elemDecl, const XMLString& elemContent, xercesc::ValidationContext* validationContext) {
+	XPathMatcherDefVisitor::endElement(self, elemDecl, elemContent, validationContext, nullptr);
 }
 
-static void endElement(xercesc::XPathMatcher& self, const xercesc::XMLElementDecl& elemDecl, const STR elemContent) {
-	XPathMatcherDefVisitor<STR>::endElement(self, elemDecl, elemContent, nullptr);
+static void endElement(xercesc::XPathMatcher& self, const xercesc::XMLElementDecl& elemDecl, const XMLString& elemContent) {
+	XPathMatcherDefVisitor::endElement(self, elemDecl, elemContent, nullptr);
 }
 
 };
@@ -120,8 +117,7 @@ void XPathMatcher_init(void) {
 	//! xercesc::XPathMatcher
 	boost::python::class_<XPathMatcherWrapper, boost::noncopyable>("XPathMatcher", boost::python::init<xercesc::XercesXPath* const, boost::python::optional<xercesc::MemoryManager* const> >())
 			.def(boost::python::init<xercesc::XercesXPath* const, xercesc::IdentityConstraint* const, boost::python::optional<xercesc::MemoryManager* const> >())
-			.def(XPathMatcherDefVisitor<XMLString&>())
-			.def(XPathMatcherDefVisitor<char*>())
+			.def(XPathMatcherDefVisitor())
 			.def("getIdentityConstraint", &xercesc::XPathMatcher::getIdentityConstraint, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getMemoryManager", &xercesc::XPathMatcher::getMemoryManager, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("isMatched", &xercesc::XPathMatcher::isMatched)

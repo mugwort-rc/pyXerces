@@ -82,40 +82,35 @@ static const XMLCh* orphanElementAt(xercesc::BaseRefVectorOf<XMLCh>& self, const
 
 };
 
-template <typename STR>
 class BaseRefVectorOfXMLChStringDefVisitor
-: public boost::python::def_visitor<BaseRefVectorOfXMLChStringDefVisitor<STR> >
+: public boost::python::def_visitor<BaseRefVectorOfXMLChStringDefVisitor>
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("addElement", &BaseRefVectorOfXMLChStringDefVisitor<STR>::addElement)
-	.def("setElementAt", &BaseRefVectorOfXMLChStringDefVisitor<STR>::setElementAt)
-	.def("insertElementAt", &BaseRefVectorOfXMLChStringDefVisitor<STR>::insertElementAt)
-	.def("containsElement", &BaseRefVectorOfXMLChStringDefVisitor<STR>::containsElement)
+	.def("addElement", &BaseRefVectorOfXMLChStringDefVisitor::addElement)
+	.def("setElementAt", &BaseRefVectorOfXMLChStringDefVisitor::setElementAt)
+	.def("insertElementAt", &BaseRefVectorOfXMLChStringDefVisitor::insertElementAt)
+	.def("containsElement", &BaseRefVectorOfXMLChStringDefVisitor::containsElement)
 	;
 }
 
-static void addElement(xercesc::BaseRefVectorOf<XMLCh>& self, const STR toAdd) {
-	XMLString buff(toAdd);
-	self.addElement(buff.ptr());
+static void addElement(xercesc::BaseRefVectorOf<XMLCh>& self, const XMLString& toAdd) {
+	self.addElement(toAdd.ptr());
 }
 
-static void setElementAt(xercesc::BaseRefVectorOf<XMLCh>& self, const STR toSet, const XMLSize_t setAt) {
-	XMLString buff(toSet);
-	self.setElementAt(buff.ptr(), setAt);
+static void setElementAt(xercesc::BaseRefVectorOf<XMLCh>& self, const XMLString& toSet, const XMLSize_t setAt) {
+	self.setElementAt(toSet.ptr(), setAt);
 }
 
-static void insertElementAt(xercesc::BaseRefVectorOf<XMLCh>& self, const STR toInsert, const XMLSize_t insertAt) {
-	XMLString buff(toInsert);
-	self.insertElementAt(buff.ptr(), insertAt);
+static void insertElementAt(xercesc::BaseRefVectorOf<XMLCh>& self, const XMLString& toInsert, const XMLSize_t insertAt) {
+	self.insertElementAt(toInsert.ptr(), insertAt);
 }
 
-static bool containsElement(xercesc::BaseRefVectorOf<XMLCh>& self, const STR toCheck) {
-	XMLString buff(toCheck);
-	return self.containsElement(buff.ptr());
+static bool containsElement(xercesc::BaseRefVectorOf<XMLCh>& self, const XMLString& toCheck) {
+	return self.containsElement(toCheck.ptr());
 }
 
 };
@@ -125,8 +120,7 @@ void BaseRefVectorOfXMLCh(void) {
 	//! xercesc::BaseRefVectorOf
 	boost::python::class_<xercesc::BaseRefVectorOf<XMLCh>, boost::noncopyable>("BaseRefVectorOfXMLCh", boost::python::init<const XMLSize_t, boost::python::optional<const bool, xercesc::MemoryManager* const> >())
 			.def(BaseRefVectorOfXMLChDefVisitor())
-			.def(BaseRefVectorOfXMLChStringDefVisitor<XMLString&>())
-			.def(BaseRefVectorOfXMLChStringDefVisitor<char*>())
+			.def(BaseRefVectorOfXMLChStringDefVisitor())
 			.def("addElement", &xercesc::BaseRefVectorOf<XMLCh>::addElement)
 			.def("setElementAt", &xercesc::BaseRefVectorOf<XMLCh>::setElementAt)
 			.def("insertElementAt", &xercesc::BaseRefVectorOf<XMLCh>::insertElementAt)

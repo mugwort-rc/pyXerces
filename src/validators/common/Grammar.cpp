@@ -53,9 +53,8 @@ static xercesc::SchemaGrammar* toSchemaGrammar(xercesc::Grammar& self) {
 
 };
 
-template <typename STR>
 class GrammarStringDefVisitor
-: public boost::python::def_visitor<GrammarStringDefVisitor<STR> > {
+: public boost::python::def_visitor<GrammarStringDefVisitor> {
 friend class def_visitor_access;
 
 public:
@@ -66,39 +65,33 @@ void visit(T& class_) const {
 	.def("getElemId", &GrammarStringDefVisitor::getElemId)
 	.def("getElemDecl", &GrammarStringDefVisitor::getElemDecl, boost::python::return_value_policy<boost::python::reference_existing_object>())
 	.def("getNotationDecl", &GrammarStringDefVisitor::getNotationDecl, boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("putElemDecl", static_cast<xercesc::XMLElementDecl*(*)(xercesc::Grammar&, const unsigned int, const STR, const STR, const STR, unsigned int, const bool)>(&GrammarStringDefVisitor::putElemDecl), boost::python::return_value_policy<boost::python::reference_existing_object>())
-	.def("putElemDecl", static_cast<xercesc::XMLElementDecl*(*)(xercesc::Grammar&, const unsigned int, const STR, const STR, const STR, unsigned int)>(&GrammarStringDefVisitor::putElemDecl), boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("putElemDecl", static_cast<xercesc::XMLElementDecl*(*)(xercesc::Grammar&, const unsigned int, const XMLString&, const XMLString&, const XMLString&, unsigned int, const bool)>(&GrammarStringDefVisitor::putElemDecl), boost::python::return_value_policy<boost::python::reference_existing_object>())
+	.def("putElemDecl", static_cast<xercesc::XMLElementDecl*(*)(xercesc::Grammar&, const unsigned int, const XMLString&, const XMLString&, const XMLString&, unsigned int)>(&GrammarStringDefVisitor::putElemDecl), boost::python::return_value_policy<boost::python::reference_existing_object>())
 	;
 }
 
-static xercesc::XMLElementDecl* findOrAddElemDecl(xercesc::Grammar& self, const unsigned int uriId, const STR baseName, const STR prefixName, const STR qName, unsigned int scope, bool& wasAdded) {
-	XMLString buff1(baseName), buff2(prefixName), buff3(qName);
-	return self.findOrAddElemDecl(uriId, buff1.ptr(), buff2.ptr(), buff3.ptr(), scope, wasAdded);
+static xercesc::XMLElementDecl* findOrAddElemDecl(xercesc::Grammar& self, const unsigned int uriId, const XMLString& baseName, const XMLString& prefixName, const XMLString& qName, unsigned int scope, bool& wasAdded) {
+	return self.findOrAddElemDecl(uriId, baseName.ptr(), prefixName.ptr(), qName.ptr(), scope, wasAdded);
 }
 
-static XMLSize_t getElemId(xercesc::Grammar& self, const unsigned int uriId, const STR baseName, const STR qName, unsigned int scope) {
-	XMLString buff1(baseName), buff2(qName);
-	return self.getElemId(uriId, buff1.ptr(), buff2.ptr(), scope);
+static XMLSize_t getElemId(xercesc::Grammar& self, const unsigned int uriId, const XMLString& baseName, const XMLString& qName, unsigned int scope) {
+	return self.getElemId(uriId, baseName.ptr(), qName.ptr(), scope);
 }
 
-static xercesc::XMLElementDecl* getElemDecl(xercesc::Grammar& self, const unsigned int uriId, const STR baseName, const STR qName, unsigned int scope) {
-	XMLString buff1(baseName), buff2(qName);
-	return self.getElemDecl(uriId, buff1.ptr(), buff2.ptr(), scope);
+static xercesc::XMLElementDecl* getElemDecl(xercesc::Grammar& self, const unsigned int uriId, const XMLString& baseName, const XMLString& qName, unsigned int scope) {
+	return self.getElemDecl(uriId, baseName.ptr(), qName.ptr(), scope);
 }
 
-static xercesc::XMLNotationDecl* getNotationDecl(xercesc::Grammar& self, const STR notName) {
-	XMLString buff(notName);
-	return self.getNotationDecl(buff.ptr());
+static xercesc::XMLNotationDecl* getNotationDecl(xercesc::Grammar& self, const XMLString& notName) {
+	return self.getNotationDecl(notName.ptr());
 }
 
-static xercesc::XMLElementDecl* putElemDecl(xercesc::Grammar& self, const unsigned int uriId, const STR baseName, const STR prefixName, const STR qName, unsigned int scope, const bool notDeclared) {
-	XMLString buff1(baseName), buff2(prefixName), buff3(qName);
-	return self.putElemDecl(uriId, buff1.ptr(), buff2.ptr(), buff3.ptr(), scope, notDeclared);
+static xercesc::XMLElementDecl* putElemDecl(xercesc::Grammar& self, const unsigned int uriId, const XMLString& baseName, const XMLString& prefixName, const XMLString& qName, unsigned int scope, const bool notDeclared) {
+	return self.putElemDecl(uriId, baseName.ptr(), prefixName.ptr(), qName.ptr(), scope, notDeclared);
 }
 
-static xercesc::XMLElementDecl* putElemDecl(xercesc::Grammar& self, const unsigned int uriId, const STR baseName, const STR prefixName, const STR qName, unsigned int scope) {
-	XMLString buff1(baseName), buff2(prefixName), buff3(qName);
-	return self.putElemDecl(uriId, buff1.ptr(), buff2.ptr(), buff3.ptr(), scope, false);
+static xercesc::XMLElementDecl* putElemDecl(xercesc::Grammar& self, const unsigned int uriId, const XMLString& baseName, const XMLString& prefixName, const XMLString& qName, unsigned int scope) {
+	return self.putElemDecl(uriId, baseName.ptr(), prefixName.ptr(), qName.ptr(), scope, false);
 }
 
 };
@@ -189,8 +182,7 @@ void Grammar_init(void) {
 	//! xercesc::Grammar
 	auto Grammar = boost::python::class_<xercesc::Grammar, boost::noncopyable, boost::python::bases<xercesc::XSerializable> >("Grammar", boost::python::no_init)
 			.def(GrammarDefVisitor())
-			.def(GrammarStringDefVisitor<XMLString&>())
-			.def(GrammarStringDefVisitor<char*>())
+			.def(GrammarStringDefVisitor())
 			.def("getGrammarType", boost::python::pure_virtual(&xercesc::Grammar::getGrammarType))
 			.def("getTargetNamespace", boost::python::pure_virtual(&xercesc::Grammar::getTargetNamespace), boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getValidated", boost::python::pure_virtual(&xercesc::Grammar::getValidated))

@@ -15,28 +15,25 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class XMLSchemaDescriptionDefVisitor
-: public boost::python::def_visitor<XMLSchemaDescriptionDefVisitor<STR> >
+: public boost::python::def_visitor<XMLSchemaDescriptionDefVisitor>
 {
 friend class def_visitor_access;
 public:
 template <class T>
 void visit(T& class_) const {
 	class_
-	.def("setTargetNamespace", &XMLSchemaDescriptionDefVisitor<STR>::setTargetNamespace)
-	.def("setLocationHints", &XMLSchemaDescriptionDefVisitor<STR>::setLocationHints)
+	.def("setTargetNamespace", &XMLSchemaDescriptionDefVisitor::setTargetNamespace)
+	.def("setLocationHints", &XMLSchemaDescriptionDefVisitor::setLocationHints)
 	;
 }
 
-static void setTargetNamespace(xercesc::XMLSchemaDescription& self, const STR ns) {
-	XMLString buff(ns);
-	self.setTargetNamespace(buff.ptr());
+static void setTargetNamespace(xercesc::XMLSchemaDescription& self, const XMLString& ns) {
+	self.setTargetNamespace(ns.ptr());
 }
 
-static void setLocationHints(xercesc::XMLSchemaDescription& self, const STR hints) {
-	XMLString buff(hints);
-	self.setLocationHints(buff.ptr());
+static void setLocationHints(xercesc::XMLSchemaDescription& self, const XMLString& hints) {
+	self.setLocationHints(hints.ptr());
 }
 
 };
@@ -113,8 +110,7 @@ PyDECL_XSERIALIZABLEWrapper;
 void XMLSchemaDescription_init(void) {
 	//! xercesc::XMLSchemaDescription
 	auto XMLSchemaDescription = boost::python::class_<XMLSchemaDescriptionWrapper, boost::noncopyable, boost::python::bases<xercesc::XMLGrammarDescription> >("XMLSchemaDescription")
-			.def(XMLSchemaDescriptionDefVisitor<XMLString&>())
-			.def(XMLSchemaDescriptionDefVisitor<char*>())
+			.def(XMLSchemaDescriptionDefVisitor())
 			.def("getGrammarType", &xercesc::XMLSchemaDescription::getGrammarType)
 			.def("getContextType", boost::python::pure_virtual(&xercesc::XMLSchemaDescription::getContextType))
 			.def("getTargetNamespace", boost::python::pure_virtual(&xercesc::XMLSchemaDescription::getTargetNamespace), boost::python::return_value_policy<boost::python::return_by_value>())

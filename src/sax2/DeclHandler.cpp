@@ -14,9 +14,8 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class DeclHandlerDefVisitor
-: public boost::python::def_visitor<DeclHandlerDefVisitor<STR> >
+: public boost::python::def_visitor<DeclHandlerDefVisitor>
 {
 friend class def_visitor_access;
 public:
@@ -30,24 +29,20 @@ void visit(T& class_) const {
 	;
 }
 
-static void elementDecl(xercesc::DeclHandler& self, const STR name, const STR model) {
-	XMLString buff1(name), buff2(model);
-	self.elementDecl(buff1.ptr(), buff2.ptr());
+static void elementDecl(xercesc::DeclHandler& self, const XMLString& name, const XMLString& model) {
+	self.elementDecl(name.ptr(), model.ptr());
 }
 
-static void attributeDecl(xercesc::DeclHandler& self, const STR eName, const STR aName, const STR type, const STR mode, const STR value) {
-	XMLString buff1(eName), buff2(aName), buff3(type), buff4(mode), buff5(value);
-	self.attributeDecl(buff1.ptr(), buff2.ptr(), buff3.ptr(), buff4.ptr(), buff5.ptr());
+static void attributeDecl(xercesc::DeclHandler& self, const XMLString& eName, const XMLString& aName, const XMLString& type, const XMLString& mode, const XMLString& value) {
+	self.attributeDecl(eName.ptr(), aName.ptr(), type.ptr(), mode.ptr(), value.ptr());
 }
 
-static void internalEntityDecl(xercesc::DeclHandler& self, const STR name, const STR value) {
-	XMLString buff1(name), buff2(value);
-	self.internalEntityDecl(buff1.ptr(), buff2.ptr());
+static void internalEntityDecl(xercesc::DeclHandler& self, const XMLString& name, const XMLString& value) {
+	self.internalEntityDecl(name.ptr(), value.ptr());
 }
 
-static void externalEntityDecl(xercesc::DeclHandler& self, const STR name, const STR publicId, const STR systemId) {
-	XMLString buff1(name), buff2(publicId), buff3(systemId);
-	self.externalEntityDecl(buff1.ptr(), buff2.ptr(), buff3.ptr());
+static void externalEntityDecl(xercesc::DeclHandler& self, const XMLString& name, const XMLString& publicId, const XMLString& systemId) {
+	self.externalEntityDecl(name.ptr(), publicId.ptr(), systemId.ptr());
 }
 
 };
@@ -77,8 +72,7 @@ void externalEntityDecl(const XMLCh* const name, const XMLCh* const publicId, co
 void DeclHandler_init(void) {
 	//! xercesc::DeclHandler
 	boost::python::class_<DeclHandlerWrapper, boost::noncopyable>("DeclHandler")
-			.def(DeclHandlerDefVisitor<XMLString&>())
-			.def(DeclHandlerDefVisitor<char*>())
+			.def(DeclHandlerDefVisitor())
 			.def("elementDecl", boost::python::pure_virtual(&xercesc::DeclHandler::elementDecl))
 			.def("attributeDecl", boost::python::pure_virtual(&xercesc::DeclHandler::attributeDecl))
 			.def("internalEntityDecl", boost::python::pure_virtual(&xercesc::DeclHandler::internalEntityDecl))

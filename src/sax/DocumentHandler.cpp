@@ -19,9 +19,8 @@
 
 namespace pyxerces {
 
-template <typename STR>
 class DocumentHandlerDefVisitor
-: public boost::python::def_visitor<DocumentHandlerDefVisitor<STR> >
+: public boost::python::def_visitor<DocumentHandlerDefVisitor>
 {
 friend class def_visitor_access;
 public:
@@ -36,29 +35,24 @@ void visit(T& class_) const {
 	;
 }
 
-static void characters(xercesc::DocumentHandler& self, const STR chars) {
-	XMLString buff(chars);
-	self.characters(buff.ptr(), buff.size());
+static void characters(xercesc::DocumentHandler& self, const XMLString& chars) {
+	self.characters(chars.ptr(), chars.size());
 }
 
-static void endElement(xercesc::DocumentHandler& self, const STR name) {
-	XMLString buff(name);
-	self.endElement(buff.ptr());
+static void endElement(xercesc::DocumentHandler& self, const XMLString& name) {
+	self.endElement(name.ptr());
 }
 
-static void ignorableWhitespace(xercesc::DocumentHandler& self, const STR chars) {
-	XMLString buff(chars);
-	self.ignorableWhitespace(buff.ptr(), buff.size());
+static void ignorableWhitespace(xercesc::DocumentHandler& self, const XMLString& chars) {
+	self.ignorableWhitespace(chars.ptr(), chars.size());
 }
 
-static void processingInstruction(xercesc::DocumentHandler& self, const STR target, const STR data) {
-	XMLString buff1(target), buff2(data);
-	self.processingInstruction(buff1.ptr(), buff2.ptr());
+static void processingInstruction(xercesc::DocumentHandler& self, const XMLString& target, const XMLString& data) {
+	self.processingInstruction(target.ptr(), data.ptr());
 }
 
-static void startElement(xercesc::DocumentHandler& self, const STR name, xercesc::AttributeList& attrs) {
-	XMLString buff(name);
-	self.startElement(buff.ptr(), attrs);
+static void startElement(xercesc::DocumentHandler& self, const XMLString& name, xercesc::AttributeList& attrs) {
+	self.startElement(name.ptr(), attrs);
 }
 
 };
@@ -108,8 +102,7 @@ void startElement(const XMLCh* const name, xercesc::AttributeList& attrs) {
 void DocumentHandler_init(void) {
 	//! xercesc::DocumentHandler
 	boost::python::class_<DocumentHandlerWrapper, boost::noncopyable>("DocumentHandler")
-			.def(DocumentHandlerDefVisitor<XMLString&>())
-			.def(DocumentHandlerDefVisitor<char*>())
+			.def(DocumentHandlerDefVisitor())
 			.def("characters", boost::python::pure_virtual(&xercesc::DocumentHandler::characters))
 			.def("endDocument", boost::python::pure_virtual(&xercesc::DocumentHandler::endDocument))
 			.def("endElement", boost::python::pure_virtual(&xercesc::DocumentHandler::endElement))
