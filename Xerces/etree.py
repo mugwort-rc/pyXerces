@@ -554,6 +554,9 @@ class _XercesElement(object):
 			if tail is not None:
 				return unicode(tail)
 			return None
+		# attrib attribute
+		elif name == 'attrib':
+			return _XercesAttributes(self._elem)
 		# base attribute
 		elif name == 'base':
 			base = object.__getattr__(self, 'base')
