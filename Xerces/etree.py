@@ -543,7 +543,7 @@ class _XercesElement(object):
 		elif name == 'text':
 			text = object.__getattr__(self, 'text')
 			if text is not None:
-				return unicode(text._get())
+				return unicode(text)
 			return None
 		# tail attribute
 		elif name == 'tail':
@@ -552,7 +552,7 @@ class _XercesElement(object):
 				return tail
 			tail = object.__getattr__(self, 'tail')
 			if tail is not None:
-				return unicode(tail._get())
+				return unicode(tail)
 			return None
 		# base attribute
 		elif name == 'base':
@@ -837,23 +837,10 @@ def SubElement(parent, tag, attrib={}, **extra):
 		@param [in]		tag			tag name
 		@param [in]		attrib		attribute dict
 	"""
-	if attrib:
-		raise XercesEtreeException('Unsupported option.')
-	if extra:
-		raise XercesEtreeException('Unsupported option.')
+	elem = Element(tag, attrib, **extra)
+	parent.append(elem)
 
-	doc = parent._elem.getOwnerDocument()
-
-	ns, tag = _parse_namespace(tag)
-	elem = doc.createElementNS(ns, tag)
-
-	attr = _XercesAttributes(elem)
-	attr._update(attrib)
-	attr._update(extra)
-
-	parent._elem.appendChild(elem)
-
-	return _XercesElement(elem)
+	return elem
 
 def _parse_namespace(tag):
 	"""
