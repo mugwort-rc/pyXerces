@@ -204,7 +204,7 @@ class _XercesDocument(object):
 			@param [in]		elem	check element
 			@return boolean
 		"""
-		return self._elem.isEqualNode(elem._elem.getOwnerDocument())
+		return self._elem.isSameNode(elem._elem.getOwnerDocument())
 
 	def _adopt(self, elem):
 		"""
@@ -224,9 +224,13 @@ class _XercesDocument(object):
 			@brief import athor document's node
 			@param [in,out]		elem	target element
 		"""
+		result = None
 		if not self._isOwn(elem):
-			return _XercesElement(self._elem.importNode(elem._elem, True))
-		return None
+			result = _XercesElement(self._elem.importNode(elem._elem, True))
+			if elem.getparent() is not None:
+				parent = elem.getparent()
+				parent.remove(elem)
+		return result
 
 	# End utility functions
 	# ==============================
@@ -395,7 +399,7 @@ class _XercesElement(object):
 			@param [in]		rhs		right parameter
 			@return boolean
 		"""
-		if type(rhs) is _XercesElement and self._elem.isEqualNode(rhs._elem):
+		if type(rhs) is _XercesElement and self._elem.isSameNode(rhs._elem):
 			return True
 		return False
 
@@ -408,7 +412,7 @@ class _XercesElement(object):
 		childs = [x._elem for x in list(self)]
 		# check element
 		for child in childs:
-			if item._elem.isEqualNode(child):
+			if item._elem.isSameNode(child):
 				return True
 		return False
 
@@ -600,6 +604,9 @@ class _XercesElement(object):
 			@param [in]		child	target child element
 			@param [in]		new		replace element
 		"""
+		doc = self.getroottree()
+		if not doc._isOwn(new):
+			new = doc._import(new)
 		if child in self:
 			self._elem.replaceChild(new._elem, child._elem)
 
