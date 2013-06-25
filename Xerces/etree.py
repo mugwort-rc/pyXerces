@@ -840,10 +840,16 @@ def SubElement(parent, tag, attrib={}, **extra):
 		@param [in]		tag			tag name
 		@param [in]		attrib		attribute dict
 	"""
-	elem = Element(tag, attrib, **extra)
-	parent.append(elem)
+	doc = parent._elem.getOwnerDocument()
 
-	return elem
+	url, tag = _parse_namespace(tag)
+	elem = doc.createElementNS(url, tag)
+
+	attr = _XercesAttributes(elem)
+	attr._update(attrib)
+	attr._update(extra)
+
+	return _XercesElement(elem)
 
 def _parse_namespace(tag):
 	"""
