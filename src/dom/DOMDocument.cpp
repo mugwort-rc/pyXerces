@@ -121,7 +121,7 @@ static xercesc::DOMNodeList* getElementsByTagName(xercesc::DOMDocument& self, co
 }
 
 static xercesc::DOMElement* createElementNS(xercesc::DOMDocument& self, const XMLString& namespaceURI, const XMLString& qualifiedName) {
-	return self.createElementNS(namespaceURI.ptr(), namespaceURI.ptr());
+	return self.createElementNS(namespaceURI.ptr(), qualifiedName.ptr());
 }
 
 static xercesc::DOMAttr* createAttributeNS(xercesc::DOMDocument& self, const XMLString& namespaceURI, const XMLString& qualifiedName) {
