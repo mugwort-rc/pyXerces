@@ -408,7 +408,7 @@ class _XercesElement(object):
 		childs = [x._elem for x in list(self)]
 		# check element
 		for child in childs:
-			if item == child:
+			if item._elem.isEqualNode(child):
 				return True
 		return False
 
