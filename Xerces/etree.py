@@ -839,6 +839,7 @@ def SubElement(parent, tag, attrib={}, **extra):
 		@param [in]		parent		parent element
 		@param [in]		tag			tag name
 		@param [in]		attrib		attribute dict
+		@return XercesElement
 	"""
 	doc = parent._elem.getOwnerDocument()
 
@@ -849,7 +850,11 @@ def SubElement(parent, tag, attrib={}, **extra):
 	attr._update(attrib)
 	attr._update(extra)
 
-	return _XercesElement(elem)
+	result = _XercesElement(elem)
+
+	parent.append(result)
+
+	return result
 
 def _parse_namespace(tag):
 	"""
