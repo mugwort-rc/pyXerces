@@ -16,7 +16,7 @@
 	parser.parse(input)
 	dom = parser.getDocument()
 
-### lxml.etree like
+### like lxml.etree style
 
 	from Xerces import etree
 
@@ -30,3 +30,28 @@
 	for elem in result:
 		print 'tag:', elem.tag
 
+#### XSLT
+
+	from Xerces import etree
+	
+	transform = etree.XSLT('''<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	  <xsl:template match="/">
+	    <foo><xsl:value-of select="/a/b/text()" /></foo>
+	  </xsl:template>
+	</xsl:stylesheet>''')
+	
+	result = transform('<a><b>Test</b></a>')
+
+	print str(result)
+	print result.getroot().text
+
+#### XQuery
+
+	from Xerces import etree
+	
+	query = etree.XQuery('<result>{ //data }</result>')
+	
+	result = query('<datas><data no="1"/><data no="2"/><data no="3"/></datas>')
+	
+	print str(result)
+	print len(result.getroot())
