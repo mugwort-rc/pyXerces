@@ -863,6 +863,78 @@ def SubElement(parent, tag, attrib={}, **extra):
 
 	return result
 
+class _XQillaResultTree:
+	def __init__(self, result):
+		self._result = result
+
+	def __str__(self):
+		return self._result
+
+	def __unicode__(self):
+		return self._result.decode('utf-8')
+
+	def getroot(self):
+		dom = None
+		try:
+			dom = fromstring(self._result)
+		except:
+			pass
+		return dom
+
+class _XQillaObject:
+	def __init__(self, queryType, source):
+		"""
+			@brief constructor
+			@param [in]		queryType	type of query
+			@param [in]		source		source xsl (dom (lxml.etree like) or text)
+		"""
+		if type(source) is _XercesElement or type(source) is _XercesDocument:
+			source = tostring(source)
+
+		self._xqilla = XQilla.XQilla()
+		self._conf    = XQilla.XercesConfiguration()
+		self._context = self._xqilla.createContext(queryType, self._conf)
+		self._query = self._xqilla.parse(source, self._context)
+
+	def __call__(self, doc):
+		"""
+			@brief call
+			@param [in]		doc		context (dom (lxml.etree like) or text)
+		"""
+		if type(doc) is _XercesElement or type(doc) is _XercesDocument:
+			doc = tostring(doc)
+
+		inputSource = Xerces.MemBufInputSource(doc, 'memXSLT')
+
+		ctx = self._query.createDynamicContext()
+		mm  = ctx.getMemoryManager()
+		node = ctx.parseDocument(inputSource)
+
+		ctx.setContextItem(node.toItem())
+		ctx.setContextPosition(1)
+		ctx.setContextSize(1)
+
+		target = Xerces.MemBufFormatTarget()
+		writer = XQilla.EventSerializer('UTF-8', '1.1', target, mm)
+
+		nsfilter = XQilla.NSFixupFilter(writer, mm)
+
+		self._query.execute(nsfilter, ctx)
+
+		return _XQillaResultTree(target.getStringBuffer())
+
+class XSLT(_XQillaObject):
+	def __init__(self, source):
+		"""
+			@brief constructor
+			@param [in]		source	source xsl (dom (lxml.etree like) or text)
+		"""
+		_XQillaObject.__init__(self, XQilla.XQilla.XSLT2, source)
+
+class XQuery(_XQillaObject):
+	def __init__(self, source):
+		_XQillaObject.__init__(self, XQilla.XQilla.XQUERY_UPDATE, source)
+
 def _parse_namespace(tag):
 	"""
 		@brief parse represent of namespace
