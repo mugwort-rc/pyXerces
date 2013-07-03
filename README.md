@@ -31,6 +31,7 @@
 		print 'tag:', elem.tag
 
 #### XSLT
+[pyXQilla][] is required.
 
 	from Xerces import etree
 	
@@ -46,6 +47,7 @@
 	print result.getroot().text
 
 #### XQuery
+[pyXQilla][] is required.
 
 	from Xerces import etree
 	
@@ -55,3 +57,6 @@
 	
 	print str(result)
 	print len(result.getroot())
+
+
+[pyXQilla]: https://github.com/mugwort-rc/pyXQilla
