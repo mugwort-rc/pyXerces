@@ -933,7 +933,7 @@ class XSLT(_XQillaObject):
 
 class XQuery(_XQillaObject):
 	def __init__(self, source):
-		_XQillaObject.__init__(self, XQilla.XQilla.XQUERY_UPDATE, source)
+		_XQillaObject.__init__(self, XQilla.XQilla.XQUERY3, source)
 
 def _parse_namespace(tag):
 	"""
