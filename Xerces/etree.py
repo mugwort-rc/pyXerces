@@ -815,10 +815,14 @@ class _XercesElement(object):
 			node_type = node.getNodeType()
 			if node_type == Xerces.DOMNode.ELEMENT_NODE:
 				result.append(_XercesElement(node.toDOMElement()))
-			elif node_type == Xerces.DOMNode.TEXT_NODE:
+			elif node_type == Xerces.DOMNode.TEXT_NODE or node_type == Xerces.DOMNode.ATTRIBUTE_NODE:
 				result.append(unicode(node.getNodeValue()))
 			else:
 				result.append(node)
+		if ns:
+			ns.release()
+		if ret:
+			ret.release()
 		return result
 
 def Element(tag, attrib={}, **extra):
