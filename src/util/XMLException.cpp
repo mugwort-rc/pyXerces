@@ -23,18 +23,6 @@ class XMLExceptionWrapper
 : public xercesc::XMLException, public boost::python::wrapper<xercesc::XMLException>
 {
 public:
-	XMLExceptionWrapper()
-		: xercesc::XMLException()
-	{}
-
-	XMLExceptionWrapper(const char* const srcFile, const XMLFileLoc srcLine, xercesc::MemoryManager* const memoryManager = 0)
-		: xercesc::XMLException(srcFile, srcLine, memoryManager)
-	{}
-
-	XMLExceptionWrapper(const XMLException& toCopy)
-		: xercesc::XMLException(toCopy)
-	{}
-
 	const XMLCh* getType() const {
 		return this->get_override("getType")();
 	}
@@ -54,8 +42,7 @@ void translateXMLException(const xercesc::XMLException& e) {
 
 void XMLException_init(void) {
 	//! xercesc::XMLException
-	auto XMLException = boost::python::class_<XMLExceptionWrapper>("XMLException")
-			.def(boost::python::init<const char* const, const XMLFileLoc, boost::python::optional<xercesc::MemoryManager*> >())
+	auto XMLException = boost::python::class_<XMLExceptionWrapper, boost::noncopyable>("XMLException")
 			.def("getType", &xercesc::XMLException::getType, boost::python::return_value_policy<boost::python::return_by_value>())
 			.def("getCode", &xercesc::XMLException::getCode)
 			.def("getMessage", &xercesc::XMLException::getMessage, boost::python::return_value_policy<boost::python::return_by_value>())

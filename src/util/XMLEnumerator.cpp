@@ -25,15 +25,7 @@ class XMLEnumeratorWrapper
 : public xercesc::XMLEnumerator<T>, public boost::python::wrapper<xercesc::XMLEnumerator<T> >
 {
 public:
-XMLEnumeratorWrapper()
-: xercesc::XMLEnumerator<T>()
-{}
-
 ~XMLEnumeratorWrapper()
-{}
-
-XMLEnumeratorWrapper(const xercesc::XMLEnumerator<T>& copy)
-: xercesc::XMLEnumerator<T>(copy)
 {}
 
 bool hasMoreElements() const {
@@ -54,7 +46,7 @@ template <typename NAME, typename TVal>
 void XMLEnumerator(void) {
 	char pyName[13 + BOOST_MPL_LIMIT_STRING_SIZE + 1] = "XMLEnumerator";
 	//! xercesc::XMLEnumerator
-	boost::python::class_<XMLEnumeratorWrapper<TVal> >(strcat(pyName, boost::mpl::c_str<NAME>::value))
+	boost::python::class_<XMLEnumeratorWrapper<TVal>, boost::noncopyable>(strcat(pyName, boost::mpl::c_str<NAME>::value))
 			.def("hasMoreElements", boost::python::pure_virtual(&xercesc::XMLEnumerator<TVal>::hasMoreElements))
 			.def("nextElement", boost::python::pure_virtual(&xercesc::XMLEnumerator<TVal>::nextElement), boost::python::return_internal_reference<>())
 			.def("Reset", boost::python::pure_virtual(&xercesc::XMLEnumerator<TVal>::Reset))
