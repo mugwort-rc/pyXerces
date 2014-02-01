@@ -303,7 +303,7 @@ class _XercesDocument(object):
 
 	def xpath(self, xpath, namespaces={}):
 		root = self.getroot()
-		return root.xpath(xpath, namespaces={})
+		return root.xpath(xpath, namespaces=namespaces)
 
 	def xslt(self):
 		# TODO:
