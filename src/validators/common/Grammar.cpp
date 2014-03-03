@@ -210,6 +210,7 @@ void Grammar_init(void) {
 			.value("DTDGrammarType", xercesc::Grammar::DTDGrammarType)
 			.value("SchemaGrammarType", xercesc::Grammar::SchemaGrammarType)
 			.value("UnKnown", xercesc::Grammar::UnKnown)
+			.export_values()
 			;
 }
 
