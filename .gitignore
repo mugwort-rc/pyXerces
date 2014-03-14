@@ -12,6 +12,10 @@
 *.la
 *.a
 
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
 # setup.py
 build/
 
