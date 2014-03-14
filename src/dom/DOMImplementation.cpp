@@ -92,7 +92,7 @@ static bool hasFeature(xercesc::DOMImplementation& self, const XMLString& featur
 }
 
 static xercesc::DOMDocumentType* createDocumentType(xercesc::DOMImplementation& self, const XMLString& qualifiedName, const XMLString& publicId, const XMLString& systemId) {
-	return self.createDocumentType(qualifiedName.ptr(), publicId.ptr(), publicId.ptr());
+	return self.createDocumentType(qualifiedName.ptr(), publicId.ptr(), systemId.ptr());
 }
 
 static xercesc::DOMDocument* createDocument(xercesc::DOMImplementation& self, const XMLString& namespaceURI, const XMLString& qualifiedName, xercesc::DOMDocumentType* doctype, xercesc::MemoryManager* const manager) {
