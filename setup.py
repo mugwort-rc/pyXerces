@@ -27,6 +27,14 @@ from distutils.sysconfig import get_config_vars
 (opt,) = get_config_vars('OPT')
 os.environ['OPT'] = " ".join([flag for flag in opt.split() if flag != '-Wstrict-prototypes'])
 
+# ccache
+for path in os.environ['PATH'].split(os.pathsep):
+    path = path.strip('"')
+    exe = os.path.join(path, 'ccache')
+    if os.path.isfile(exe) and os.access(exe, os.X_OK):
+        os.environ['CC'] = 'ccache gcc'
+        break
+
 setup(name = 'PyXerces',
       version = '0.0.1',
       description = 'pyXerces: A Python Xerces-c wrapper',
