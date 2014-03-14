@@ -40,6 +40,8 @@ public:
 template <class T>
 void visit(T& class_) const {
 	class_
+	.def("__eq__", &DOMNodeDefVisitor::__eq__)
+	.def("__ne__", &DOMNodeDefVisitor::__ne__)
 	.def("toDOMNode", &DOMNodeDefVisitor::toDOMNode, boost::python::return_value_policy<boost::python::reference_existing_object>())
 	.def("toDOMAttr", &DOMNodeDefVisitor::toDOMAttr, boost::python::return_value_policy<boost::python::reference_existing_object>())
 	.def("toDOMCharacterData", &DOMNodeDefVisitor::toDOMCharacterData, boost::python::return_value_policy<boost::python::reference_existing_object>())
@@ -53,6 +55,16 @@ void visit(T& class_) const {
 	.def("toDOMProcessingInstruction", &DOMNodeDefVisitor::toDOMProcessingInstruction, boost::python::return_value_policy<boost::python::reference_existing_object>())
 	.def("toDOMXPathNamespace", &DOMNodeDefVisitor::toDOMXPathNamespace, boost::python::return_value_policy<boost::python::reference_existing_object>())
 	;
+}
+
+static bool __eq__(xercesc::DOMNode& self, xercesc::DOMNode* rhs)
+{
+	return &self == rhs;
+}
+
+static bool __ne__(xercesc::DOMNode& self, xercesc::DOMNode* rhs)
+{
+	return ! __eq__(self, rhs);
 }
 
 static xercesc::DOMNode* toDOMNode(xercesc::DOMNode& self) {
