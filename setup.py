@@ -1,4 +1,27 @@
 # -*- coding: utf-8 -*-
+"""
+pyXerces
+========
+
+|travis-ci|_
+
+.. |travis-ci| image:: https://travis-ci.org/mugwort-rc/pyXerces.png
+.. _travis-ci: https://travis-ci.org/mugwort-rc/pyXerces
+
+Basic Usage:
+
+    import Xerces
+
+    parser = Xerces.XercesDOMParser()
+
+    xml = '<test>foobar</test>'
+    input = Xerces.MemBufInputSource(xml, 'MemBufId')
+    parser.parse(input)
+
+    dom = parser.getDocument()
+
+"""
+
 import os, sys
 
 from distutils.core import setup
@@ -36,11 +59,21 @@ for path in os.environ['PATH'].split(os.pathsep):
         break
 
 setup(name = 'PyXerces',
+      long_description = __doc__,
       version = '0.0.1',
       description = 'pyXerces: A Python Xerces-c wrapper',
       author = 'mugwort_rc',
       author_email = 'mugwort rc at gmail com',
-      url = 'https://github.com/mugwort_rc/pyxerces',
+      url = 'https://github.com/mugwort-rc/pyXerces',
+      classifiers = [
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: Apache Software License',
+        'Programming Language :: C++',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.7',
+        'Topic :: Text Processing :: Markup :: XML',
+      ],
       license = 'Apache Software License, Version 2.0',
       packages = ['Xerces', 'Xerces.util'],
 

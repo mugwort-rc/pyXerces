@@ -1,5 +1,7 @@
 # pyXerces
 
+[![Build Status](https://travis-ci.org/mugwort-rc/pyXerces.png)](http://travis-ci.org/mugwort-rc/pyXerces)
+
 ## Build
 
 	$ python setup.py build
