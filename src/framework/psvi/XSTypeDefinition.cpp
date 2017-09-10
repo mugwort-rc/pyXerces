@@ -31,7 +31,11 @@ const XMLCh* getName() const {
 	return this->get_override("getName")();
 }
 
+#if _XERCES_VERSION >= 30200
 const XMLCh* getNamespace() const {
+#else
+const XMLCh* getNamespace() {
+#endif
 	return this->get_override("getNamespace")();
 }
 
