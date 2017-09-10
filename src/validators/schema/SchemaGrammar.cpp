@@ -94,7 +94,6 @@ void SchemaGrammar_init(void) {
 			.def("getAttGroupInfoRegistry", &xercesc::SchemaGrammar::getAttGroupInfoRegistry, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getDatatypeRegistry", &xercesc::SchemaGrammar::getDatatypeRegistry, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("getValidSubstitutionGroups", &xercesc::SchemaGrammar::getValidSubstitutionGroups, boost::python::return_value_policy<boost::python::reference_existing_object>())
-			.def("getValidationContext", &xercesc::SchemaGrammar::getValidationContext, boost::python::return_value_policy<boost::python::reference_existing_object>())
 			.def("setTargetNamespace", &xercesc::SchemaGrammar::setTargetNamespace)
 			.def("setAttributeDeclRegistry", &xercesc::SchemaGrammar::setAttributeDeclRegistry)
 			.def("setComplexTypeRegistry", &xercesc::SchemaGrammar::setComplexTypeRegistry)

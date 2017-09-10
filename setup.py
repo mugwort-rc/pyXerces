@@ -43,7 +43,7 @@ xerces = Extension(name = 'Xerces.__Xerces',
                    libraries = libraries,
                    library_dirs = library_dirs,
                    sources = sources,
-                   extra_compile_args = ['-std=c++0x'])
+                   extra_compile_args = ['-std=c++11'])
 
 # distutils c++ bug fix.
 from distutils.sysconfig import get_config_vars

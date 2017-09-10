@@ -31,7 +31,7 @@ const XMLCh* getName() const {
 	return this->get_override("getName")();
 }
 
-const XMLCh* getNamespace() {
+const XMLCh* getNamespace() const {
 	return this->get_override("getNamespace")();
 }
 

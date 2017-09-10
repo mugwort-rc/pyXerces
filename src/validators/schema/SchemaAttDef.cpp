@@ -12,6 +12,7 @@
 //! for forward declaration
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
 #include <xercesc/util/QName.hpp>
+#include <xercesc/validators/schema/SchemaElementDecl.hpp>
 #include <xercesc/validators/schema/ComplexTypeInfo.hpp>
 
 #include <xercesc/validators/schema/SchemaAttDef.hpp>
